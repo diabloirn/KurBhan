@@ -1,0 +1,21 @@
+# Binary Go & Executables
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+backend/main
+
+# Virtual Environments Python
+venv/
+**/venv/
+__pycache__/
+*.pyc
+
+# Docker & OS Files
+.DS_Store
+Thumbs.db
+
+# IDE Files
+.vscode/
+.idea/

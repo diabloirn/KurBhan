@@ -1,0 +1,113 @@
+syntax = "proto3";
+
+package kurbhan.v1;
+
+option go_package = "kurbhan/gen/v1;kurbhanv1";
+
+import "google/protobuf/timestamp.proto";
+
+// ==========================================
+// 1. AUTH SERVICE
+// ==========================================
+service AuthService {
+  rpc Register (RegisterRequest) returns (AuthResponse);
+  rpc Login (LoginRequest) returns (AuthResponse);
+}
+
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+  string full_name = 3;
+  string phone_number = 4;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message AuthResponse {
+  string token = 1;
+  string user_id = 2;
+  string role = 3;
+}
+
+// ==========================================
+// 2. RATE SERVICE (Kalkulasi Tarif)
+// ==========================================
+service RateService {
+  rpc CalculateRate (CalculateRateRequest) returns (CalculateRateResponse);
+}
+
+message CalculateRateRequest {
+  string origin_village_id = 1;
+  string destination_village_id = 2;
+  double actual_weight_kg = 3;
+  double length_cm = 4;
+  double width_cm = 5;
+  double height_cm = 6;
+  string vehicle_type = 7; // mobil_box_kecil, mobil_box_sedang, mobil_box_besar
+  string service_type = 8; // reguler, cepat, sameday
+}
+
+message CalculateRateResponse {
+  double volumetric_weight_kg = 1;
+  double chargeable_weight_kg = 2;
+  double total_price = 3;
+  bool is_cross_island = 4;
+  string estimated_min_days = 5;
+  string estimated_max_days = 6;
+}
+
+// ==========================================
+// 3. SHIPMENT SERVICE (Otomatisasi & Tracking)
+// ==========================================
+service ShipmentService {
+  rpc CreateShipment (CreateShipmentRequest) returns (ShipmentResponse);
+  rpc CancelShipment (CancelShipmentRequest) returns (ShipmentResponse);
+  rpc TrackShipment (TrackShipmentRequest) returns (TrackShipmentResponse);
+}
+
+message CreateShipmentRequest {
+  string user_id = 1;
+  string origin_village_id = 2;
+  string destination_village_id = 3;
+  string origin_address_detail = 4;
+  string destination_address_detail = 5;
+  string vehicle_type = 6;
+  string service_type = 7;
+  string transit_type = 8; // darat, laut, udara
+  double actual_weight_kg = 9;
+  double length_cm = 10;
+  double width_cm = 11;
+  double height_cm = 12;
+}
+
+message CancelShipmentRequest {
+  string shipment_id = 1;
+  string user_id = 2;
+}
+
+message ShipmentResponse {
+  string shipment_id = 1;
+  string status = 2;
+  double total_price = 3;
+  google.protobuf.Timestamp created_at = 4;
+}
+
+message TrackingHistory {
+  string location = 1;
+  string status = 2;
+  string notes = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+message TrackShipmentRequest {
+  string shipment_id = 1;
+}
+
+message TrackShipmentResponse {
+  string shipment_id = 1;
+  string current_status = 2;
+  repeated TrackingHistory history = 3;
+}
