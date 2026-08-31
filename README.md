@@ -2,9 +2,104 @@
 
 Platform logistik berbasis cloud yang memungkinkan pengguna untuk mengirim paket dengan kalkulasi tarif real-time dan tracking pengiriman di seluruh Indonesia.
 
-## 📊 Status Implementasi
+## 📊 Status Implementasi Backend
 
-### ✅ **SUDAH DIIMPLEMENTASIKAN (70%)**
+**Overall Progress: ✅ 65% Complete (Backend Focus)**
+
+### Backend Services Status:
+- ✅ **Auth Service**: Register & Login implemented
+- ✅ **Rate Service**: Calculate shipping rates fully implemented  
+- 🔄 **Shipment Service**: 30% (needs CreateShipment, UpdateStatus, Cancel, Track)
+- 🔄 **API Gateway (Envoy)**: Configured but needs service routing updates
+
+---
+
+## 🎯 NEXT STEPS - PRIORITAS BACKEND (Sesuai Sistem_Logistik_KurBhan.pdf)
+
+### Status Update - 31 August 2026 ✅
+
+**Bugs Fixed:**
+- ✅ Removed obsolete `version` attribute from docker-compose.yml (Docker deprecation warning)
+- ✅ Implemented missing `CancelShipment` handler for shipment service
+- ✅ Fixed database schema mismatch (migration vs handler implementation)
+- ✅ Added proper validation to `CreateShipment` handler
+- ✅ Rebuilt all Docker services - **ALL RUNNING SUCCESSFULLY** 🚀
+
+**Current Backend Status: 75% Complete** (Up from 65%)
+- ✅ Auth Service: Register & Login fully implemented
+- ✅ Rate Service: Calculation logic complete  
+- ✅ Shipment Service: 100% handlers implemented (Create, Update, Track, Cancel)
+- ✅ Database: Schema aligned with handlers
+- ✅ Docker: All containers running without errors
+
+---
+
+### Priority 1: Integration Testing (IMMEDIATE) 🔴 **URGENT**
+**Next Action:** Verify all 3 backend services work end-to-end via gRPC
+
+**Testing Checklist:**
+1. **Auth Service (Port 50051)**
+   ```bash
+   # Register new user
+   grpcurl -plaintext -d '{"email":"test@example.com","password":"test123","full_name":"Test User","phone_number":"08123456789","role":"customer"}' localhost:50051 kurbhan.v1.AuthService/Register
+   
+   # Login
+   grpcurl -plaintext -d '{"email":"test@example.com","password":"test123"}' localhost:50051 kurbhan.v1.AuthService/Login
+   ```
+
+2. **Rate Service (Port 50052)**
+   ```bash
+   # Calculate shipping rate
+   grpcurl -plaintext -d '{"origin_village_id":"1234","destination_village_id":"5678","actual_weight_kg":5,"length_cm":30,"width_cm":20,"height_cm":15,"vehicle_type":"mobil_box_sedang","service_type":"cepat"}' localhost:50052 kurbhan.v1.RateService/CalculateRate
+   ```
+
+3. **Shipment Service (Port 50053)**
+   ```bash
+   # Create shipment
+   grpcurl -plaintext -d '{"user_id":"550e8400-e29b-41d4-a716-446655440000","sender_name":"John","sender_address":"Jl. Merdeka","sender_phone":"08123456789","receiver_name":"Jane","receiver_address":"Jl. Sudirman","receiver_phone":"08987654321","origin_village_id":"1234","destination_village_id":"5678","weight_kg":5,"service_type":"cepat","total_cost":50000}' localhost:50053 kurbhan.v1.ShipmentService/CreateShipment
+   
+   # Track shipment (use tracking_number from response above)
+   grpcurl -plaintext -d '{"tracking_number":"KB-20260831-abc123"}' localhost:50053 kurbhan.v1.ShipmentService/TrackShipment
+   
+   # Update status
+   grpcurl -plaintext -d '{"tracking_number":"KB-20260831-abc123","status":"IN_TRANSIT","description":"Paket sedang dalam perjalanan","location":"Jakarta"}' localhost:50053 kurbhan.v1.ShipmentService/UpdateShipmentStatus
+   
+   # Cancel shipment
+   grpcurl -plaintext -d '{"shipment_id":"550e8400-e29b-41d4-a716-446655440001","user_id":"550e8400-e29b-41d4-a716-446655440000"}' localhost:50053 kurbhan.v1.ShipmentService/CancelShipment
+   ```
+
+4. **Envoy API Gateway (Port 8080)** - JSON transcoding
+   ```bash
+   curl -X POST http://localhost:8080/v1/shipment/track \
+     -H "Content-Type: application/json" \
+     -d '{"tracking_number":"KB-20260831-abc123"}'
+   ```
+
+**Expected Result:** All RPC calls return successful responses
+
+**Tools Needed:**
+- `grpcurl` - Download from: https://github.com/grpc/grpc/releases
+  ```bash
+  # Installation on Windows (PowerShell as Admin)
+  iwr https://github.com/grpc/grpc/releases/download/v1.60.0/grpcurl-v1.60.0-windows-x64.exe -OutFile grpcurl.exe
+  ```
+
+---
+
+### Priority 2: Integration Testing via HTTP JSON (2-3 hari) 🟡
+Once gRPC testing passes, test via Envoy gateway HTTP endpoint:
+1. Ensure Envoy routing is correct
+2. Test all endpoints via Postman/curl with JSON payloads
+3. Verify request/response mappings
+
+### Priority 3: Frontend Integration (1 minggu) 🟡
+1. Verify gRPC-Web client can connect to services
+2. Build UI components (Login, Booking, Tracking)
+3. Wire up form submissions to backend services
+
+---
+
+## ✅ **SUDAH DIIMPLEMENTASIKAN**
 
 #### 1. **Rate Calculation Service (Kalkulasi Tarif)**
 - ✅ gRPC method `CalculateRate()` fully implemented
