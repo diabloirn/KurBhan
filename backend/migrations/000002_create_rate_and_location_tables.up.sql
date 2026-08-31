@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS provinces (
+    id VARCHAR(10) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    is_java_island BOOLEAN DEFAULT false
+);
+
+CREATE TABLE IF NOT EXISTS regencies (
+    id VARCHAR(10) PRIMARY KEY,
+    province_id VARCHAR(10) REFERENCES provinces(id) ON DELETE CASCADE,
+    name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS districts (
+    id VARCHAR(10) PRIMARY KEY,
+    regency_id VARCHAR(10) REFERENCES regencies(id) ON DELETE CASCADE,
+    name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS villages (
+    id VARCHAR(10) PRIMARY KEY,
+    district_id VARCHAR(10) REFERENCES districts(id) ON DELETE CASCADE,
+    name VARCHAR(100) NOT NULL
+);
