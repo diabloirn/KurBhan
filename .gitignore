@@ -1,21 +1,22 @@
-# Binary Go & Executables
+# Dependencies
+node_modules/
+vendor/
+
+# Environment & Secret variables
+.env
+*.env
+
+# Build outputs & Executables
 *.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-backend/main
+*.out
+dist/
+build/
 
-# Virtual Environments Python
-venv/
-**/venv/
-__pycache__/
-*.pyc
-
-# Docker & OS Files
-.DS_Store
-Thumbs.db
-
-# IDE Files
+# IDE / Editor files
 .vscode/
 .idea/
+*.swp
+
+# OS generated files
+.DS_Store
+Thumbs.db

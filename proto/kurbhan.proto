@@ -10,8 +10,8 @@ import "google/protobuf/timestamp.proto";
 // 1. AUTH SERVICE
 // ==========================================
 service AuthService {
-  rpc Register (RegisterRequest) returns (AuthResponse);
-  rpc Login (LoginRequest) returns (AuthResponse);
+  rpc Register (RegisterRequest) returns (RegisterResponse);
+  rpc Login (LoginRequest) returns (LoginResponse);
 }
 
 message RegisterRequest {
@@ -19,11 +19,29 @@ message RegisterRequest {
   string password = 2;
   string full_name = 3;
   string phone_number = 4;
+  string role = 5;  // customer, admin, driver, etc
 }
 
 message LoginRequest {
   string email = 1;
   string password = 2;
+}
+
+message UserProto {
+  string id = 1;
+  string full_name = 2;
+  string email = 3;
+  string role = 4;
+}
+
+message LoginResponse {
+  string token = 1;
+  UserProto user = 2;
+}
+
+message RegisterResponse {
+  string user_id = 1;
+  string message = 2;
 }
 
 message AuthResponse {
@@ -63,24 +81,47 @@ message CalculateRateResponse {
 // 3. SHIPMENT SERVICE (Otomatisasi & Tracking)
 // ==========================================
 service ShipmentService {
-  rpc CreateShipment (CreateShipmentRequest) returns (ShipmentResponse);
+  rpc CreateShipment (CreateShipmentRequest) returns (CreateShipmentResponse);
+  rpc UpdateShipmentStatus (UpdateShipmentStatusRequest) returns (UpdateShipmentStatusResponse);
   rpc CancelShipment (CancelShipmentRequest) returns (ShipmentResponse);
   rpc TrackShipment (TrackShipmentRequest) returns (TrackShipmentResponse);
 }
 
 message CreateShipmentRequest {
   string user_id = 1;
-  string origin_village_id = 2;
-  string destination_village_id = 3;
-  string origin_address_detail = 4;
-  string destination_address_detail = 5;
-  string vehicle_type = 6;
-  string service_type = 7;
-  string transit_type = 8; // darat, laut, udara
-  double actual_weight_kg = 9;
-  double length_cm = 10;
-  double width_cm = 11;
-  double height_cm = 12;
+  string sender_name = 2;
+  string sender_address = 3;
+  string sender_phone = 4;
+  string receiver_name = 5;
+  string receiver_address = 6;
+  string receiver_phone = 7;
+  string origin_village_id = 8;
+  string destination_village_id = 9;
+  double weight_kg = 10;
+  string service_type = 11;
+  double total_cost = 12;
+}
+
+message CreateShipmentResponse {
+  string shipment_id = 1;
+  string tracking_number = 2;
+  string status = 3;
+  string message = 4;
+}
+
+message UpdateShipmentStatusRequest {
+  string tracking_number = 1;
+  string status = 2;
+  string location = 3;
+  string description = 4;
+}
+
+message UpdateShipmentStatusResponse {
+  string shipment_id = 1;
+  string tracking_number = 2;
+  string status = 3;
+  string message = 4;
+  bool success = 5;
 }
 
 message CancelShipmentRequest {
@@ -88,26 +129,38 @@ message CancelShipmentRequest {
   string user_id = 2;
 }
 
+message ShipmentProto {
+  string id = 1;
+  string tracking_number = 2;
+  string sender_name = 3;
+  string sender_address = 4;
+  string receiver_name = 5;
+  string receiver_address = 6;
+  double weight_kg = 7;
+  string service_type = 8;
+  double total_cost = 9;
+  string status = 10;
+}
+
+message TrackingHistoryProto {
+  string status = 1;
+  string description = 2;
+  string location = 3;
+  string timestamp = 4;
+}
+
+message TrackShipmentRequest {
+  string tracking_number = 1;
+}
+
+message TrackShipmentResponse {
+  ShipmentProto shipment = 1;
+  repeated TrackingHistoryProto histories = 2;
+}
+
 message ShipmentResponse {
   string shipment_id = 1;
   string status = 2;
   double total_price = 3;
   google.protobuf.Timestamp created_at = 4;
-}
-
-message TrackingHistory {
-  string location = 1;
-  string status = 2;
-  string notes = 3;
-  google.protobuf.Timestamp updated_at = 4;
-}
-
-message TrackShipmentRequest {
-  string shipment_id = 1;
-}
-
-message TrackShipmentResponse {
-  string shipment_id = 1;
-  string current_status = 2;
-  repeated TrackingHistory history = 3;
 }

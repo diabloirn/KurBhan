@@ -1,4 +1,4 @@
-package service
+package handler
 
 import (
 	"context"
@@ -8,33 +8,33 @@ import (
 	"math"
 	"time"
 
+	pb "rate-service/pb"
+
 	"github.com/bradfitz/gomemcache/memcache"
-	pb "kurbhan/gen/v1"
 )
 
-type RateService struct {
+type RateHandler struct {
 	pb.UnimplementedRateServiceServer
-	db         *sql.DB
-	memcached  *memcache.Client
+	db        *sql.DB
+	memcached *memcache.Client
 }
 
-func NewRateService(db *sql.DB, memcachedHost string) *RateService {
-	mc := memcache.New(memcachedHost)
-	return &RateService{
+func NewRateHandler(db *sql.DB, mc *memcache.Client) *RateHandler {
+	return &RateHandler{
 		db:        db,
 		memcached: mc,
 	}
 }
 
-func (s *RateService) CalculateRate(ctx context.Context, req *pb.CalculateRateRequest) (*pb.CalculateRateResponse, error) {
-	// 1. Generate Key Cache (Berdasarkan parameter pengiriman)
+func (s *RateHandler) CalculateRate(ctx context.Context, req *pb.CalculateRateRequest) (*pb.CalculateRateResponse, error) {
+	// 1. Generate Key Cache
 	cacheKey := fmt.Sprintf("rate:%s:%s:%.2f:%.2f:%.2f:%.2f:%s:%s",
 		req.OriginVillageId, req.DestinationVillageId,
 		req.ActualWeightKg, req.LengthCm, req.WidthCm, req.HeightCm,
 		req.VehicleType, req.ServiceType,
 	)
 
-	// 2. Cek apakah hasil ada di Memcached
+	// 2. Cek Memcached
 	if item, err := s.memcached.Get(cacheKey); err == nil {
 		var cachedResp pb.CalculateRateResponse
 		if err := json.Unmarshal(item.Value, &cachedResp); err == nil {
@@ -53,26 +53,24 @@ func (s *RateService) CalculateRate(ctx context.Context, req *pb.CalculateRateRe
 		return nil, fmt.Errorf("destination village not found: %v", err)
 	}
 
-	// 4. Deteksi Pengiriman Antar-Pulau (Cross-Island)
+	// 4. Deteksi Pengiriman Antar-Pulau
 	isCrossIsland, err := s.checkCrossIsland(originProv, destProv)
 	if err != nil {
 		return nil, fmt.Errorf("failed to check island status: %v", err)
 	}
 
 	// 5. Kalkulasi Volumetric Weight & Chargeable Weight
-	// Rumus Logistik Standar: (P x L x T) / 6000 (Reguler/Darat/Laut) atau / 5000 (Udara/Express)
 	divisor := 6000.0
 	if req.ServiceType == "cepat" && isCrossIsland {
-		divisor = 5000.0 // Kargo udara menggunakan pembagi 5000
+		divisor = 5000.0
 	}
 
 	volumetricWeight := (req.LengthCm * req.WidthCm * req.HeightCm) / divisor
 	chargeableWeight := math.Max(req.ActualWeightKg, volumetricWeight)
 
-	// 6. Hitung Base Rate dan Multiplier Modal Transportasi
-	basePricePerKg := 10000.0 // Tarif dasar per KG
+	// 6. Hitung Base Rate & Multiplier
+	basePricePerKg := 10000.0
 
-	// Multiplier Jenis Layanan
 	serviceMultiplier := 1.0
 	switch req.ServiceType {
 	case "cepat":
@@ -81,7 +79,6 @@ func (s *RateService) CalculateRate(ctx context.Context, req *pb.CalculateRateRe
 		serviceMultiplier = 2.2
 	}
 
-	// Multiplier Jenis Armada / Transit
 	vehicleMultiplier := 1.0
 	switch req.VehicleType {
 	case "mobil_box_sedang":
@@ -90,17 +87,15 @@ func (s *RateService) CalculateRate(ctx context.Context, req *pb.CalculateRateRe
 		vehicleMultiplier = 1.8
 	}
 
-	// Biaya Tambahan Antar-Pulau (Laut / Udara)
 	crossIslandFee := 0.0
 	if isCrossIsland {
 		if req.ServiceType == "cepat" {
-			crossIslandFee = 25000.0 // Surcharge Kargo Udara
+			crossIslandFee = 25000.0
 		} else {
-			crossIslandFee = 12000.0 // Surcharge Kargo Laut
+			crossIslandFee = 12000.0
 		}
 	}
 
-	// Total Harga Akhir
 	totalPrice := (chargeableWeight * basePricePerKg * serviceMultiplier * vehicleMultiplier) + crossIslandFee
 
 	// 7. Estimasi Hari Pengiriman
@@ -110,7 +105,7 @@ func (s *RateService) CalculateRate(ctx context.Context, req *pb.CalculateRateRe
 	} else if req.ServiceType == "cepat" {
 		minDays, maxDays = "1", "2"
 	} else if isCrossIsland {
-		minDays, maxDays = "4", "7" // Jalur Laut Reguler Antar-Pulau
+		minDays, maxDays = "4", "7"
 	}
 
 	response := &pb.CalculateRateResponse{
@@ -122,7 +117,7 @@ func (s *RateService) CalculateRate(ctx context.Context, req *pb.CalculateRateRe
 		EstimatedMaxDays:   maxDays,
 	}
 
-	// 8. Simpan Hasil ke Memcached (TTL 1 Jam)
+	// 8. Simpan ke Memcached (TTL 1 Jam)
 	if jsonBytes, err := json.Marshal(response); err == nil {
 		_ = s.memcached.Set(&memcache.Item{
 			Key:        cacheKey,
@@ -134,8 +129,7 @@ func (s *RateService) CalculateRate(ctx context.Context, req *pb.CalculateRateRe
 	return response, nil
 }
 
-// Helper: Query Provinsi Asal/Tujuan dari ID Kelurahan
-func (s *RateService) getProvinceIDByVillage(villageID string) (string, error) {
+func (s *RateHandler) getProvinceIDByVillage(villageID string) (string, error) {
 	query := `
 		SELECT r.province_id 
 		FROM villages v
@@ -148,8 +142,7 @@ func (s *RateService) getProvinceIDByVillage(villageID string) (string, error) {
 	return provinceID, err
 }
 
-// Helper: Cek apakah kedua provinsi berada di pulau yang sama (menggunakan flag is_java_island)
-func (s *RateService) checkCrossIsland(originProvID, destProvID string) (bool, error) {
+func (s *RateHandler) checkCrossIsland(originProvID, destProvID string) (bool, error) {
 	if originProvID == destProvID {
 		return false, nil
 	}
@@ -171,8 +164,6 @@ func (s *RateService) checkCrossIsland(originProvID, destProvID string) (bool, e
 		javaStatus[id] = isJava
 	}
 
-	// Jika salah satu berada di Jawa dan satunya di luar Jawa -> Cross Island
-	// Jika keduanya di luar Jawa dan beda provinsi -> Cross Island
 	if javaStatus[originProvID] != javaStatus[destProvID] {
 		return true, nil
 	}

@@ -1,19 +1,53 @@
 version: '3.8'
 
 services:
-  backend:
+  auth-service:
     build:
-      context: ./backend
+      context: ./backend/internal/services/auth_service
       dockerfile: Dockerfile
-    container_name: kurbhan-backend
+    container_name: kurbhan-auth-service
     ports:
       - "50051:50051"
     environment:
       - DB_URI=postgresql://postgres.wgyzpzdnublmqfirikab:Diabloirn16......@aws-0-ap-northeast-1.pooler.supabase.com:6543/postgres
-      - MEMCACHED_HOST=memcached:11211
       - PORT=50051
+    networks:
+      - kurbhan-network
+
+  rate-service:
+    build:
+      context: ./backend/internal/services/rate_service
+      dockerfile: Dockerfile
+    container_name: kurbhan-rate-service
+    ports:
+      - "50052:50052"
+    environment:
+      - DB_URI=postgresql://postgres.wgyzpzdnublmqfirikab:Diabloirn16......@aws-0-ap-northeast-1.pooler.supabase.com:6543/postgres
+      - MEMCACHED_HOST=memcached:11211
+      - PORT=50052
     depends_on:
       - memcached
+    networks:
+      - kurbhan-network
+
+  shipment-service:
+    build:
+      context: ./backend/internal/services/shipment_service
+      dockerfile: Dockerfile
+    container_name: kurbhan-shipment-service
+    ports:
+      - "50053:50053"
+    environment:
+      - DB_URI=postgresql://postgres.wgyzpzdnublmqfirikab:Diabloirn16......@aws-0-ap-northeast-1.pooler.supabase.com:6543/postgres
+      - PORT=50053
+    networks:
+      - kurbhan-network
+
+  memcached:
+    image: memcached:alpine
+    container_name: kurbhan-memcached
+    ports:
+      - "11211:11211"
     networks:
       - kurbhan-network
 
@@ -23,18 +57,12 @@ services:
     volumes:
       - ./envoy/envoy.yaml:/etc/envoy/envoy.yaml
     ports:
-      - "9090:9090"
+      - "8080:8080"
       - "9901:9901"
     depends_on:
-      - backend
-    networks:
-      - kurbhan-network
-
-  memcached:
-    image: memcached:alpine
-    container_name: kurbhan-memcached
-    ports:
-      - "11211:11211"
+      - auth-service
+      - rate-service
+      - shipment-service
     networks:
       - kurbhan-network
 
