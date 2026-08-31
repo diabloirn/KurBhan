@@ -3,7 +3,7 @@ module kurbhan
 go 1.26.3
 
 require (
-	github.com/bradfitz/gomemcache v0.0.0-20260422231931-4d751bb6e37c
+	github.com/lib/pq v1.12.3
 	google.golang.org/grpc v1.83.2
 	google.golang.org/protobuf v1.36.12
 )
