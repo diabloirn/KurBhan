@@ -1,2 +1,2 @@
-DROP TABLE IF EXISTS tracking_history;
-DROP TABLE IF EXISTS shipments;
+DROP TABLE IF EXISTS tracking_history CASCADE;
+DROP TABLE IF EXISTS shipments CASCADE;
