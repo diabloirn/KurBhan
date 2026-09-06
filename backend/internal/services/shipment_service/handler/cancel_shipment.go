@@ -14,7 +14,7 @@ import (
 func (h *ShipmentHandler) CancelShipment(ctx context.Context, req *pb.CancelShipmentRequest) (*pb.ShipmentResponse, error) {
 	// 1. Validasi shipment exists dan status masih CREATED/PENDING
 	queryCheck := `
-		SELECT id, status, total_price, created_at
+		SELECT id, status, total_cost, created_at
 		FROM shipments
 		WHERE id = $1
 	`

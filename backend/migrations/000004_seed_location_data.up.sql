@@ -21,5 +21,5 @@ ON CONFLICT (id) DO NOTHING;
 -- Seed Data Village (Kelurahan Sample)
 INSERT INTO villages (id, district_id, name) VALUES
 ('3175061001', '317506', 'KRAMAT JATI'),
-('3275041002', '3275', 'SEPANJANG JAYA')
+('3275041002', '327504', 'SEPANJANG JAYA')
 ON CONFLICT (id) DO NOTHING;
