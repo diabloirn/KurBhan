@@ -1,0 +1,150 @@
+/* Login Page Styles — Warehouse & Freight Identity */
+
+.login-root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: var(--kb-paper);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 2.25rem 2rem;
+  background: var(--kb-paper-light);
+  border: var(--crate-border-thick);
+  box-shadow: var(--crate-shadow-lg);
+  border-radius: 4px;
+}
+
+@media (min-width: 640px) {
+  .login-card {
+    padding: 3rem 2.5rem;
+  }
+}
+
+.login-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.login-logo-box {
+  width: 3.25rem;
+  height: 3.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  background: var(--kb-hazard);
+  border: 2px solid var(--kb-asphalt);
+  box-shadow: 2px 2px 0px var(--kb-asphalt);
+  margin-bottom: 1.25rem;
+}
+
+.login-title {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--kb-wood);
+  text-align: center;
+  margin: 0;
+}
+
+.login-error-box {
+  background: rgba(198, 40, 40, 0.08);
+  border: 2px solid var(--kb-red);
+  border-radius: 2px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.login-error-text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--kb-red);
+  margin: 0;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.login-label {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--kb-wood);
+  margin-bottom: 0.4rem;
+}
+
+.login-password-wrap {
+  position: relative;
+}
+
+.login-password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--kb-wood-light);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-password-toggle:hover {
+  color: var(--kb-asphalt);
+}
+
+.login-error-msg {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--kb-red);
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+}
+
+.login-submit-btn {
+  width: 100%;
+  margin-top: 0.75rem;
+}
+
+.login-footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 14px;
+  border-top: 1.5px dashed rgba(28, 28, 28, 0.2);
+  padding-top: 1.5rem;
+}
+
+.login-footer-text {
+  color: var(--kb-asphalt);
+}
+
+.login-link {
+  font-weight: 700;
+  color: var(--kb-wood);
+  text-decoration: underline;
+  margin-left: 0.25rem;
+}
+
+.login-link:hover {
+  color: var(--kb-hazard-dark);
+}
