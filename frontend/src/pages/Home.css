@@ -1,0 +1,420 @@
+/* ─────────────────────────────────────────────────────────────
+   Home Page Styles — Warehouse & Freight Identity
+   ───────────────────────────────────────────────────────────── */
+
+.home-root {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--kb-paper);
+}
+
+/* 1. Industrial Hero Dock */
+.home-hero-dock {
+  min-height: calc(100vh - 65px);
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 4rem 1.25rem 5rem 1.25rem;
+  background: 
+    radial-gradient(circle at 80% 20%, rgba(201, 168, 118, 0.25) 0%, transparent 50%),
+    linear-gradient(180deg, var(--kb-paper) 0%, #E8DFCE 100%);
+  border-bottom: 3px solid var(--kb-asphalt);
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .home-hero-dock {
+    padding: 4.5rem 3rem;
+  }
+}
+
+.home-hero-grid {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+@media (min-width: 1024px) {
+  .home-hero-grid {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 3rem;
+  }
+}
+
+.home-hero-manifest {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.home-manifest-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--kb-asphalt);
+  color: var(--kb-hazard);
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  padding: 0.35rem 0.75rem;
+  border-radius: 2px;
+  margin-bottom: 1.25rem;
+  border: 1.5px solid var(--kb-asphalt);
+}
+
+.home-headline {
+  font-size: clamp(2.75rem, 6.5vw, 4.75rem);
+  font-weight: 900;
+  color: var(--kb-wood);
+  line-height: 0.94;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.home-lead-text {
+  font-size: clamp(1rem, 1.3vw, 1.15rem);
+  color: var(--kb-asphalt);
+  max-width: 35rem;
+  line-height: 1.6;
+  margin-bottom: 2.25rem;
+  font-weight: 500;
+}
+
+.home-action-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .home-action-cluster {
+    width: auto;
+  }
+}
+
+.home-hero-3d-wrap {
+  position: relative;
+  width: 100%;
+  height: 300px;
+}
+
+@media (min-width: 640px) {
+  .home-hero-3d-wrap {
+    height: 380px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-hero-3d-wrap {
+    height: 520px;
+  }
+}
+
+.home-3d-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(201, 168, 118, 0.2);
+  border: 2px dashed var(--kb-concrete);
+  color: var(--kb-wood);
+  font-weight: 700;
+}
+
+/* Floor Hazard Border Divider */
+.warehouse-dock-line {
+  height: 14px;
+  width: 100%;
+}
+
+/* 2. Asymmetric Warehouse Capability Section */
+.warehouse-spec-section {
+  padding: 5rem 1.25rem;
+  background-color: #E6DCBA;
+  border-bottom: 3px solid var(--kb-asphalt);
+}
+
+@media (min-width: 1024px) {
+  .warehouse-spec-section {
+    padding: 6rem 3rem;
+  }
+}
+
+.warehouse-spec-container {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.warehouse-section-head {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 3.5rem;
+}
+
+.warehouse-section-title {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  color: var(--kb-wood);
+  margin-top: 0.5rem;
+}
+
+.warehouse-bento-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .warehouse-bento-grid {
+    grid-template-columns: 1.2fr 0.8fr;
+  }
+}
+
+/* Panel 1: Kraft Cardboard Stamped Waybill (Large) */
+.spec-kraft-box {
+  background: var(--kb-paper-light);
+  border: var(--crate-border-thick);
+  box-shadow: var(--crate-shadow);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 4px;
+}
+
+@media (min-width: 768px) {
+  .spec-kraft-box {
+    padding: 2.5rem;
+  }
+}
+
+.spec-box-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.spec-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--kb-wood);
+  margin-bottom: 0.75rem;
+}
+
+.spec-copy {
+  color: var(--kb-asphalt);
+  line-height: 1.6;
+  font-size: 15px;
+  max-width: 32rem;
+}
+
+/* Visual Volumetric vs Actual Comparison Box */
+.spec-volumetric-comparison {
+  margin-top: 2rem;
+  background: var(--kb-paper);
+  border: 1.5px solid var(--kb-asphalt);
+  padding: 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .spec-volumetric-comparison {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.spec-metric-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.spec-metric-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--kb-wood-light);
+}
+
+.spec-metric-val {
+  font-family: var(--font-heading);
+  font-size: 1.85rem;
+  font-weight: 900;
+  color: var(--kb-wood);
+}
+
+/* Panel 2: Heavy Steel Crate Rack (Right Side) */
+.spec-steel-rack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.spec-subpanel {
+  background: #ffffff;
+  border: var(--crate-border-thick);
+  box-shadow: var(--crate-shadow);
+  padding: 1.75rem;
+  border-radius: 4px;
+}
+
+.spec-subpanel-dark {
+  background: var(--kb-wood);
+  color: var(--kb-paper);
+  border: var(--crate-border-thick);
+  box-shadow: var(--crate-shadow);
+  padding: 1.75rem;
+  border-radius: 4px;
+}
+
+.spec-subpanel-dark h3 {
+  color: #ffffff;
+}
+
+.spec-subpanel-dark p {
+  color: var(--kb-paper);
+  opacity: 0.85;
+}
+
+/* 3. Sequential Conveyor Journey (Cara Kerja Fisik) */
+.conveyor-section {
+  padding: 5rem 1.25rem;
+  background: var(--kb-paper);
+  border-bottom: 3px solid var(--kb-asphalt);
+}
+
+@media (min-width: 1024px) {
+  .conveyor-section {
+    padding: 6rem 3rem;
+  }
+}
+
+.conveyor-container {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.conveyor-track-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .conveyor-track-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.conveyor-bay-card {
+  background: var(--kb-paper-light);
+  border: 2px solid var(--kb-asphalt);
+  box-shadow: var(--crate-shadow);
+  border-radius: 4px;
+  padding: 2rem 1.5rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.conveyor-bay-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  border-bottom: 1.5px solid rgba(28, 28, 28, 0.15);
+  padding-bottom: 0.75rem;
+}
+
+.conveyor-bay-num {
+  font-family: var(--font-heading);
+  font-size: 2.25rem;
+  font-weight: 900;
+  color: var(--kb-wood);
+  line-height: 1;
+}
+
+.conveyor-bay-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--kb-wood);
+  margin-bottom: 0.5rem;
+}
+
+.conveyor-bay-desc {
+  font-size: 14px;
+  color: var(--kb-asphalt);
+  line-height: 1.6;
+}
+
+/* 4. Industrial Dispatch CTA Dock */
+.dispatch-dock-section {
+  background: var(--kb-asphalt);
+  padding: 6rem 1.25rem;
+  color: #ffffff;
+  position: relative;
+}
+
+@media (min-width: 1024px) {
+  .dispatch-dock-section {
+    padding: 7rem 3rem;
+  }
+}
+
+.dispatch-dock-container {
+  max-width: 54rem;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  background: var(--kb-wood);
+  border: 3px solid var(--kb-hazard);
+  box-shadow: 6px 6px 0px var(--kb-hazard);
+  padding: 3rem 2rem;
+  border-radius: 4px;
+}
+
+@media (min-width: 768px) {
+  .dispatch-dock-container {
+    padding: 4rem 3.5rem;
+  }
+}
+
+.dispatch-dock-title {
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.dispatch-dock-copy {
+  color: var(--kb-paper);
+  font-size: 1.15rem;
+  margin-bottom: 2.5rem;
+  max-width: 36rem;
+  line-height: 1.6;
+}
+
+.dispatch-dock-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}

@@ -1,117 +1,194 @@
+import { lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Truck, Calculator, ArrowRight } from 'lucide-react';
+import { 
+  Scale, 
+  Truck, 
+  Anchor, 
+  Plane, 
+  FileText, 
+  Boxes, 
+  CheckSquare 
+} from 'lucide-react';
+import './Home.css';
+
+const PackageScene = lazy(() => import('../components/PackageScene'));
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50">
-      {/* Hero Section */}
-      <section className="bg-indigo-600 text-white py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
-            Kirim Paket ke Seluruh Indonesia
-          </h1>
-          <p className="text-lg sm:text-xl text-indigo-100 max-w-3xl mx-auto mb-10">
-            KurBhan adalah platform logistik terpercaya dengan tarif transparan dan pelacakan real-time. Nikmati pengiriman cepat dan aman ke seluruh pelosok negeri.
+    <div className="home-root">
+      {/* 1. Industrial Hero Dock */}
+      <section className="home-hero-dock">
+        <div className="home-hero-grid">
+          <div className="home-hero-manifest">
+            <div className="home-manifest-badge">
+              <span>MANIFEST EKSPEDISI NUSANTARA</span>
+              <span>•</span>
+              <span>DARAT • LAUT • UDARA</span>
+            </div>
+
+            <h1 className="home-headline">
+              Kirim kargo dan paket besar tanpa tebak-tebakan tarif.
+            </h1>
+
+            <p className="home-lead-text">
+              Platform logistik skala riil untuk pengiriman barang individu dan bisnis. Kalkulasi tarif transparan di muka, alokasi armada box hingga tronton, dan pemantauan manifes fisik secara real-time ke seluruh pelosok Indonesia.
+            </p>
+
+            <div className="home-action-cluster">
+              <Link to="/booking" className="hazard-btn">
+                Buat Pengiriman Kargo
+              </Link>
+              <Link to="/tracking" className="paper-btn">
+                Lacak Resi Fisik
+              </Link>
+            </div>
+          </div>
+
+          <div className="home-hero-3d-wrap">
+            <Suspense fallback={<div className="home-3d-fallback">Memuat Palet & Peti Kargo 3D...</div>}>
+              <PackageScene />
+            </Suspense>
+          </div>
+        </div>
+      </section>
+
+      {/* Hazard Line Marka Lantai Gudang */}
+      <div className="warehouse-dock-line hazard-stripes" />
+
+      {/* 2. Asymmetric Warehouse Capability Bento Section */}
+      <section className="warehouse-spec-section">
+        <div className="warehouse-spec-container">
+          <div className="warehouse-section-head">
+            <span className="stencil-tag stencil-wood w-fit">STANDAR GUDANG & PENGIRIMAN</span>
+            <h2 className="warehouse-section-title">Kepastian bobot, armada, dan rute.</h2>
+          </div>
+
+          <div className="warehouse-bento-grid">
+            {/* Panel 1: Kraft Waybill Style (Volumetric vs Actual Weight Transparency) */}
+            <div className="spec-kraft-box">
+              <div>
+                <div className="spec-box-header">
+                  <div>
+                    <span className="stencil-tag stencil-hazard mb-2">TARIF TRANSPARAN</span>
+                    <h3 className="spec-title">Kalkulasi Otomatis Bobot Volumetrik</h3>
+                  </div>
+                  <Scale className="w-8 h-8 text-[var(--kb-wood)] shrink-0" />
+                </div>
+                <p className="spec-copy">
+                  Tidak ada biaya siluman atau timbangan fiktif di konter. Rumus tarif KurBhan menghitung perbandingan bobot aktual (kg) terhadap dimensi kubikasi kargo secara otomatis sebelum Anda membayar.
+                </p>
+              </div>
+
+              <div className="spec-volumetric-comparison">
+                <div className="spec-metric-col">
+                  <span className="spec-metric-label">Standar Kubikasi Darat</span>
+                  <span className="spec-metric-val">(P x L x T) / 4.000</span>
+                  <span className="text-xs text-[var(--kb-wood-light)] mt-1">Sesuai standar asosiasi logistik darat nasional</span>
+                </div>
+                <div className="spec-metric-col">
+                  <span className="spec-metric-label">Benchmark Ekspedisi</span>
+                  <span className="spec-metric-val text-[var(--kb-green)]">Hemat s/d 24%</span>
+                  <span className="text-xs text-[var(--kb-wood-light)] mt-1">Dibandingkan langsung dengan tarif JNE, J&T, SiCepat</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Panel 2: Heavy Steel Fleet & Multi-modal Capacity */}
+            <div className="spec-steel-rack">
+              <div className="spec-subpanel">
+                <div className="flex items-center gap-2 mb-3">
+                  <Truck className="w-5 h-5 text-[var(--kb-wood)]" />
+                  <span className="stencil-tag stencil-wood">ARMADA DARAT BERBAGAI KELAS</span>
+                </div>
+                <h3 className="text-xl font-bold text-[var(--kb-wood)] mb-2">Mobil Box Hingga Truk Tronton Hino</h3>
+                <p className="text-sm text-[var(--kb-asphalt)]">
+                  Dari paket reguler 1 kg, muatan box engkel 3 ton, hingga peti kemas tronton 20 ton langsung dari dermaga atau gudang Anda.
+                </p>
+              </div>
+
+              <div className="spec-subpanel-dark">
+                <div className="flex items-center gap-2 mb-3">
+                  <Anchor className="w-5 h-5 text-[var(--kb-hazard)]" />
+                  <Plane className="w-5 h-5 text-[var(--kb-hazard)]" />
+                  <span className="stencil-tag stencil-hazard">INTER-ISLAND CORRIDOR</span>
+                </div>
+                <h3 className="text-xl font-bold mb-2">Jalur Lintas Pulau Laut Ro-Ro & Kargo Udara</h3>
+                <p className="text-sm">
+                  Koneksi terintegrasi antar-pelabuhan utama nusantara (Tanjung Priok, Tanjung Perak, Belawan, Makassar) dengan jadwal keberangkatan pasti.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Sequential Conveyor Journey (Cara Kerja Fisik Logistik) */}
+      <section className="conveyor-section">
+        <div className="conveyor-container">
+          <div className="warehouse-section-head">
+            <span className="stencil-tag stencil-wood w-fit">MANIFES OPERASIONAL</span>
+            <h2 className="warehouse-section-title">Perjalanan fisik setiap peti muatan.</h2>
+          </div>
+
+          <div className="conveyor-track-grid">
+            {/* Step 1 */}
+            <div className="conveyor-bay-card">
+              <div className="conveyor-bay-header">
+                <span className="conveyor-bay-num">01</span>
+                <FileText className="w-6 h-6 text-[var(--kb-wood)]" />
+              </div>
+              <h3 className="conveyor-bay-title">Cetak Surat Jalan & Stensil Label</h3>
+              <p className="conveyor-bay-desc">
+                Input spesifikasi barang di kalkulator. Sistem menerbitkan nomor resi sah dan instruksi penanganan khusus (stempel Fragile / This Side Up).
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="conveyor-bay-card">
+              <div className="conveyor-bay-header">
+                <span className="conveyor-bay-num">02</span>
+                <Boxes className="w-6 h-6 text-[var(--kb-wood)]" />
+              </div>
+              <h3 className="conveyor-bay-title">Muat Palet & Angkut Armada</h3>
+              <p className="conveyor-bay-desc">
+                Kurir dan armada yang dialokasikan menjemput barang di lokasi Anda. Peti dimuat ke palet kargo dan diverifikasi pada manifes keberangkatan.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="conveyor-bay-card">
+              <div className="conveyor-bay-header">
+                <span className="conveyor-bay-num">03</span>
+                <CheckSquare className="w-6 h-6 text-[var(--kb-green)]" />
+              </div>
+              <h3 className="conveyor-bay-title">Serah Terima & Segel Utuh</h3>
+              <p className="conveyor-bay-desc">
+                Paket tiba di gudang tujuan atau depan pintu penerima. Status manifes diperbarui seketika dengan tanda tangan digital dan foto bukti serah terima.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Industrial Dispatch CTA Dock */}
+      <section className="dispatch-dock-section">
+        <div className="dispatch-dock-container">
+          <span className="stencil-tag stencil-hazard mb-3">DOCK PENERIMAAN TERBUKA</span>
+          <h2 className="dispatch-dock-title">
+            Siap mengirim kargo pertamamu hari ini?
+          </h2>
+          <p className="dispatch-dock-copy">
+            Bergabung dengan ribuan online seller dan pelaku usaha yang mengandalkan transparansi tarif serta keandalan armada KurBhan di seluruh Indonesia.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link
-              to="/booking"
-              className="inline-flex items-center justify-center px-8 py-4 text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 transition-colors shadow-sm"
-            >
-              Kirim Sekarang <ArrowRight className="ml-2 h-5 w-5" />
+          <div className="dispatch-dock-actions">
+            <Link to="/booking" className="hazard-btn text-lg py-3 px-8">
+              Buka Form Pengiriman Kargo
             </Link>
-            <Link
-              to="/tracking"
-              className="inline-flex items-center justify-center px-8 py-4 text-base font-medium rounded-md text-white border border-indigo-400 hover:bg-indigo-700 transition-colors shadow-sm"
-            >
-              Lacak Kiriman <MapPin className="ml-2 h-5 w-5" />
+            <Link to="/tracking" className="paper-btn text-lg py-3 px-8">
+              Cek Status Resi
             </Link>
           </div>
         </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">Mengapa Memilih KurBhan?</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">Kami memberikan layanan terbaik untuk memastikan paket Anda sampai dengan aman dan tepat waktu.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mb-6">
-                <Calculator className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-semibold text-slate-900 mb-3">Tarif Transparan</h3>
-              <p className="text-slate-600">Hitung ongkos kirim dengan mudah sebelum mengirim. Tidak ada biaya tersembunyi.</p>
-            </div>
-            <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mb-6">
-                <MapPin className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-semibold text-slate-900 mb-3">Tracking Real-Time</h3>
-              <p className="text-slate-600">Pantau perjalanan paket Anda kapan saja dan di mana saja dengan fitur live tracking kami.</p>
-            </div>
-            <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mb-6">
-                <Truck className="h-6 w-6" />
-              </div>
-              <h3 className="text-xl font-semibold text-slate-900 mb-3">Pengiriman Cepat</h3>
-              <p className="text-slate-600">Jaringan logistik yang luas memastikan pengiriman tepat waktu ke tujuan.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How it works Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-slate-900 mb-4">Cara Kerja</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">Tiga langkah mudah untuk mengirim paket dengan KurBhan.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            <div className="hidden md:block absolute top-12 left-1/6 right-1/6 h-0.5 bg-indigo-200" aria-hidden="true" />
-            
-            <div className="relative flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-indigo-600 text-white rounded-full flex items-center justify-center text-2xl font-bold z-10 mb-6 shadow-lg shadow-indigo-200">
-                1
-              </div>
-              <h3 className="text-xl font-semibold text-slate-900 mb-3">Isi Form Pengiriman</h3>
-              <p className="text-slate-600">Masukkan detail pengirim, penerima, dan informasi paket.</p>
-            </div>
-            
-            <div className="relative flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-indigo-600 text-white rounded-full flex items-center justify-center text-2xl font-bold z-10 mb-6 shadow-lg shadow-indigo-200">
-                2
-              </div>
-              <h3 className="text-xl font-semibold text-slate-900 mb-3">Bayar & Kirim</h3>
-              <p className="text-slate-600">Pilih metode pembayaran dan serahkan paket ke kurir kami.</p>
-            </div>
-            
-            <div className="relative flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-indigo-600 text-white rounded-full flex items-center justify-center text-2xl font-bold z-10 mb-6 shadow-lg shadow-indigo-200">
-                3
-              </div>
-              <h3 className="text-xl font-semibold text-slate-900 mb-3">Lacak Paket</h3>
-              <p className="text-slate-600">Gunakan nomor resi untuk melacak status pengiriman secara real-time.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="bg-indigo-900 text-white py-16 px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-3xl font-bold mb-6">Mulai Kirim Paket Sekarang</h2>
-        <p className="text-indigo-200 max-w-2xl mx-auto mb-10 text-lg">
-          Bergabunglah dengan ribuan pengguna lain yang telah mempercayakan pengiriman mereka kepada KurBhan.
-        </p>
-        <Link
-          to="/booking"
-          className="inline-flex items-center justify-center px-8 py-4 text-base font-medium rounded-md text-indigo-900 bg-white hover:bg-indigo-50 transition-colors shadow-lg"
-        >
-          Kirim Paket <ArrowRight className="ml-2 h-5 w-5" />
-        </Link>
       </section>
     </div>
   );
