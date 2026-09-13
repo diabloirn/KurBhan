@@ -1,46 +1,388 @@
 @import "tailwindcss";
 
-/* Custom base styles */
+/* ─────────────────────────────────────────────────────────────
+   KurBhan Design System — Warehouse & Freight Identity
+   Gudang Logistik, Peti Kemas, Palet & Kertas Label Ekspedisi
+   ───────────────────────────────────────────────────────────── */
+
 @layer base {
-  body {
-    @apply bg-white text-slate-900 antialiased;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  :root {
+    /* 1. Core Warehouse Palette */
+    --kb-wood: #3A2E22;            /* Kayu Peti Gelap (Dark Crate Wood) */
+    --kb-wood-light: #524334;      /* Serat Kayu Muda */
+    --kb-kraft: #C9A876;           /* Kardus Kraft / Corrugated */
+    --kb-kraft-dark: #A68654;      /* Lipatan Kardus Gelap */
+    --kb-paper: #EFE7D8;           /* Kertas Label Ekspedisi / Aged Waybill */
+    --kb-paper-light: #F8F4EC;     /* Kertas Cetak Resi Baru */
+    --kb-hazard: #F2B705;          /* Kuning Peringatan Gudang (Hazard Yellow) */
+    --kb-hazard-dark: #CCA004;     /* Kuning Garis Lantai Tua */
+    --kb-asphalt: #1C1C1C;         /* Hitam Aspal / Ban Forklift */
+    --kb-concrete: #7A8B87;        /* Abu Beton Gudang Kehijauan */
+    --kb-concrete-light: #DFE5E3;  /* Lantai Gudang Terang */
+    
+    /* Functional Status */
+    --kb-green: #2E7D32;           /* Segel Manifest Utuh / Sampai */
+    --kb-red: #C62828;             /* Stempel FRAGILE / Dibatalkan */
+    --kb-blue: #1E5B94;            /* Stempel Port / Kargo Laut */
+
+    /* Physical Borders & Solid Offsets (Bukan shadow blur SaaS) */
+    --crate-border: 2px solid var(--kb-asphalt);
+    --crate-border-thick: 3px solid var(--kb-asphalt);
+    --crate-shadow: 3px 3px 0px var(--kb-asphalt);
+    --crate-shadow-lg: 5px 5px 0px var(--kb-asphalt);
+    --crate-shadow-sm: 2px 2px 0px var(--kb-asphalt);
+
+    /* Fonts */
+    --font-heading: 'Barlow Condensed', -apple-system, sans-serif;
+    --font-body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
-  /* Smooth scrolling */
   html {
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+    background-color: var(--kb-paper);
+    color: var(--kb-asphalt);
+    overflow-x: hidden;
+    width: 100%;
   }
 
-  /* Better focus styles */
+  body {
+    font-family: var(--font-body);
+    background-color: var(--kb-paper);
+    color: var(--kb-asphalt);
+    line-height: 1.55;
+    letter-spacing: -0.01em;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    width: 100%;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  /* Accessible touch targets on handheld touch devices */
+  @media (pointer: coarse) {
+    button, 
+    a, 
+    input, 
+    select {
+      min-height: 44px;
+    }
+  }
+
+  ::selection {
+    background: var(--kb-hazard);
+    color: var(--kb-asphalt);
+  }
+
+  /* Industrial Headline Hierarchy */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    font-weight: 800;
+    line-height: 0.96;
+    letter-spacing: -0.015em;
+    color: var(--kb-wood);
+  }
+
+  h1 { font-size: clamp(2.5rem, 6vw, 4.25rem); font-weight: 900; }
+  h2 { font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 800; }
+  h3 { font-size: clamp(1.35rem, 2.5vw, 1.85rem); font-weight: 700; }
+
   *:focus-visible {
-    @apply outline-2 outline-offset-2 outline-indigo-600;
+    outline: 3px solid var(--kb-hazard);
+    outline-offset: 2px;
   }
 }
 
-/* Custom component utilities */
+/* ─────────────────────────────────────────────────────────────
+   Industrial Components & Warehouse Material Classes
+   ───────────────────────────────────────────────────────────── */
+
 @layer components {
-  .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed disabled:opacity-50;
+  /* Marka Lantai Garis Kuning-Hitam Hazard Gudang */
+  .hazard-stripes {
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--kb-hazard),
+      var(--kb-hazard) 12px,
+      var(--kb-asphalt) 12px,
+      var(--kb-asphalt) 24px
+    );
   }
 
-  .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600;
+  .hazard-stripes-slim {
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--kb-hazard),
+      var(--kb-hazard) 6px,
+      var(--kb-asphalt) 6px,
+      var(--kb-asphalt) 12px
+    );
   }
 
-  .input-field {
-    @apply block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 transition-colors focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500;
+  /* Stempel Tinta Stensil Muatan */
+  .stencil-tag {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 2px;
+    font-size: 12px;
+    line-height: 1;
   }
 
-  .input-label {
-    @apply block text-sm font-medium text-slate-700 mb-1.5;
+  .stencil-hazard {
+    background: var(--kb-hazard);
+    color: var(--kb-asphalt);
+    border: 1.5px solid var(--kb-asphalt);
   }
 
-  .input-error {
-    @apply mt-1 text-xs text-red-600;
+  .stencil-wood {
+    background: var(--kb-wood);
+    color: var(--kb-paper);
+    border: 1.5px solid var(--kb-asphalt);
   }
 
-  .card {
-    @apply rounded-xl border border-slate-200 bg-white p-6 shadow-sm;
+  .stencil-fragile {
+    background: rgba(198, 40, 40, 0.12);
+    color: var(--kb-red);
+    border: 1.5px dashed var(--kb-red);
+  }
+
+  /* Panel Kardus Kraft / Peti Kayu */
+  .kraft-panel {
+    background: var(--kb-paper-light);
+    border: var(--crate-border-thick);
+    box-shadow: var(--crate-shadow);
+    border-radius: 4px;
+    position: relative;
+  }
+
+  .wood-panel {
+    background: var(--kb-wood);
+    color: var(--kb-paper);
+    border: var(--crate-border-thick);
+    box-shadow: var(--crate-shadow);
+    border-radius: 4px;
+  }
+
+  .wood-panel h1, .wood-panel h2, .wood-panel h3, .wood-panel h4 {
+    color: #ffffff;
+  }
+
+  /* Surat Jalan / Waybill Card */
+  .waybill-card {
+    background: var(--kb-paper-light);
+    border: 2px solid var(--kb-asphalt);
+    box-shadow: 3px 3px 0px var(--kb-asphalt);
+    border-radius: 4px;
+    position: relative;
+  }
+
+  .waybill-perforation {
+    border-top: 2px dashed rgba(28, 28, 28, 0.25);
+  }
+
+  /* Tombol Aksi Hazard & Logistik */
+  .hazard-btn {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 16px;
+    background: var(--kb-hazard);
+    color: var(--kb-asphalt);
+    border: 2px solid var(--kb-asphalt);
+    box-shadow: var(--crate-shadow);
+    padding: 0.75rem 1.5rem;
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.1s, box-shadow 0.1s;
+    user-select: none;
+  }
+
+  .hazard-btn:hover {
+    transform: translate(-1.5px, -1.5px);
+    box-shadow: var(--crate-shadow-lg);
+  }
+
+  .hazard-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: var(--crate-shadow-sm);
+  }
+
+  .wood-btn {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 16px;
+    background: var(--kb-wood);
+    color: var(--kb-paper);
+    border: 2px solid var(--kb-asphalt);
+    box-shadow: var(--crate-shadow);
+    padding: 0.75rem 1.5rem;
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.1s, box-shadow 0.1s;
+    user-select: none;
+  }
+
+  .wood-btn:hover {
+    background: var(--kb-wood-light);
+    transform: translate(-1.5px, -1.5px);
+    box-shadow: var(--crate-shadow-lg);
+  }
+
+  .wood-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: var(--crate-shadow-sm);
+  }
+
+  .paper-btn {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 16px;
+    background: var(--kb-paper-light);
+    color: var(--kb-asphalt);
+    border: 2px solid var(--kb-asphalt);
+    box-shadow: var(--crate-shadow);
+    padding: 0.75rem 1.5rem;
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.1s, box-shadow 0.1s;
+    user-select: none;
+  }
+
+  .paper-btn:hover {
+    transform: translate(-1.5px, -1.5px);
+    box-shadow: var(--crate-shadow-lg);
+  }
+
+  .paper-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: var(--crate-shadow-sm);
+  }
+
+  /* Input Form Pergudangan */
+  .cargo-input,
+  .apple-input {
+    background: #ffffff;
+    border: 2px solid var(--kb-asphalt);
+    box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.08);
+    border-radius: 2px;
+    padding: 0.75rem 1rem;
+    font-size: 14px;
+    color: var(--kb-asphalt);
+    font-family: var(--font-body);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .cargo-input:focus,
+  .apple-input:focus {
+    border-color: var(--kb-asphalt);
+    outline: 2px solid var(--kb-hazard);
+    box-shadow: 3px 3px 0px var(--kb-asphalt);
+  }
+
+  /* Universal Mappings to Warehouse Material Identity */
+  .neo-card,
+  .glass-card,
+  .glass-neo-card {
+    background: var(--kb-paper-light);
+    border: var(--crate-border-thick);
+    box-shadow: var(--crate-shadow);
+    border-radius: 4px;
+  }
+
+  .neo-btn-blue,
+  .neo-btn {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 15px;
+    background: var(--kb-hazard);
+    color: var(--kb-asphalt);
+    border: 2px solid var(--kb-asphalt);
+    box-shadow: var(--crate-shadow);
+    padding: 0.75rem 1.5rem;
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+
+  .neo-btn-blue:hover,
+  .neo-btn:hover {
+    transform: translate(-1.5px, -1.5px);
+    box-shadow: var(--crate-shadow-lg);
+  }
+
+  .neo-btn-white {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 15px;
+    background: var(--kb-paper-light);
+    color: var(--kb-asphalt);
+    border: 2px solid var(--kb-asphalt);
+    box-shadow: var(--crate-shadow);
+    padding: 0.75rem 1.5rem;
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+
+  .neo-btn-white:hover {
+    transform: translate(-1.5px, -1.5px);
+    box-shadow: var(--crate-shadow-lg);
+  }
+
+  .badge-neo {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.25rem 0.65rem;
+    border-radius: 2px;
+    border: 1.5px solid var(--kb-asphalt);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
   }
 }
+
