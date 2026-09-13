@@ -11,7 +11,9 @@
 /* eslint-disable */
 // @ts-nocheck
 
-var jspb = require('google-protobuf');
+import * as jspb from 'google-protobuf';
+import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb.js';
+
 var goog = jspb;
 var global =
     (typeof globalThis !== 'undefined' && globalThis) ||
@@ -21,7 +23,9 @@ var global =
     (function () { return this; }).call(null) ||
     Function('return this')();
 
-var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
+var proto = global.proto || {};
+global.proto = proto;
+
 goog.object.extend(proto, google_protobuf_timestamp_pb);
 goog.exportSymbol('proto.kurbhan.v1.AuthResponse', null, global);
 goog.exportSymbol('proto.kurbhan.v1.CalculateRateRequest', null, global);
@@ -4711,5 +4715,27 @@ proto.kurbhan.v1.ShipmentResponse.prototype.hasCreatedAt = function() {
   return jspb.Message.getField(this, 4) != null;
 };
 
+var kurbhanv1 = proto.kurbhan.v1;
 
-goog.object.extend(exports, proto.kurbhan.v1);
+export const {
+  AuthResponse,
+  CalculateRateRequest,
+  CalculateRateResponse,
+  CancelShipmentRequest,
+  CreateShipmentRequest,
+  CreateShipmentResponse,
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  RegisterResponse,
+  ShipmentProto,
+  ShipmentResponse,
+  TrackShipmentRequest,
+  TrackShipmentResponse,
+  TrackingHistoryProto,
+  UpdateShipmentStatusRequest,
+  UpdateShipmentStatusResponse,
+  UserProto,
+} = kurbhanv1;
+
+export default kurbhanv1;
