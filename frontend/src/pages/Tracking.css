@@ -1,0 +1,365 @@
+/* Tracking Page Styles — Warehouse & Freight Identity */
+
+.tracking-root {
+  min-height: 100vh;
+  background-color: var(--kb-paper);
+}
+
+.tracking-hero {
+  background: 
+    radial-gradient(circle at 50% 0%, rgba(201, 168, 118, 0.25) 0%, transparent 60%),
+    linear-gradient(180deg, var(--kb-paper) 0%, #E8DFCE 100%);
+  border-bottom: 3px solid var(--kb-asphalt);
+  padding: 4rem 1.25rem 4.5rem 1.25rem;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .tracking-hero {
+    padding: 5rem 1.5rem 5.5rem 1.5rem;
+  }
+}
+
+.tracking-hero-container {
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tracking-search-form {
+  margin-top: 2rem;
+  max-width: 38rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tracking-search-card {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--kb-paper-light);
+  border: var(--crate-border-thick);
+  box-shadow: var(--crate-shadow);
+  border-radius: 4px;
+}
+
+@media (min-width: 640px) {
+  .tracking-search-card {
+    flex-direction: row;
+  }
+}
+
+.tracking-search-input-wrap {
+  position: relative;
+  flex: 1 1 0%;
+}
+
+.tracking-search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--kb-wood-light);
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.tracking-search-input {
+  width: 100%;
+  height: 3rem;
+  padding-left: 3rem;
+  font-size: 1.125rem;
+  font-family: monospace;
+  font-weight: 700;
+  border-radius: 2px;
+}
+
+.tracking-search-btn {
+  height: 3rem;
+  padding-left: 1.75rem;
+  padding-right: 1.75rem;
+  white-space: nowrap;
+}
+
+.tracking-content {
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 3.5rem 1.25rem 6rem 1.25rem;
+}
+
+.tracking-error-box {
+  border: 2px solid var(--kb-red);
+  background: rgba(198, 40, 40, 0.08);
+  padding: 1.25rem;
+  border-radius: 4px;
+  color: var(--kb-red);
+  margin-bottom: 2rem;
+}
+
+.tracking-loading-wrap {
+  padding: 5rem 0;
+  text-align: center;
+}
+
+.tracking-notfound-card {
+  padding: 3rem 2rem;
+  text-align: center;
+  background: var(--kb-paper-light);
+  border: var(--crate-border-thick);
+  box-shadow: var(--crate-shadow);
+  border-radius: 4px;
+}
+
+.tracking-notfound-icon {
+  width: 4rem;
+  height: 4rem;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--kb-wood-light);
+  margin-bottom: 1rem;
+}
+
+.tracking-notfound-title {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--kb-wood);
+  margin-bottom: 0.5rem;
+}
+
+.tracking-notfound-desc {
+  color: var(--kb-asphalt);
+  max-width: 28rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tracking-results-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Shipping Waybill Receipt Card */
+.tracking-info-card {
+  padding: 2rem;
+  background: var(--kb-paper-light);
+  border: var(--crate-border-thick);
+  box-shadow: var(--crate-shadow);
+  border-radius: 4px;
+  position: relative;
+}
+
+.tracking-info-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  border-bottom: 2px dashed rgba(28, 28, 28, 0.2);
+  padding-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .tracking-info-header {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.tracking-info-resi-label {
+  font-family: var(--font-heading);
+  color: var(--kb-wood-light);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+  margin-bottom: 0.2rem;
+}
+
+.tracking-info-resi-val {
+  font-family: monospace;
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: var(--kb-wood);
+}
+
+@media (min-width: 768px) {
+  .tracking-info-resi-val {
+    font-size: 2.25rem;
+  }
+}
+
+.tracking-info-parties {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.75rem;
+  margin-bottom: 1.75rem;
+}
+
+@media (min-width: 768px) {
+  .tracking-info-parties {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.tracking-party-label {
+  font-family: var(--font-heading);
+  color: var(--kb-wood-light);
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.tracking-party-name {
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--kb-wood);
+}
+
+.tracking-party-phone {
+  color: var(--kb-asphalt);
+  font-size: 13px;
+  font-family: monospace;
+}
+
+.tracking-party-address {
+  color: var(--kb-asphalt);
+  margin-top: 0.25rem;
+  font-size: 14px;
+}
+
+.tracking-info-specs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  border-top: 2px dashed rgba(28, 28, 28, 0.2);
+  padding-top: 1.5rem;
+}
+
+.tracking-spec-label {
+  font-family: var(--font-heading);
+  color: var(--kb-wood-light);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.tracking-spec-val {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--kb-wood);
+}
+
+/* Timeline Card */
+.tracking-timeline-card {
+  padding: 2rem;
+  background: var(--kb-paper-light);
+  border: var(--crate-border-thick);
+  box-shadow: var(--crate-shadow);
+  border-radius: 4px;
+}
+
+.tracking-timeline-title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--kb-wood);
+  margin-bottom: 0;
+}
+
+.tracking-timeline-list {
+  position: relative;
+  padding-left: 1.75rem;
+  border-left: 3px solid var(--kb-asphalt);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.tracking-timeline-item {
+  position: relative;
+}
+
+.tracking-timeline-node {
+  position: absolute;
+  left: -38px;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 2px;
+  border: 2px solid var(--kb-asphalt);
+  background: var(--kb-hazard);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 0px var(--kb-asphalt);
+}
+
+.tracking-timeline-body {
+  background: #ffffff;
+  border: 1.5px solid var(--kb-asphalt);
+  padding: 1.25rem;
+  border-radius: 2px;
+  box-shadow: 2px 2px 0px rgba(28, 28, 28, 0.1);
+  margin-top: -0.5rem;
+}
+
+.tracking-timeline-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(28, 28, 28, 0.08);
+  padding-bottom: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .tracking-timeline-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.tracking-timeline-status {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--kb-wood);
+}
+
+.tracking-timeline-time {
+  font-size: 0.8rem;
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--kb-wood-light);
+}
+
+.tracking-timeline-desc {
+  color: var(--kb-asphalt);
+  margin-bottom: 0.5rem;
+  font-size: 14px;
+}
+
+.tracking-timeline-loc {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--kb-wood-light);
+  font-size: 0.85rem;
+  font-weight: 600;
+}

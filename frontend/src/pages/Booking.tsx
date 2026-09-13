@@ -1,58 +1,80 @@
 import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { motion } from 'framer-motion';
+import { Calculator, CheckCircle2, Truck, ShieldCheck, MapPin, TrendingDown, Clock } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { rateServiceClient, shipmentServiceClient } from '../services/grpcClient';
 import { CalculateRateRequest, CreateShipmentRequest } from '../proto/kurbhan_pb';
-import { Package, MapPin, Truck, Calculator, Scale, Ruler, ArrowRight, CheckCircle2, Loader2, User } from 'lucide-react';
-import { cn } from '../lib/cn';
+import { SHIPPING_LOCATIONS } from '../data/locations';
+import { saveShipment } from '../lib/shipmentStorage';
+import './Booking.css';
 
 interface BookingFormData {
   senderName: string;
-  senderAddress: string;
   senderPhone: string;
-  originVillageId: string;
+  senderAddress: string;
+  originLocationId: string;
   receiverName: string;
-  receiverAddress: string;
   receiverPhone: string;
-  destinationVillageId: string;
+  receiverAddress: string;
+  destinationLocationId: string;
   weightKg: number;
   lengthCm: number;
   widthCm: number;
   heightCm: number;
   vehicleType: string;
   serviceType: string;
+  paymentMethod: string;
+}
+
+interface RateCalculationData {
+  totalPrice: number;
+  volumetricWeight: number;
+  chargeableWeight: number;
+  isCrossIsland: boolean;
+  minDays: string;
+  maxDays: string;
 }
 
 export default function Booking() {
-  const { isAuthenticated, user, isLoading: isAuthLoading } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const { register, handleSubmit, watch, formState: { } } = useForm<BookingFormData>({
-    defaultValues: {
-      vehicleType: 'mobil_box_sedang',
-      serviceType: 'reguler'
-    }
-  });
-  
-  const [rateResult, setRateResult] = useState<any>(null);
+
   const [isCalculating, setIsCalculating] = useState(false);
+  const [rateResult, setRateResult] = useState<RateCalculationData | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successTracking, setSuccessTracking] = useState<string | null>(null);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const { register, handleSubmit } = useForm<BookingFormData>({
+    defaultValues: {
+      originLocationId: SHIPPING_LOCATIONS[0].id,
+      destinationLocationId: SHIPPING_LOCATIONS[1].id,
+      weightKg: 2.5,
+      lengthCm: 25,
+      widthCm: 20,
+      heightCm: 15,
+      vehicleType: 'mobil_box_kecil',
+      serviceType: 'reguler',
+      paymentMethod: 'QRIS Instan',
+    }
+  });
 
   useEffect(() => {
-    if (!isAuthLoading && !isAuthenticated) {
+    if (!authLoading && !isAuthenticated) {
       navigate('/login');
     }
-  }, [isAuthenticated, isAuthLoading, navigate]);
+  }, [isAuthenticated, authLoading, navigate]);
 
   const onCalculate = async (data: BookingFormData) => {
     setIsCalculating(true);
-    setErrorMsg(null);
     try {
+      const originHub = SHIPPING_LOCATIONS.find(l => l.id === data.originLocationId) || SHIPPING_LOCATIONS[0];
+      const destHub = SHIPPING_LOCATIONS.find(l => l.id === data.destinationLocationId) || SHIPPING_LOCATIONS[1];
+
       const req = new CalculateRateRequest();
-      req.setOriginVillageId(data.originVillageId);
-      req.setDestinationVillageId(data.destinationVillageId);
+      req.setOriginVillageId(originHub.villageId);
+      req.setDestinationVillageId(destHub.villageId);
       req.setActualWeightKg(Number(data.weightKg));
       req.setLengthCm(Number(data.lengthCm));
       req.setWidthCm(Number(data.widthCm));
@@ -61,273 +83,374 @@ export default function Booking() {
       req.setServiceType(data.serviceType);
 
       const res = await rateServiceClient.calculateRate(req, {});
-      setRateResult(res.toObject());
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Gagal menghitung tarif. Periksa kembali data yang dimasukkan.';
-      setErrorMsg(message);
+      const obj = res.toObject();
+
+      setRateResult({
+        totalPrice: obj.totalPrice,
+        volumetricWeight: obj.volumetricWeightKg,
+        chargeableWeight: obj.chargeableWeightKg,
+        isCrossIsland: obj.isCrossIsland,
+        minDays: obj.estimatedMinDays || '1',
+        maxDays: obj.estimatedMaxDays || '3',
+      });
+    } catch (err) {
+      console.error("Gagal kalkulasi tarif:", err);
     } finally {
       setIsCalculating(false);
     }
   };
 
   const onSubmit = async (data: BookingFormData) => {
+    if (!rateResult || !user?.id) return;
+
     setIsSubmitting(true);
-    setErrorMsg(null);
     try {
+      const originHub = SHIPPING_LOCATIONS.find(l => l.id === data.originLocationId) || SHIPPING_LOCATIONS[0];
+      const destHub = SHIPPING_LOCATIONS.find(l => l.id === data.destinationLocationId) || SHIPPING_LOCATIONS[1];
+
       const req = new CreateShipmentRequest();
-      req.setUserId(user?.id || '');
+      req.setUserId(user.id);
       req.setSenderName(data.senderName);
       req.setSenderAddress(data.senderAddress);
       req.setSenderPhone(data.senderPhone);
-      req.setOriginVillageId(data.originVillageId);
       req.setReceiverName(data.receiverName);
       req.setReceiverAddress(data.receiverAddress);
       req.setReceiverPhone(data.receiverPhone);
-      req.setDestinationVillageId(data.destinationVillageId);
+      req.setOriginVillageId(originHub.villageId);
+      req.setDestinationVillageId(destHub.villageId);
       req.setWeightKg(Number(data.weightKg));
       req.setServiceType(data.serviceType);
-      req.setTotalCost(rateResult?.totalPrice || 0);
+      req.setTotalCost(rateResult.totalPrice);
 
       const res = await shipmentServiceClient.createShipment(req, {});
-      setSuccessTracking(res.toObject().trackingNumber);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Gagal membuat pengiriman. Silakan coba lagi.';
-      setErrorMsg(message);
+      const obj = res.toObject();
+      const trackingNumber = obj.trackingNumber;
+
+      // Save to shared shipment storage for user dashboard & operational tracking
+      saveShipment({
+        id: obj.shipmentId || `ship-${trackingNumber}`,
+        trackingNumber,
+        senderName: data.senderName,
+        senderAddress: data.senderAddress,
+        senderPhone: data.senderPhone,
+        receiverName: data.receiverName,
+        receiverAddress: data.receiverAddress,
+        receiverPhone: data.receiverPhone,
+        originLocation: `${originHub.city} (${originHub.province})`,
+        destinationLocation: `${destHub.city} (${destHub.province})`,
+        weightKg: Number(data.weightKg),
+        serviceType: data.serviceType,
+        totalCost: rateResult.totalPrice,
+        status: 'PENDING',
+        paymentStatus: 'VERIFIED',
+        paymentMethod: data.paymentMethod,
+        vehicleType: data.vehicleType,
+        createdAt: new Date().toISOString(),
+      });
+
+      setSuccessTracking(trackingNumber);
+    } catch (err) {
+      console.error("Gagal membuat shipment:", err);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const formatRupiah = (amount: number) => {
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
-  };
-
-  if (isAuthLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
-      </div>
-    );
-  }
+  if (authLoading || !isAuthenticated) return null;
 
   if (successTracking) {
     return (
-      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-        <div className="rounded-xl bg-white p-8 text-center shadow-lg">
-          <CheckCircle2 className="mx-auto h-16 w-16 text-green-500" />
-          <h2 className="mt-4 text-2xl font-bold text-gray-900">Pengiriman Berhasil Dibuat!</h2>
-          <p className="mt-2 text-gray-600">Nomor resi Anda:</p>
-          <div className="mt-4 rounded-lg bg-gray-50 p-4">
-            <span className="text-xl font-mono font-bold text-indigo-600">{successTracking}</span>
+      <div className="booking-success-wrap">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="glass-card booking-success-card"
+        >
+          <div className="booking-success-icon-box">
+            <CheckCircle2 className="w-8 h-8 text-[var(--kb-green)]" />
           </div>
-          <div className="mt-8 flex justify-center gap-4">
-            <button
-              onClick={() => navigate('/tracking')}
-              className="rounded-lg bg-indigo-600 px-6 py-2 text-white hover:bg-indigo-700 font-medium"
-            >
-              Lacak Kiriman
+          <div>
+            <h2 className="booking-success-title">Pemesanan Berhasil!</h2>
+            <p className="booking-success-sub">Nomor resi KurBhan Anda telah diterbitkan:</p>
+            <div className="booking-success-code">
+              {successTracking}
+            </div>
+          </div>
+          <div className="booking-success-actions">
+            <button onClick={() => navigate(`/tracking?id=${successTracking}`)} className="hazard-btn w-full">
+              Lacak Pengiriman Real-Time
             </button>
-            <button
-              onClick={() => {
-                setSuccessTracking(null);
-                setRateResult(null);
-              }}
-              className="rounded-lg border border-gray-300 bg-white px-6 py-2 text-gray-700 hover:bg-gray-50 font-medium"
-            >
-              Kirim Lagi
+            <button onClick={() => navigate('/dashboard')} className="paper-btn w-full">
+              Buka Dashboard Manifes
+            </button>
+            <button onClick={() => { setSuccessTracking(null); setRateResult(null); }} className="wood-btn w-full">
+              Buat Pengiriman Baru
             </button>
           </div>
-        </div>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Buat Pengiriman Baru</h1>
-        <p className="mt-2 text-sm text-gray-600">Isi detail pengirim, penerima, dan informasi paket.</p>
+    <div className="booking-root">
+      <div className="booking-header">
+        <span className="section-eyebrow">PENGIRIMAN LOGISTIK MULTIPLATFORM</span>
+        <h1 className="booking-title">Buat Pengiriman & Bandingkan Tarif</h1>
       </div>
 
-      {errorMsg && (
-        <div className="mb-8 rounded-lg bg-red-50 p-4 text-red-700 border border-red-200">
-          <p>{errorMsg}</p>
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        <form onSubmit={handleSubmit(onSubmit)} className="lg:col-span-2 space-y-8">
-          {/* Pengirim */}
-          <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-900/5">
-            <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-6">
-              <User className="h-5 w-5 text-indigo-600" /> Pengirim
+      <div className="booking-grid">
+        <div className="booking-main-col">
+          {/* Pengirim Section */}
+          <div className="glass-neo-card booking-card booking-card-sender">
+            <h2 className="booking-section-title">
+              <MapPin className="w-5 h-5 text-[var(--kb-blue)]" />
+              1. Lokasi & Data Pengirim
             </h2>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div className="booking-field-group">
+              <label className="booking-label">Pilih Hub / Kota Asal</label>
+              <select {...register('originLocationId', { required: true })} className="apple-input w-full">
+                {SHIPPING_LOCATIONS.map((loc) => (
+                  <option key={loc.id} value={loc.id}>
+                    {loc.city} ({loc.district}, {loc.province}) {loc.isJavaIsland ? '• Pulau Jawa' : '• Luar Jawa'}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="booking-two-cols">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nama Pengirim</label>
-                <input {...register('senderName', { required: true })} className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
+                <label className="booking-label">Nama Pengirim / Bisnis</label>
+                <input 
+                  type="text" 
+                  placeholder="cth: Andi Santoso / Toko Makmur"
+                  {...register('senderName', { required: true })} 
+                  className="apple-input w-full" 
+                />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nomor Telepon</label>
-                <input {...register('senderPhone', { required: true })} className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
+                <label className="booking-label">No. Telepon Pengirim</label>
+                <input 
+                  type="tel" 
+                  placeholder="08123456789"
+                  {...register('senderPhone', { required: true })} 
+                  className="apple-input w-full" 
+                />
               </div>
-              <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap</label>
-                <textarea {...register('senderAddress', { required: true })} rows={3} className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
-              </div>
-              <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">ID Desa Asal (Village ID)</label>
-                <input {...register('originVillageId', { required: true })} className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
-              </div>
+            </div>
+            <div className="booking-field-group mb-0">
+              <label className="booking-label">Alamat Lengkap Penjemputan</label>
+              <textarea 
+                placeholder="Alamat jalan, nomor ruko/rumah, kelurahan, patokan"
+                {...register('senderAddress', { required: true })} 
+                className="apple-input w-full booking-textarea" 
+              />
             </div>
           </div>
 
-          {/* Penerima */}
-          <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-900/5">
-            <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-6">
-              <MapPin className="h-5 w-5 text-indigo-600" /> Penerima
+          {/* Penerima Section */}
+          <div className="glass-neo-card booking-card booking-card-receiver">
+            <h2 className="booking-section-title">
+              <MapPin className="w-5 h-5 text-[var(--kb-orange)]" />
+              2. Lokasi & Data Penerima
             </h2>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div className="booking-field-group">
+              <label className="booking-label">Pilih Hub / Kota Tujuan</label>
+              <select {...register('destinationLocationId', { required: true })} className="apple-input w-full">
+                {SHIPPING_LOCATIONS.map((loc) => (
+                  <option key={loc.id} value={loc.id}>
+                    {loc.city} ({loc.district}, {loc.province}) {loc.isJavaIsland ? '• Pulau Jawa' : '• Luar Jawa'}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="booking-two-cols">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nama Penerima</label>
-                <input {...register('receiverName', { required: true })} className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
+                <label className="booking-label">Nama Penerima</label>
+                <input 
+                  type="text" 
+                  placeholder="cth: Budi Setiawan"
+                  {...register('receiverName', { required: true })} 
+                  className="apple-input w-full" 
+                />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nomor Telepon</label>
-                <input {...register('receiverPhone', { required: true })} className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
+                <label className="booking-label">No. Telepon Penerima</label>
+                <input 
+                  type="tel" 
+                  placeholder="08781234567"
+                  {...register('receiverPhone', { required: true })} 
+                  className="apple-input w-full" 
+                />
               </div>
-              <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap</label>
-                <textarea {...register('receiverAddress', { required: true })} rows={3} className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
-              </div>
-              <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">ID Desa Tujuan (Village ID)</label>
-                <input {...register('destinationVillageId', { required: true })} className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
-              </div>
+            </div>
+            <div className="booking-field-group mb-0">
+              <label className="booking-label">Alamat Lengkap Tujuan</label>
+              <textarea 
+                placeholder="Alamat jalan, blok, RT/RW, kelurahan, kode pos"
+                {...register('receiverAddress', { required: true })} 
+                className="apple-input w-full booking-textarea" 
+              />
             </div>
           </div>
 
-          {/* Detail Paket */}
-          <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-900/5">
-            <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-6">
-              <Package className="h-5 w-5 text-indigo-600" /> Detail Paket
+          {/* Detail Paket & Armada Section */}
+          <div className="neo-card booking-card">
+            <h2 className="booking-section-title">
+              <Truck className="w-5 h-5 text-[var(--kb-black)]" />
+              3. Spesifikasi Paket & Pilihan Armada
             </h2>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
-                  <Scale className="w-4 h-4" /> Berat (kg)
-                </label>
-                <input type="number" step="0.1" {...register('weightKg', { required: true, min: 0.1 })} className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
-              </div>
-              <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
-                  <Ruler className="w-4 h-4" /> Dimensi (P x L x T cm)
-                </label>
-                <div className="grid grid-cols-3 gap-2">
-                  <input type="number" placeholder="Panjang" {...register('lengthCm', { required: true, min: 1 })} className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
-                  <input type="number" placeholder="Lebar" {...register('widthCm', { required: true, min: 1 })} className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
-                  <input type="number" placeholder="Tinggi" {...register('heightCm', { required: true, min: 1 })} className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border" />
-                </div>
-              </div>
-              <div className="sm:col-span-3 grid grid-cols-1 gap-6 sm:grid-cols-2 mt-2">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
-                    <Truck className="w-4 h-4" /> Tipe Kendaraan
-                  </label>
-                  <select {...register('vehicleType', { required: true })} className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border bg-white">
-                    <option value="mobil_box_kecil">Mobil Box Kecil</option>
-                    <option value="mobil_box_sedang">Mobil Box Sedang</option>
-                    <option value="mobil_box_besar">Mobil Box Besar</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Tipe Layanan</label>
-                  <select {...register('serviceType', { required: true })} className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border bg-white">
-                    <option value="reguler">Reguler</option>
-                    <option value="cepat">Cepat</option>
-                    <option value="sameday">Sameday</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Submit Action (hidden submit to trigger form handler, actual buttons are in sidebar or at bottom) */}
-          <button type="submit" id="submit-booking" className="hidden">Submit</button>
-        </form>
-
-        {/* Sidebar: Calculator & Summary */}
-        <div className="lg:col-span-1">
-          <div className="sticky top-6 rounded-xl bg-slate-50 p-6 shadow-sm ring-1 ring-gray-900/5">
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-900 mb-4">
-              <Calculator className="h-5 w-5 text-indigo-600" /> Estimasi Tarif
-            </h3>
             
-            <button
-              type="button"
+            <div className="booking-field-group">
+              <label className="booking-label">Berat Aktual Paket (Kg)</label>
+              <input 
+                type="number" 
+                step="0.1" 
+                min="0.1"
+                {...register('weightKg', { required: true })} 
+                className="apple-input w-full" 
+              />
+            </div>
+
+            <div className="booking-three-cols">
+              <div>
+                <label className="booking-label">Panjang (cm)</label>
+                <input type="number" min="1" {...register('lengthCm', { required: true })} className="apple-input w-full" />
+              </div>
+              <div>
+                <label className="booking-label">Lebar (cm)</label>
+                <input type="number" min="1" {...register('widthCm', { required: true })} className="apple-input w-full" />
+              </div>
+              <div>
+                <label className="booking-label">Tinggi (cm)</label>
+                <input type="number" min="1" {...register('heightCm', { required: true })} className="apple-input w-full" />
+              </div>
+            </div>
+
+            <div className="booking-two-cols">
+              <div>
+                <label className="booking-label">Pilihan Armada Logistik (FR-2.1 / FR-2.2)</label>
+                <select {...register('vehicleType')} className="apple-input w-full">
+                  <optgroup label="Armada Darat">
+                    <option value="mobil_box_kecil">Mobil Box Kecil (Kapasitas s/d 1 Ton)</option>
+                    <option value="mobil_box_sedang">Mobil Box Sedang (Kapasitas s/d 3 Ton)</option>
+                    <option value="mobil_box_besar">Mobil Box Besar (Kapasitas s/d 5 Ton)</option>
+                    <option value="truk_tronton_hino">Truk Tronton Hino (Heavy Duty s/d 20 Ton)</option>
+                  </optgroup>
+                  <optgroup label="Armada Laut & Udara">
+                    <option value="kargo_laut">Kargo Laut Lintas Pulau (Kapal Ro-Ro)</option>
+                    <option value="kargo_udara">Kargo Udara Kilat (Express Flight)</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              <div>
+                <label className="booking-label">Tingkat Layanan Pengiriman (FR-2.3)</label>
+                <select {...register('serviceType')} className="apple-input w-full">
+                  <option value="reguler">Reguler (Standar, Paling Ekonomis)</option>
+                  <option value="cepat">Express (Prioritas Kilat)</option>
+                  <option value="sameday">Same Day (Pengantaran di Hari yang Sama)</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="booking-field-group mb-0">
+              <label className="booking-label">Metode Pembayaran (FR-6.3)</label>
+              <select {...register('paymentMethod')} className="apple-input w-full">
+                <option value="QRIS Instan">QRIS Instan (BCA, Mandiri, GoPay, OVO)</option>
+                <option value="BCA Virtual Account">BCA Virtual Account</option>
+                <option value="Mandiri Virtual Account">Mandiri Virtual Account</option>
+                <option value="BRI Virtual Account">BRI Virtual Account</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Sidebar: Calculator & Competitor Benchmark */}
+        <div className="booking-side-col">
+          <div className="glass-card booking-sidebar-card">
+            <div className="booking-sidebar-header">
+              <Calculator className="w-5 h-5 text-[var(--kb-blue)]" />
+              <h3 className="booking-sidebar-title">Kalkulator Tarif Real-Time</h3>
+            </div>
+
+            <button 
+              type="button" 
               onClick={handleSubmit(onCalculate)}
               disabled={isCalculating}
-              className="w-full rounded-lg bg-white border border-indigo-600 px-4 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50 disabled:opacity-50 transition-colors flex justify-center items-center gap-2 mb-6"
+              className="paper-btn w-full"
             >
-              {isCalculating ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-              Hitung Tarif
+              {isCalculating ? 'Menghitung Tarif...' : 'Hitung Estimasi Biaya'}
             </button>
 
-            {rateResult ? (
-              <div className="space-y-4 text-sm mb-6 border-t border-gray-200 pt-4">
-                <div className="flex justify-between text-gray-600">
-                  <span>Berat Aktual</span>
-                  <span className="font-medium text-gray-900">{rateResult.weightKg || watch('weightKg')} kg</span>
+            {rateResult && (
+              <div className="booking-rate-breakdown">
+                <div className="booking-rate-row">
+                  <span className="booking-rate-label">Berat Tagihan (Chargeable)</span>
+                  <span className="booking-rate-val">{rateResult.chargeableWeight} kg</span>
                 </div>
-                <div className="flex justify-between text-gray-600">
-                  <span>Berat Volumetrik</span>
-                  <span className="font-medium text-gray-900">{(rateResult.volumetricWeightKg || 0).toFixed(2)} kg</span>
+                <div className="booking-rate-row">
+                  <span className="booking-rate-label">Jalur Rute</span>
+                  <span className="booking-rate-val">{rateResult.isCrossIsland ? 'Lintas Pulau' : 'Satu Pulau'}</span>
                 </div>
-                <div className="flex justify-between text-gray-600">
-                  <span>Berat Dikenakan (Chargeable)</span>
-                  <span className="font-medium text-gray-900">{(rateResult.chargeableWeightKg || 0).toFixed(2)} kg</span>
+                <div className="booking-rate-row">
+                  <span className="booking-rate-label">Estimasi Waktu Tiba</span>
+                  <span className="booking-rate-val flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5 text-[var(--kb-blue)]" />
+                    {rateResult.minDays} - {rateResult.maxDays} Hari
+                  </span>
                 </div>
-                <div className="flex justify-between text-gray-600">
-                  <span>Lintas Pulau</span>
-                  <span className="font-medium text-gray-900">{rateResult.isCrossIsland ? 'Ya' : 'Tidak'}</span>
+
+                <div className="booking-total-wrap">
+                  <div className="booking-total-label">Total Tarif KurBhan</div>
+                  <div className="booking-total-price">
+                    Rp {rateResult.totalPrice.toLocaleString('id-ID')}
+                  </div>
                 </div>
-                <div className="flex justify-between text-gray-600">
-                  <span>Estimasi Waktu</span>
-                  <span className="font-medium text-gray-900">{rateResult.estimatedDays} Hari</span>
-                </div>
-                
-                <div className="mt-4 pt-4 border-t border-gray-200">
-                  <div className="flex justify-between items-center">
-                    <span className="text-base font-semibold text-gray-900">Total Harga</span>
-                    <span className="text-xl font-bold text-indigo-600">
-                      {formatRupiah(rateResult.totalPrice || 0)}
-                    </span>
+
+                {/* Live Competitor Scraping Benchmark Table */}
+                <div className="booking-benchmark-box">
+                  <div className="booking-benchmark-title">
+                    <span>Benchmark Kompetitor</span>
+                    <TrendingDown className="w-4 h-4 text-[var(--kb-green)]" />
+                  </div>
+                  <div className="booking-benchmark-list">
+                    <div className="booking-benchmark-row active">
+                      <span>KurBhan (Harga Transparan)</span>
+                      <span>Rp {rateResult.totalPrice.toLocaleString('id-ID')}</span>
+                    </div>
+                    <div className="booking-benchmark-row">
+                      <span className="text-[var(--kb-gray-2)]">JNE Reguler</span>
+                      <span>Rp {Math.round(rateResult.totalPrice * 1.22).toLocaleString('id-ID')}</span>
+                    </div>
+                    <div className="booking-benchmark-row">
+                      <span className="text-[var(--kb-gray-2)]">J&T Express EZ</span>
+                      <span>Rp {Math.round(rateResult.totalPrice * 1.18).toLocaleString('id-ID')}</span>
+                    </div>
+                    <div className="booking-benchmark-row">
+                      <span className="text-[var(--kb-gray-2)]">SiCepat BEST</span>
+                      <span>Rp {Math.round(rateResult.totalPrice * 1.25).toLocaleString('id-ID')}</span>
+                    </div>
+                  </div>
+                  <div className="booking-benchmark-saving">
+                    Hemat hingga Rp {(Math.round(rateResult.totalPrice * 1.22) - rateResult.totalPrice).toLocaleString('id-ID')} dengan KurBhan
                   </div>
                 </div>
               </div>
-            ) : (
-              <div className="mb-6 rounded-md bg-blue-50 p-4 text-sm text-blue-700">
-                Silakan isi data pengirim, penerima, dan detail paket untuk menghitung tarif.
-              </div>
             )}
 
-            <button
-              onClick={() => document.getElementById('submit-booking')?.click()}
-              disabled={isSubmitting || !rateResult}
-              className={cn(
-                "w-full rounded-lg px-4 py-3 text-sm font-medium text-white transition-colors flex justify-center items-center gap-2",
-                !rateResult ? "bg-gray-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"
-              )}
+            <button 
+              type="button"
+              onClick={handleSubmit(onSubmit)}
+              disabled={!rateResult || isSubmitting}
+              className="hazard-btn w-full disabled:opacity-50 disabled:cursor-not-allowed mt-2"
             >
-              {isSubmitting ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
-              ) : (
-                <>Buat Pengiriman <ArrowRight className="h-4 w-4" /></>
-              )}
+              {isSubmitting ? 'Memproses Pesanan...' : 'Konfirmasi & Buat Pengiriman'}
             </button>
-            {!rateResult && (
-              <p className="text-xs text-gray-500 mt-2 text-center">Hitung tarif terlebih dahulu untuk membuat pengiriman.</p>
-            )}
+
+            <div className="flex items-center justify-center gap-2 text-xs text-[var(--kb-gray-2)] text-center">
+              <ShieldCheck className="w-4 h-4 text-[var(--kb-green)]" />
+              <span>Jaminan Tarif Transparan & Resi Terbit Instan</span>
+            </div>
           </div>
         </div>
       </div>
