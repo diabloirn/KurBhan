@@ -1,0 +1,335 @@
+/* ==========================================================================
+   KurBhan - Admin Operational Control Room Styles
+   Industrial Warehouse / Freight Manifest Aesthetic
+   ========================================================================== */
+
+.admin-root {
+  min-height: 100vh;
+  background: var(--kb-paper);
+  background-image: radial-gradient(var(--kb-kraft-dark) 1px, transparent 0);
+  background-size: 24px 24px;
+  padding: 2.5rem 1rem 4rem;
+}
+
+.admin-container {
+  max-width: 82rem;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Header */
+.admin-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--kb-wood);
+}
+
+@media (min-width: 768px) {
+  .admin-header {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}
+
+.admin-title-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.admin-headline {
+  font-family: var(--font-display);
+  font-size: clamp(1.85rem, 4vw, 2.5rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--kb-wood);
+  margin: 0;
+  line-height: 1.05;
+}
+
+.admin-sub {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--kb-wood-light);
+  max-width: 42rem;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--kb-wood);
+  color: var(--kb-hazard);
+  border: 1.5px solid var(--kb-asphalt);
+  box-shadow: 2px 2px 0px var(--kb-wood);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Tabs Navigation */
+.admin-tabs {
+  display: flex;
+  overflow-x: auto;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.admin-tab-btn {
+  padding: 0.65rem 1.15rem;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 2px solid var(--kb-wood);
+  background: var(--kb-kraft-light);
+  color: var(--kb-wood);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 2px 2px 0px var(--kb-wood);
+}
+
+.admin-tab-btn:hover {
+  background: var(--kb-hazard);
+  color: var(--kb-wood);
+}
+
+.admin-tab-btn.active {
+  background: var(--kb-wood);
+  color: var(--kb-hazard);
+  box-shadow: 3px 3px 0px var(--kb-asphalt);
+}
+
+/* Status Update Panel */
+.admin-update-panel {
+  background: var(--kb-kraft-light);
+  border: 2px solid var(--kb-wood);
+  box-shadow: var(--crate-shadow);
+  padding: 1.5rem;
+  position: relative;
+}
+
+.admin-update-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--kb-hazard) 0,
+    var(--kb-hazard) 12px,
+    var(--kb-asphalt) 12px,
+    var(--kb-asphalt) 24px
+  );
+}
+
+.admin-panel-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--kb-wood);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .admin-form-grid {
+    grid-template-columns: repeat(4, 1fr);
+    align-items: end;
+  }
+}
+
+.admin-form-group label {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--kb-wood);
+  margin-bottom: 0.35rem;
+}
+
+/* Tab Content Cards */
+.admin-card {
+  background: var(--kb-paper);
+  border: 2px solid var(--kb-wood);
+  box-shadow: var(--crate-shadow);
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .admin-card {
+    padding: 2rem;
+  }
+}
+
+.admin-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1.5px solid var(--kb-kraft-dark);
+}
+
+@media (min-width: 640px) {
+  .admin-card-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.admin-card-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--kb-wood);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Tables */
+.admin-table-wrap {
+  overflow-x: auto;
+  border: 2px solid var(--kb-wood);
+  box-shadow: 2px 2px 0px var(--kb-wood);
+  background: #ffffff;
+  -webkit-overflow-scrolling: touch;
+}
+
+.admin-table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+}
+
+.admin-table th {
+  background: var(--kb-wood);
+  color: var(--kb-paper);
+  padding: 0.75rem 1rem;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.admin-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--kb-kraft);
+  border-right: 1px solid var(--kb-paper-dark);
+  vertical-align: middle;
+  color: var(--kb-wood);
+}
+
+.admin-table tr:nth-child(even) td {
+  background: #fbf9f4;
+}
+
+.admin-table tr:hover td {
+  background: var(--kb-kraft-light);
+}
+
+/* Driver & Fleet Grid */
+.admin-fleet-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .admin-fleet-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .admin-fleet-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.admin-fleet-card {
+  background: var(--kb-kraft-light);
+  border: 2px solid var(--kb-wood);
+  box-shadow: var(--crate-shadow);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.admin-fleet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1.5px solid var(--kb-kraft-dark);
+}
+
+.admin-fleet-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--kb-wood);
+}
+
+/* Benchmark Comparison */
+.admin-scraping-sync-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--kb-wood);
+  background: var(--kb-hazard);
+  padding: 0.35rem 0.75rem;
+  border: 1.5px solid var(--kb-wood);
+  box-shadow: 1px 1px 0px var(--kb-wood);
+}

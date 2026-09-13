@@ -1,0 +1,318 @@
+/* ==========================================================================
+   KurBhan - Dashboard Page Styles
+   Industrial Warehouse / Freight Manifest Aesthetic
+   ========================================================================== */
+
+.dashboard-root {
+  min-height: 100vh;
+  background: var(--kb-paper);
+  background-image: radial-gradient(var(--kb-kraft-dark) 1px, transparent 0);
+  background-size: 24px 24px;
+  padding: 3rem 1rem 5rem;
+}
+
+.dashboard-container {
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+}
+
+.dashboard-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--kb-wood);
+}
+
+.dashboard-welcome {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--kb-wood);
+  margin: 0;
+  line-height: 1.1;
+}
+
+.dashboard-sub {
+  font-family: var(--font-body);
+  margin-top: 0.25rem;
+  font-size: 1rem;
+  color: var(--kb-wood-light);
+  max-width: 44rem;
+  line-height: 1.4;
+}
+
+/* Actions */
+.dashboard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.dashboard-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  text-decoration: none;
+}
+
+/* Stats */
+.dashboard-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .dashboard-stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.dashboard-stat-card {
+  background: var(--kb-kraft-light);
+  border: 2px solid var(--kb-wood);
+  box-shadow: var(--crate-shadow);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-stat-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--kb-wood);
+  margin-bottom: 0.75rem;
+}
+
+.dashboard-stat-val {
+  font-family: var(--font-display);
+  font-size: 2.75rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--kb-wood);
+  margin-bottom: 0.25rem;
+}
+
+.dashboard-stat-label {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--kb-wood-light);
+  font-weight: 700;
+}
+
+/* Shipments Section */
+.dashboard-history-card {
+  background: var(--kb-paper);
+  border: 2px solid var(--kb-wood);
+  box-shadow: var(--crate-shadow);
+  padding: 1.75rem;
+}
+
+@media (min-width: 768px) {
+  .dashboard-history-card {
+    padding: 2.25rem;
+  }
+}
+
+.dashboard-history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1.5px solid var(--kb-kraft-dark);
+}
+
+.dashboard-history-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--kb-wood);
+  margin: 0;
+}
+
+.dashboard-shipments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.dashboard-shipment-item {
+  background: var(--kb-kraft-light);
+  border: 2px solid var(--kb-wood);
+  padding: 1.25rem;
+  box-shadow: 2px 2px 0px var(--kb-wood);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.dashboard-shipment-item:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0px var(--kb-wood);
+}
+
+.dashboard-item-top {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--kb-kraft-dark);
+  padding-bottom: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .dashboard-item-top {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.dashboard-item-resi {
+  font-family: monospace;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--kb-wood);
+}
+
+.dashboard-item-route {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--kb-wood);
+}
+
+.dashboard-item-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  font-size: 0.85rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .dashboard-item-details {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.dashboard-detail-label {
+  font-family: var(--font-display);
+  color: var(--kb-wood-light);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.dashboard-detail-val {
+  font-family: var(--font-body);
+  font-weight: 700;
+  color: var(--kb-wood);
+  margin-top: 0.2rem;
+}
+
+.dashboard-item-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* Empty State */
+.dashboard-empty-wrap {
+  text-align: center;
+  padding: 3rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dashboard-empty-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  color: var(--kb-wood-light);
+  margin-bottom: 1rem;
+}
+
+.dashboard-empty-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--kb-wood);
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-empty-desc {
+  font-family: var(--font-body);
+  color: var(--kb-wood-light);
+  margin-bottom: 1.5rem;
+  max-width: 28rem;
+  font-size: 0.9rem;
+}
+
+/* Security & MFA Card */
+.dashboard-security-card {
+  background: var(--kb-kraft-light);
+  border: 2px solid var(--kb-wood);
+  box-shadow: var(--crate-shadow);
+  padding: 1.75rem;
+}
+
+.dashboard-security-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.dashboard-security-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--kb-wood);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.dashboard-mfa-toggles {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .dashboard-mfa-toggles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.dashboard-mfa-box {
+  background: var(--kb-paper);
+  border: 1.5px solid var(--kb-wood);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 1px 1px 0px var(--kb-wood);
+}
