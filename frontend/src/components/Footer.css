@@ -1,0 +1,174 @@
+/* ─────────────────────────────────────────────────────────────
+   Footer Component Styles — Warehouse & Freight Identity
+   ───────────────────────────────────────────────────────────── */
+
+.footer-root {
+  background: var(--kb-asphalt);
+  color: var(--kb-paper);
+  border-top: 3px solid var(--kb-hazard);
+}
+
+.footer-dock-stripe {
+  height: 4px;
+  width: 100%;
+}
+
+.footer-container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 80rem;
+  padding: 4rem 1.25rem 2rem 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .footer-container {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  margin-bottom: 3.5rem;
+}
+
+@media (min-width: 640px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: 1.4fr 0.9fr 0.9fr 0.8fr;
+  }
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 1rem;
+  text-decoration: none;
+}
+
+.footer-logo-crate-icon {
+  display: flex;
+  height: 2rem;
+  width: 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  background: var(--kb-hazard);
+  color: var(--kb-asphalt);
+  border: 1.5px solid var(--kb-asphalt);
+}
+
+.footer-logo-title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+}
+
+.footer-brand-desc {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--kb-paper);
+  opacity: 0.75;
+  max-width: 280px;
+  margin-bottom: 1.25rem;
+}
+
+.footer-dock-badge {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--kb-hazard);
+  border: 1px solid rgba(242, 183, 5, 0.4);
+  padding: 0.25rem 0.6rem;
+  width: fit-content;
+  border-radius: 2px;
+}
+
+.footer-col-title {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--kb-hazard);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 1rem;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.footer-link {
+  font-size: 14px;
+  color: var(--kb-paper);
+  opacity: 0.8;
+  text-decoration: none;
+  transition: opacity 0.15s, color 0.15s;
+}
+
+.footer-link:hover {
+  opacity: 1;
+  color: var(--kb-hazard);
+}
+
+.footer-bottom {
+  border-top: 1.5px solid rgba(239, 231, 216, 0.15);
+  padding-top: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .footer-bottom {
+    flex-direction: row;
+  }
+}
+
+.footer-copy {
+  font-size: 12px;
+  color: var(--kb-paper);
+  opacity: 0.6;
+  margin: 0;
+}
+
+.footer-legal-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer-legal-link {
+  font-size: 12px;
+  color: var(--kb-paper);
+  opacity: 0.6;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.footer-legal-link:hover {
+  opacity: 0.9;
+}

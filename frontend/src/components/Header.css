@@ -1,0 +1,267 @@
+/* ─────────────────────────────────────────────────────────────
+   Header Component Styles — Warehouse & Freight Identity
+   ───────────────────────────────────────────────────────────── */
+
+.header-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: var(--kb-wood);
+  color: var(--kb-paper);
+  border-bottom: 2.5px solid var(--kb-asphalt);
+  box-shadow: 0 4px 12px rgba(28, 28, 28, 0.15);
+}
+
+.header-hazard-strip {
+  height: 3px;
+  width: 100%;
+}
+
+.header-nav {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  max-width: 80rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .header-nav {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+}
+
+.header-logo-crate-icon {
+  display: flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  background: var(--kb-hazard);
+  border: 1.5px solid var(--kb-asphalt);
+  color: var(--kb-asphalt);
+  box-shadow: 2px 2px 0px var(--kb-asphalt);
+  transition: transform 0.15s;
+}
+
+.header-logo:hover .header-logo-crate-icon {
+  transform: rotate(-3deg) scale(1.05);
+}
+
+.header-logo-title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.header-logo-tag {
+  font-size: 10px;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  background: rgba(242, 183, 5, 0.2);
+  color: var(--kb-hazard);
+  border: 1px solid var(--kb-hazard);
+  padding: 0.15rem 0.4rem;
+  border-radius: 2px;
+  margin-left: 0.25rem;
+}
+
+.header-desktop-nav {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .header-desktop-nav {
+    display: flex;
+  }
+}
+
+.header-nav-link {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.4rem 0.85rem;
+  border-radius: 2px;
+  text-decoration: none;
+  color: var(--kb-paper);
+  opacity: 0.82;
+  transition: all 0.15s;
+  border: 1.5px solid transparent;
+}
+
+.header-nav-link:hover {
+  opacity: 1;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.header-nav-link.active {
+  opacity: 1;
+  color: var(--kb-asphalt);
+  background: var(--kb-hazard);
+  border-color: var(--kb-asphalt);
+  box-shadow: 2px 2px 0px var(--kb-asphalt);
+}
+
+.header-desktop-auth {
+  display: none;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .header-desktop-auth {
+    display: flex;
+  }
+}
+
+.header-btn-logout {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.4rem 0.85rem;
+  color: var(--kb-paper);
+  border: 1.5px solid rgba(239, 231, 216, 0.4);
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.header-btn-logout:hover {
+  color: #ffffff;
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.header-link-login {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.4rem 0.85rem;
+  color: var(--kb-paper);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.header-link-login:hover {
+  color: var(--kb-hazard);
+}
+
+.header-btn-register {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.45rem 1.15rem;
+  background: var(--kb-hazard);
+  color: var(--kb-asphalt);
+  border: 1.5px solid var(--kb-asphalt);
+  border-radius: 2px;
+  box-shadow: 2px 2px 0px var(--kb-asphalt);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.header-btn-register:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--kb-asphalt);
+}
+
+.header-mobile-toggle {
+  display: flex;
+  padding: 0.5rem;
+  color: var(--kb-paper);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .header-mobile-toggle {
+    display: none;
+  }
+}
+
+.header-mobile-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  padding-top: 68px;
+  background: var(--kb-wood);
+  color: var(--kb-paper);
+  border-top: 2px solid var(--kb-hazard);
+}
+
+@media (min-width: 768px) {
+  .header-mobile-overlay {
+    display: none;
+  }
+}
+
+.header-mobile-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.5rem;
+}
+
+.header-mobile-link {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.75rem 1rem;
+  border-radius: 2px;
+  text-decoration: none;
+  color: var(--kb-paper);
+  border: 1.5px solid transparent;
+  transition: all 0.15s;
+}
+
+.header-mobile-link:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.header-mobile-link.active {
+  color: var(--kb-asphalt);
+  background: var(--kb-hazard);
+  border-color: var(--kb-asphalt);
+}
+
+.header-mobile-divider {
+  height: 1.5px;
+  background: rgba(239, 231, 216, 0.2);
+  margin: 0.75rem 0;
+}

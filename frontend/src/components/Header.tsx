@@ -1,158 +1,163 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
-import { Package, Menu, X, LogOut, User, LayoutDashboard } from 'lucide-react'
-import { cn } from '../lib/cn'
+import { Package, Menu, X } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import './Header.css'
+
+const navLinks = [
+  { to: '/', label: 'Beranda' },
+  { to: '/booking', label: 'Kirim Kargo' },
+  { to: '/tracking', label: 'Lacak Resi' },
+  { to: '/admin', label: 'Operasional' },
+]
 
 export default function Header() {
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const { isAuthenticated, user, logout } = useAuth()
-  const navigate = useNavigate()
+  const location = useLocation()
 
-  const handleLogout = () => {
-    logout()
-    navigate('/')
-    setMobileOpen(false)
-  }
-
-  const navLinks = [
-    { to: '/', label: 'Beranda' },
-    { to: '/booking', label: 'Kirim Paket' },
-    { to: '/tracking', label: 'Lacak Kiriman' },
-  ]
+  const isActive = (path: string) => location.pathname === path
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-lg">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2.5 font-bold text-xl text-slate-900">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 text-white">
-            <Package className="h-5 w-5" />
-          </div>
-          <span>Kur<span className="text-indigo-600">Bhan</span></span>
-        </Link>
-
-        {/* Desktop Nav */}
-        <nav className="hidden items-center gap-1 md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              className="rounded-lg px-3.5 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        {/* Desktop Auth */}
-        <div className="hidden items-center gap-3 md:flex">
-          {isAuthenticated ? (
-            <>
-              <Link
-                to="/dashboard"
-                className="flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100"
-              >
-                <LayoutDashboard className="h-4 w-4" />
-                Dashboard
-              </Link>
-              <div className="flex items-center gap-2 rounded-full bg-slate-100 py-1.5 pl-3 pr-1.5">
-                <User className="h-4 w-4 text-slate-500" />
-                <span className="text-sm font-medium text-slate-700">{user?.fullName}</span>
-                <button
-                  onClick={handleLogout}
-                  className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-red-100 hover:text-red-600"
-                  title="Keluar"
-                >
-                  <LogOut className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <Link
-                to="/login"
-                className="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
-              >
-                Masuk
-              </Link>
-              <Link
-                to="/register"
-                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700"
-              >
-                Daftar
-              </Link>
-            </>
-          )}
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-slate-600 transition-colors hover:bg-slate-100 md:hidden"
-        >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
-      </div>
-
-      {/* Mobile Nav */}
-      <div
-        className={cn(
-          'overflow-hidden border-t border-slate-200 bg-white transition-all duration-300 md:hidden',
-          mobileOpen ? 'max-h-96' : 'max-h-0 border-t-0'
-        )}
-      >
-        <nav className="space-y-1 px-4 py-3">
-          {navLinks.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              onClick={() => setMobileOpen(false)}
-              className="block rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100"
-            >
-              {link.label}
-            </Link>
-          ))}
-          <hr className="my-2 border-slate-200" />
-          {isAuthenticated ? (
-            <>
-              <Link
-                to="/dashboard"
-                onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100"
-              >
-                <LayoutDashboard className="h-4 w-4" />
-                Dashboard
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50"
-              >
-                <LogOut className="h-4 w-4" />
-                Keluar
-              </button>
-            </>
-          ) : (
-            <div className="flex gap-2 pt-1">
-              <Link
-                to="/login"
-                onClick={() => setMobileOpen(false)}
-                className="flex-1 rounded-lg border border-slate-300 py-2.5 text-center text-sm font-medium text-slate-700 hover:bg-slate-50"
-              >
-                Masuk
-              </Link>
-              <Link
-                to="/register"
-                onClick={() => setMobileOpen(false)}
-                className="flex-1 rounded-lg bg-indigo-600 py-2.5 text-center text-sm font-medium text-white hover:bg-indigo-700"
-              >
-                Daftar
-              </Link>
+    <>
+      <header className="header-root">
+        <div className="header-hazard-strip hazard-stripes-slim" />
+        <nav className="header-nav">
+          {/* Logo & Freight Tag */}
+          <Link to="/" className="header-logo group">
+            <div className="header-logo-crate-icon">
+              <Package className="h-5 w-5" strokeWidth={2.5} />
             </div>
-          )}
+            <div className="flex items-center">
+              <span className="header-logo-title">
+                KurBhan
+              </span>
+              <span className="header-logo-tag">CARGO</span>
+            </div>
+          </Link>
+
+          {/* Desktop Nav */}
+          <div className="header-desktop-nav">
+            {navLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={`header-nav-link ${isActive(link.to) ? 'active' : ''}`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Desktop Auth */}
+          <div className="header-desktop-auth">
+            {isAuthenticated ? (
+              <>
+                <Link
+                  to="/dashboard"
+                  className={`header-nav-link ${isActive('/dashboard') ? 'active' : ''}`}
+                >
+                  {user?.fullName?.split(' ')[0] || 'Dashboard'}
+                </Link>
+                <button
+                  onClick={logout}
+                  className="header-btn-logout"
+                >
+                  Keluar
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="header-link-login"
+                >
+                  Masuk
+                </Link>
+                <Link
+                  to="/register"
+                  className="header-btn-register"
+                >
+                  Daftar Kargo
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="header-mobile-toggle"
+            aria-label="Buka menu navigasi"
+          >
+            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </nav>
-      </div>
-    </header>
+      </header>
+
+      {/* Mobile Nav Overlay */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.15 }}
+            className="header-mobile-overlay"
+          >
+            <div className="header-mobile-menu">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  onClick={() => setIsOpen(false)}
+                  className={`header-mobile-link ${isActive(link.to) ? 'active' : ''}`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+
+              <div className="header-mobile-divider" />
+
+              {isAuthenticated ? (
+                <>
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setIsOpen(false)}
+                    className="header-mobile-link"
+                  >
+                    Dashboard Manifes Saya
+                  </Link>
+                  <button
+                    onClick={() => { logout(); setIsOpen(false) }}
+                    className="header-mobile-link text-[var(--kb-hazard)] text-left bg-transparent border-none cursor-pointer"
+                  >
+                    Keluar dari Akun
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    onClick={() => setIsOpen(false)}
+                    className="header-mobile-link"
+                  >
+                    Masuk Akun
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={() => setIsOpen(false)}
+                    className="hazard-btn w-full mt-2"
+                  >
+                    Daftar Kargo Sekarang
+                  </Link>
+                </>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   )
 }
-

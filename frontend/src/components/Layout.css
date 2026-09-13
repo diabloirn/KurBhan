@@ -1,0 +1,13 @@
+/* Layout Component Styles */
+
+.layout-root {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background-color: var(--kb-paper);
+}
+
+.layout-main {
+  flex: 1 1 0%;
+  padding-top: 52px;
+}
