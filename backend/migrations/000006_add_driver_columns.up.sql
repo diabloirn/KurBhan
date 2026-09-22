@@ -1,0 +1,10 @@
+ALTER TABLE shipments ADD COLUMN IF NOT EXISTS assigned_driver_id UUID REFERENCES users(id);
+ALTER TABLE shipments ADD COLUMN IF NOT EXISTS driver_accepted_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE shipments ADD COLUMN IF NOT EXISTS delivery_proof_url TEXT;
+ALTER TABLE shipments ADD COLUMN IF NOT EXISTS driver_latitude DOUBLE PRECISION;
+ALTER TABLE shipments ADD COLUMN IF NOT EXISTS driver_longitude DOUBLE PRECISION;
+ALTER TABLE shipments ADD COLUMN IF NOT EXISTS driver_location_updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE shipments ADD COLUMN IF NOT EXISTS cod_dp_collected DOUBLE PRECISION DEFAULT 0;
+ALTER TABLE shipments ADD COLUMN IF NOT EXISTS cod_remaining_collected DOUBLE PRECISION DEFAULT 0;
+
+CREATE INDEX IF NOT EXISTS idx_shipments_driver ON shipments(assigned_driver_id);

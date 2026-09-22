@@ -1,0 +1,347 @@
+/* ─────────────────────────────────────────────────────────────
+   WaybillModal.css — KurBhan Thermal Shipping Label & Waybill
+   ───────────────────────────────────────────────────────────── */
+
+.waybill-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(28, 28, 28, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.waybill-dialog {
+  background-color: var(--kb-paper);
+  border: 3px solid var(--kb-asphalt);
+  box-shadow: 6px 6px 0px var(--kb-asphalt);
+  max-width: 620px;
+  width: 100%;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.waybill-header {
+  background-color: var(--kb-wood);
+  color: var(--kb-paper);
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--kb-asphalt);
+}
+
+.waybill-header-title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--kb-hazard);
+  margin: 0;
+}
+
+.waybill-close-btn {
+  background: none;
+  border: none;
+  color: var(--kb-paper);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s;
+}
+
+.waybill-close-btn:hover {
+  transform: scale(1.1);
+  color: var(--kb-hazard);
+}
+
+/* Success celebratory header if payment just succeeded */
+.waybill-success-banner {
+  background: #2E7D32;
+  color: #FFFFFF;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 2px solid var(--kb-asphalt);
+}
+
+.waybill-success-banner h4 {
+  color: #FFFFFF;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.waybill-success-banner p {
+  margin: 0;
+  font-size: 0.78rem;
+  opacity: 0.92;
+}
+
+.waybill-body {
+  padding: 1.25rem;
+  overflow-y: auto;
+  background-color: #F8F4EC;
+}
+
+/* Physical Printable Waybill Box */
+.waybill-sheet {
+  background: #FFFFFF;
+  border: 2px solid #1C1C1C;
+  padding: 1.25rem;
+  color: #1C1C1C;
+  font-family: 'IBM Plex Sans', sans-serif;
+  position: relative;
+  box-shadow: 2px 2px 0px rgba(0,0,0,0.15);
+}
+
+.waybill-brand-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 2px solid #1C1C1C;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.waybill-logo-text {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #1C1C1C;
+}
+
+.waybill-tagline {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #555555;
+  font-weight: 700;
+}
+
+.waybill-service-badge {
+  background-color: #1C1C1C;
+  color: #F2B705;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 800;
+  padding: 0.2rem 0.6rem;
+  text-transform: uppercase;
+  border: 1px solid #1C1C1C;
+}
+
+/* Barcode visual */
+.waybill-barcode-section {
+  text-align: center;
+  padding: 0.5rem 0;
+  border-bottom: 2px dashed #1C1C1C;
+  margin-bottom: 0.75rem;
+}
+
+.waybill-barcode-bars {
+  height: 48px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    #1C1C1C 0px,
+    #1C1C1C 2px,
+    transparent 2px,
+    transparent 4px,
+    #1C1C1C 4px,
+    #1C1C1C 7px,
+    transparent 7px,
+    transparent 9px,
+    #1C1C1C 9px,
+    #1C1C1C 10px,
+    transparent 10px,
+    transparent 13px,
+    #1C1C1C 13px,
+    #1C1C1C 16px,
+    transparent 16px,
+    transparent 18px
+  );
+  width: 80%;
+  margin: 0 auto 0.35rem auto;
+}
+
+.waybill-tracking-no {
+  font-family: monospace;
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+}
+
+/* Address grid */
+.waybill-address-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 2px solid #1C1C1C;
+  margin-bottom: 0.75rem;
+}
+
+.waybill-address-col {
+  padding: 0.5rem;
+  font-size: 0.78rem;
+}
+
+.waybill-address-col:first-child {
+  border-right: 2px solid #1C1C1C;
+}
+
+.waybill-col-label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666666;
+  margin-bottom: 0.2rem;
+}
+
+.waybill-person-name {
+  font-weight: 800;
+  font-size: 0.88rem;
+  color: #000000;
+}
+
+.waybill-phone {
+  font-family: monospace;
+  font-weight: 700;
+  color: #333333;
+}
+
+.waybill-full-addr {
+  margin-top: 0.25rem;
+  color: #444444;
+  line-height: 1.35;
+}
+
+/* Package details row */
+.waybill-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  border-bottom: 2px solid #1C1C1C;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.waybill-spec-item {
+  padding: 0.35rem;
+  background-color: #F4F4F4;
+  border: 1px solid #DDDDDD;
+}
+
+.waybill-spec-val {
+  font-weight: 800;
+  font-size: 0.85rem;
+  margin-top: 0.15rem;
+}
+
+/* Payment stamp & summary */
+.waybill-payment-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.waybill-price-block {
+  font-size: 0.8rem;
+}
+
+.waybill-price-val {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #1C1C1C;
+}
+
+/* Authentic physical stamp look */
+.waybill-stamp {
+  border: 3px dashed #2E7D32;
+  color: #2E7D32;
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 900;
+  padding: 0.25rem 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transform: rotate(-5deg);
+  border-radius: 4px;
+}
+
+.waybill-stamp.unpaid {
+  border-color: #CCA004;
+  color: #CCA004;
+}
+
+/* Action buttons footer */
+.waybill-footer {
+  background-color: var(--kb-paper);
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  border-top: 2px solid var(--kb-asphalt);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PRINT STYLES: window.print()
+   ───────────────────────────────────────────────────────────── */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .waybill-sheet, 
+  .waybill-sheet * {
+    visibility: visible;
+  }
+
+  .waybill-backdrop {
+    position: absolute;
+    inset: 0;
+    background: none !important;
+    padding: 0;
+  }
+
+  .waybill-dialog {
+    border: none !important;
+    box-shadow: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .waybill-header,
+  .waybill-success-banner,
+  .waybill-footer {
+    display: none !important;
+  }
+
+  .waybill-body {
+    padding: 0 !important;
+    background: none !important;
+  }
+
+  .waybill-sheet {
+    border: 2px solid #000000 !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    page-break-inside: avoid;
+  }
+}
+

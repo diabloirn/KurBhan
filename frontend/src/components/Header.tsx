@@ -10,6 +10,7 @@ const navLinks = [
   { to: '/booking', label: 'Kirim Kargo' },
   { to: '/tracking', label: 'Lacak Resi' },
   { to: '/admin', label: 'Operasional' },
+  { to: '/faq', label: 'FAQ' },
 ]
 
 export default function Header() {

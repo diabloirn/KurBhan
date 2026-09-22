@@ -1310,6 +1310,1718 @@ func (x *ShipmentResponse) GetCreatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+type CreatePaymentRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ShipmentId    string                 `protobuf:"bytes,1,opt,name=shipment_id,json=shipmentId,proto3" json:"shipment_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Method        string                 `protobuf:"bytes,3,opt,name=method,proto3" json:"method,omitempty"`   // BANK_TRANSFER, VIRTUAL_ACCOUNT, COD
+	Channel       string                 `protobuf:"bytes,4,opt,name=channel,proto3" json:"channel,omitempty"` // BCA, BLU_BCA, MANDIRI, BNI, BRI
+	Amount        float64                `protobuf:"fixed64,5,opt,name=amount,proto3" json:"amount,omitempty"`
+	CodDpAmount   float64                `protobuf:"fixed64,6,opt,name=cod_dp_amount,json=codDpAmount,proto3" json:"cod_dp_amount,omitempty"`   // DP amount for COD (minimum 50% of amount)
+	CustomerPhone string                 `protobuf:"bytes,7,opt,name=customer_phone,json=customerPhone,proto3" json:"customer_phone,omitempty"` // Nomor telepon untuk generate nomor VA
+	CustomerName  string                 `protobuf:"bytes,8,opt,name=customer_name,json=customerName,proto3" json:"customer_name,omitempty"`    // Nama pelanggan/pengirim
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreatePaymentRequest) Reset() {
+	*x = CreatePaymentRequest{}
+	mi := &file_kurbhan_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreatePaymentRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreatePaymentRequest) ProtoMessage() {}
+
+func (x *CreatePaymentRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreatePaymentRequest.ProtoReflect.Descriptor instead.
+func (*CreatePaymentRequest) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *CreatePaymentRequest) GetShipmentId() string {
+	if x != nil {
+		return x.ShipmentId
+	}
+	return ""
+}
+
+func (x *CreatePaymentRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *CreatePaymentRequest) GetMethod() string {
+	if x != nil {
+		return x.Method
+	}
+	return ""
+}
+
+func (x *CreatePaymentRequest) GetChannel() string {
+	if x != nil {
+		return x.Channel
+	}
+	return ""
+}
+
+func (x *CreatePaymentRequest) GetAmount() float64 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
+}
+
+func (x *CreatePaymentRequest) GetCodDpAmount() float64 {
+	if x != nil {
+		return x.CodDpAmount
+	}
+	return 0
+}
+
+func (x *CreatePaymentRequest) GetCustomerPhone() string {
+	if x != nil {
+		return x.CustomerPhone
+	}
+	return ""
+}
+
+func (x *CreatePaymentRequest) GetCustomerName() string {
+	if x != nil {
+		return x.CustomerName
+	}
+	return ""
+}
+
+type CreatePaymentResponse struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	PaymentId         string                 `protobuf:"bytes,1,opt,name=payment_id,json=paymentId,proto3" json:"payment_id,omitempty"`
+	Method            string                 `protobuf:"bytes,2,opt,name=method,proto3" json:"method,omitempty"`
+	Channel           string                 `protobuf:"bytes,3,opt,name=channel,proto3" json:"channel,omitempty"`
+	Amount            float64                `protobuf:"fixed64,4,opt,name=amount,proto3" json:"amount,omitempty"`
+	DpAmount          float64                `protobuf:"fixed64,5,opt,name=dp_amount,json=dpAmount,proto3" json:"dp_amount,omitempty"`
+	RemainingAmount   float64                `protobuf:"fixed64,6,opt,name=remaining_amount,json=remainingAmount,proto3" json:"remaining_amount,omitempty"`
+	VaNumber          string                 `protobuf:"bytes,7,opt,name=va_number,json=vaNumber,proto3" json:"va_number,omitempty"`                              // Virtual Account number (prefix + nomor telepon)
+	BankAccountNumber string                 `protobuf:"bytes,8,opt,name=bank_account_number,json=bankAccountNumber,proto3" json:"bank_account_number,omitempty"` // Bank account for transfer
+	BankAccountName   string                 `protobuf:"bytes,9,opt,name=bank_account_name,json=bankAccountName,proto3" json:"bank_account_name,omitempty"`       // Account holder name
+	Status            string                 `protobuf:"bytes,10,opt,name=status,proto3" json:"status,omitempty"`
+	ExpiredAt         string                 `protobuf:"bytes,11,opt,name=expired_at,json=expiredAt,proto3" json:"expired_at,omitempty"` // Batas waktu pembayaran (maksimal 1x24 jam)
+	Message           string                 `protobuf:"bytes,12,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *CreatePaymentResponse) Reset() {
+	*x = CreatePaymentResponse{}
+	mi := &file_kurbhan_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreatePaymentResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreatePaymentResponse) ProtoMessage() {}
+
+func (x *CreatePaymentResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreatePaymentResponse.ProtoReflect.Descriptor instead.
+func (*CreatePaymentResponse) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *CreatePaymentResponse) GetPaymentId() string {
+	if x != nil {
+		return x.PaymentId
+	}
+	return ""
+}
+
+func (x *CreatePaymentResponse) GetMethod() string {
+	if x != nil {
+		return x.Method
+	}
+	return ""
+}
+
+func (x *CreatePaymentResponse) GetChannel() string {
+	if x != nil {
+		return x.Channel
+	}
+	return ""
+}
+
+func (x *CreatePaymentResponse) GetAmount() float64 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
+}
+
+func (x *CreatePaymentResponse) GetDpAmount() float64 {
+	if x != nil {
+		return x.DpAmount
+	}
+	return 0
+}
+
+func (x *CreatePaymentResponse) GetRemainingAmount() float64 {
+	if x != nil {
+		return x.RemainingAmount
+	}
+	return 0
+}
+
+func (x *CreatePaymentResponse) GetVaNumber() string {
+	if x != nil {
+		return x.VaNumber
+	}
+	return ""
+}
+
+func (x *CreatePaymentResponse) GetBankAccountNumber() string {
+	if x != nil {
+		return x.BankAccountNumber
+	}
+	return ""
+}
+
+func (x *CreatePaymentResponse) GetBankAccountName() string {
+	if x != nil {
+		return x.BankAccountName
+	}
+	return ""
+}
+
+func (x *CreatePaymentResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *CreatePaymentResponse) GetExpiredAt() string {
+	if x != nil {
+		return x.ExpiredAt
+	}
+	return ""
+}
+
+func (x *CreatePaymentResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+type GetPaymentStatusRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PaymentId     string                 `protobuf:"bytes,1,opt,name=payment_id,json=paymentId,proto3" json:"payment_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetPaymentStatusRequest) Reset() {
+	*x = GetPaymentStatusRequest{}
+	mi := &file_kurbhan_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetPaymentStatusRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPaymentStatusRequest) ProtoMessage() {}
+
+func (x *GetPaymentStatusRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPaymentStatusRequest.ProtoReflect.Descriptor instead.
+func (*GetPaymentStatusRequest) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *GetPaymentStatusRequest) GetPaymentId() string {
+	if x != nil {
+		return x.PaymentId
+	}
+	return ""
+}
+
+type GetPaymentStatusResponse struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	PaymentId         string                 `protobuf:"bytes,1,opt,name=payment_id,json=paymentId,proto3" json:"payment_id,omitempty"`
+	ShipmentId        string                 `protobuf:"bytes,2,opt,name=shipment_id,json=shipmentId,proto3" json:"shipment_id,omitempty"`
+	Method            string                 `protobuf:"bytes,3,opt,name=method,proto3" json:"method,omitempty"`
+	Channel           string                 `protobuf:"bytes,4,opt,name=channel,proto3" json:"channel,omitempty"`
+	Amount            float64                `protobuf:"fixed64,5,opt,name=amount,proto3" json:"amount,omitempty"`
+	DpAmount          float64                `protobuf:"fixed64,6,opt,name=dp_amount,json=dpAmount,proto3" json:"dp_amount,omitempty"`
+	RemainingAmount   float64                `protobuf:"fixed64,7,opt,name=remaining_amount,json=remainingAmount,proto3" json:"remaining_amount,omitempty"`
+	VaNumber          string                 `protobuf:"bytes,8,opt,name=va_number,json=vaNumber,proto3" json:"va_number,omitempty"`
+	Status            string                 `protobuf:"bytes,9,opt,name=status,proto3" json:"status,omitempty"`
+	ExpiredAt         string                 `protobuf:"bytes,10,opt,name=expired_at,json=expiredAt,proto3" json:"expired_at,omitempty"`
+	ConfirmedAt       string                 `protobuf:"bytes,11,opt,name=confirmed_at,json=confirmedAt,proto3" json:"confirmed_at,omitempty"`
+	CreatedAt         string                 `protobuf:"bytes,12,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	CustomerPhone     string                 `protobuf:"bytes,13,opt,name=customer_phone,json=customerPhone,proto3" json:"customer_phone,omitempty"`
+	CustomerName      string                 `protobuf:"bytes,14,opt,name=customer_name,json=customerName,proto3" json:"customer_name,omitempty"`
+	SenderName        string                 `protobuf:"bytes,15,opt,name=sender_name,json=senderName,proto3" json:"sender_name,omitempty"`
+	SenderPhone       string                 `protobuf:"bytes,16,opt,name=sender_phone,json=senderPhone,proto3" json:"sender_phone,omitempty"`
+	AmountTransferred float64                `protobuf:"fixed64,17,opt,name=amount_transferred,json=amountTransferred,proto3" json:"amount_transferred,omitempty"`
+	RejectionReason   string                 `protobuf:"bytes,18,opt,name=rejection_reason,json=rejectionReason,proto3" json:"rejection_reason,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *GetPaymentStatusResponse) Reset() {
+	*x = GetPaymentStatusResponse{}
+	mi := &file_kurbhan_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetPaymentStatusResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPaymentStatusResponse) ProtoMessage() {}
+
+func (x *GetPaymentStatusResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPaymentStatusResponse.ProtoReflect.Descriptor instead.
+func (*GetPaymentStatusResponse) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *GetPaymentStatusResponse) GetPaymentId() string {
+	if x != nil {
+		return x.PaymentId
+	}
+	return ""
+}
+
+func (x *GetPaymentStatusResponse) GetShipmentId() string {
+	if x != nil {
+		return x.ShipmentId
+	}
+	return ""
+}
+
+func (x *GetPaymentStatusResponse) GetMethod() string {
+	if x != nil {
+		return x.Method
+	}
+	return ""
+}
+
+func (x *GetPaymentStatusResponse) GetChannel() string {
+	if x != nil {
+		return x.Channel
+	}
+	return ""
+}
+
+func (x *GetPaymentStatusResponse) GetAmount() float64 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
+}
+
+func (x *GetPaymentStatusResponse) GetDpAmount() float64 {
+	if x != nil {
+		return x.DpAmount
+	}
+	return 0
+}
+
+func (x *GetPaymentStatusResponse) GetRemainingAmount() float64 {
+	if x != nil {
+		return x.RemainingAmount
+	}
+	return 0
+}
+
+func (x *GetPaymentStatusResponse) GetVaNumber() string {
+	if x != nil {
+		return x.VaNumber
+	}
+	return ""
+}
+
+func (x *GetPaymentStatusResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *GetPaymentStatusResponse) GetExpiredAt() string {
+	if x != nil {
+		return x.ExpiredAt
+	}
+	return ""
+}
+
+func (x *GetPaymentStatusResponse) GetConfirmedAt() string {
+	if x != nil {
+		return x.ConfirmedAt
+	}
+	return ""
+}
+
+func (x *GetPaymentStatusResponse) GetCreatedAt() string {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return ""
+}
+
+func (x *GetPaymentStatusResponse) GetCustomerPhone() string {
+	if x != nil {
+		return x.CustomerPhone
+	}
+	return ""
+}
+
+func (x *GetPaymentStatusResponse) GetCustomerName() string {
+	if x != nil {
+		return x.CustomerName
+	}
+	return ""
+}
+
+func (x *GetPaymentStatusResponse) GetSenderName() string {
+	if x != nil {
+		return x.SenderName
+	}
+	return ""
+}
+
+func (x *GetPaymentStatusResponse) GetSenderPhone() string {
+	if x != nil {
+		return x.SenderPhone
+	}
+	return ""
+}
+
+func (x *GetPaymentStatusResponse) GetAmountTransferred() float64 {
+	if x != nil {
+		return x.AmountTransferred
+	}
+	return 0
+}
+
+func (x *GetPaymentStatusResponse) GetRejectionReason() string {
+	if x != nil {
+		return x.RejectionReason
+	}
+	return ""
+}
+
+type ConfirmPaymentRequest struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	PaymentId         string                 `protobuf:"bytes,1,opt,name=payment_id,json=paymentId,proto3" json:"payment_id,omitempty"`
+	ConfirmedBy       string                 `protobuf:"bytes,2,opt,name=confirmed_by,json=confirmedBy,proto3" json:"confirmed_by,omitempty"`                     // admin user_id, 'SYSTEM', or 'WEBHOOK'
+	ProofImageUrl     string                 `protobuf:"bytes,3,opt,name=proof_image_url,json=proofImageUrl,proto3" json:"proof_image_url,omitempty"`             // URL/path bukti transfer yang di-upload
+	SenderName        string                 `protobuf:"bytes,4,opt,name=sender_name,json=senderName,proto3" json:"sender_name,omitempty"`                        // Nama lengkap pengirim pada struk/rekening
+	SenderPhone       string                 `protobuf:"bytes,5,opt,name=sender_phone,json=senderPhone,proto3" json:"sender_phone,omitempty"`                     // Nomor telepon pengirim
+	AmountTransferred float64                `protobuf:"fixed64,6,opt,name=amount_transferred,json=amountTransferred,proto3" json:"amount_transferred,omitempty"` // Nominal yang ditransfer
+	BankSender        string                 `protobuf:"bytes,7,opt,name=bank_sender,json=bankSender,proto3" json:"bank_sender,omitempty"`                        // Asal bank pengirim
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *ConfirmPaymentRequest) Reset() {
+	*x = ConfirmPaymentRequest{}
+	mi := &file_kurbhan_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ConfirmPaymentRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ConfirmPaymentRequest) ProtoMessage() {}
+
+func (x *ConfirmPaymentRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ConfirmPaymentRequest.ProtoReflect.Descriptor instead.
+func (*ConfirmPaymentRequest) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *ConfirmPaymentRequest) GetPaymentId() string {
+	if x != nil {
+		return x.PaymentId
+	}
+	return ""
+}
+
+func (x *ConfirmPaymentRequest) GetConfirmedBy() string {
+	if x != nil {
+		return x.ConfirmedBy
+	}
+	return ""
+}
+
+func (x *ConfirmPaymentRequest) GetProofImageUrl() string {
+	if x != nil {
+		return x.ProofImageUrl
+	}
+	return ""
+}
+
+func (x *ConfirmPaymentRequest) GetSenderName() string {
+	if x != nil {
+		return x.SenderName
+	}
+	return ""
+}
+
+func (x *ConfirmPaymentRequest) GetSenderPhone() string {
+	if x != nil {
+		return x.SenderPhone
+	}
+	return ""
+}
+
+func (x *ConfirmPaymentRequest) GetAmountTransferred() float64 {
+	if x != nil {
+		return x.AmountTransferred
+	}
+	return 0
+}
+
+func (x *ConfirmPaymentRequest) GetBankSender() string {
+	if x != nil {
+		return x.BankSender
+	}
+	return ""
+}
+
+type ConfirmPaymentResponse struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Success         bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message         string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	PaymentId       string                 `protobuf:"bytes,3,opt,name=payment_id,json=paymentId,proto3" json:"payment_id,omitempty"`
+	Status          string                 `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`                                          // VERIFIED, REJECTED, PENDING
+	RejectionReason string                 `protobuf:"bytes,5,opt,name=rejection_reason,json=rejectionReason,proto3" json:"rejection_reason,omitempty"` // Alasan penolakan jika tidak cocok
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *ConfirmPaymentResponse) Reset() {
+	*x = ConfirmPaymentResponse{}
+	mi := &file_kurbhan_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ConfirmPaymentResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ConfirmPaymentResponse) ProtoMessage() {}
+
+func (x *ConfirmPaymentResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ConfirmPaymentResponse.ProtoReflect.Descriptor instead.
+func (*ConfirmPaymentResponse) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *ConfirmPaymentResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *ConfirmPaymentResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *ConfirmPaymentResponse) GetPaymentId() string {
+	if x != nil {
+		return x.PaymentId
+	}
+	return ""
+}
+
+func (x *ConfirmPaymentResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *ConfirmPaymentResponse) GetRejectionReason() string {
+	if x != nil {
+		return x.RejectionReason
+	}
+	return ""
+}
+
+type ProcessVATransactionRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	VaNumber      string                 `protobuf:"bytes,1,opt,name=va_number,json=vaNumber,proto3" json:"va_number,omitempty"`                // Nomor VA tujuan pembayaran (prefix + no telepon)
+	Amount        float64                `protobuf:"fixed64,2,opt,name=amount,proto3" json:"amount,omitempty"`                                  // Jumlah uang yang ditransfer masuk
+	TransactionId string                 `protobuf:"bytes,3,opt,name=transaction_id,json=transactionId,proto3" json:"transaction_id,omitempty"` // ID transaksi dari bank gateway
+	PaymentDate   string                 `protobuf:"bytes,4,opt,name=payment_date,json=paymentDate,proto3" json:"payment_date,omitempty"`       // Timestamp transaksi pembayaran
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ProcessVATransactionRequest) Reset() {
+	*x = ProcessVATransactionRequest{}
+	mi := &file_kurbhan_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProcessVATransactionRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProcessVATransactionRequest) ProtoMessage() {}
+
+func (x *ProcessVATransactionRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProcessVATransactionRequest.ProtoReflect.Descriptor instead.
+func (*ProcessVATransactionRequest) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *ProcessVATransactionRequest) GetVaNumber() string {
+	if x != nil {
+		return x.VaNumber
+	}
+	return ""
+}
+
+func (x *ProcessVATransactionRequest) GetAmount() float64 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
+}
+
+func (x *ProcessVATransactionRequest) GetTransactionId() string {
+	if x != nil {
+		return x.TransactionId
+	}
+	return ""
+}
+
+func (x *ProcessVATransactionRequest) GetPaymentDate() string {
+	if x != nil {
+		return x.PaymentDate
+	}
+	return ""
+}
+
+type ProcessVATransactionResponse struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Success         bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Status          string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"` // ACCEPTED, REJECTED
+	Message         string                 `protobuf:"bytes,3,opt,name=message,proto3" json:"message,omitempty"`
+	ShipmentId      string                 `protobuf:"bytes,4,opt,name=shipment_id,json=shipmentId,proto3" json:"shipment_id,omitempty"`
+	PaymentId       string                 `protobuf:"bytes,5,opt,name=payment_id,json=paymentId,proto3" json:"payment_id,omitempty"`
+	RejectionReason string                 `protobuf:"bytes,6,opt,name=rejection_reason,json=rejectionReason,proto3" json:"rejection_reason,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *ProcessVATransactionResponse) Reset() {
+	*x = ProcessVATransactionResponse{}
+	mi := &file_kurbhan_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ProcessVATransactionResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ProcessVATransactionResponse) ProtoMessage() {}
+
+func (x *ProcessVATransactionResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ProcessVATransactionResponse.ProtoReflect.Descriptor instead.
+func (*ProcessVATransactionResponse) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *ProcessVATransactionResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *ProcessVATransactionResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *ProcessVATransactionResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *ProcessVATransactionResponse) GetShipmentId() string {
+	if x != nil {
+		return x.ShipmentId
+	}
+	return ""
+}
+
+func (x *ProcessVATransactionResponse) GetPaymentId() string {
+	if x != nil {
+		return x.PaymentId
+	}
+	return ""
+}
+
+func (x *ProcessVATransactionResponse) GetRejectionReason() string {
+	if x != nil {
+		return x.RejectionReason
+	}
+	return ""
+}
+
+type GetPaymentMethodsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetPaymentMethodsRequest) Reset() {
+	*x = GetPaymentMethodsRequest{}
+	mi := &file_kurbhan_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetPaymentMethodsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPaymentMethodsRequest) ProtoMessage() {}
+
+func (x *GetPaymentMethodsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPaymentMethodsRequest.ProtoReflect.Descriptor instead.
+func (*GetPaymentMethodsRequest) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{26}
+}
+
+type PaymentMethodInfo struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Method            string                 `protobuf:"bytes,1,opt,name=method,proto3" json:"method,omitempty"`
+	Channel           string                 `protobuf:"bytes,2,opt,name=channel,proto3" json:"channel,omitempty"`
+	DisplayName       string                 `protobuf:"bytes,3,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
+	BankAccountNumber string                 `protobuf:"bytes,4,opt,name=bank_account_number,json=bankAccountNumber,proto3" json:"bank_account_number,omitempty"`
+	BankAccountName   string                 `protobuf:"bytes,5,opt,name=bank_account_name,json=bankAccountName,proto3" json:"bank_account_name,omitempty"`
+	IsActive          bool                   `protobuf:"varint,6,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *PaymentMethodInfo) Reset() {
+	*x = PaymentMethodInfo{}
+	mi := &file_kurbhan_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PaymentMethodInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PaymentMethodInfo) ProtoMessage() {}
+
+func (x *PaymentMethodInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PaymentMethodInfo.ProtoReflect.Descriptor instead.
+func (*PaymentMethodInfo) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *PaymentMethodInfo) GetMethod() string {
+	if x != nil {
+		return x.Method
+	}
+	return ""
+}
+
+func (x *PaymentMethodInfo) GetChannel() string {
+	if x != nil {
+		return x.Channel
+	}
+	return ""
+}
+
+func (x *PaymentMethodInfo) GetDisplayName() string {
+	if x != nil {
+		return x.DisplayName
+	}
+	return ""
+}
+
+func (x *PaymentMethodInfo) GetBankAccountNumber() string {
+	if x != nil {
+		return x.BankAccountNumber
+	}
+	return ""
+}
+
+func (x *PaymentMethodInfo) GetBankAccountName() string {
+	if x != nil {
+		return x.BankAccountName
+	}
+	return ""
+}
+
+func (x *PaymentMethodInfo) GetIsActive() bool {
+	if x != nil {
+		return x.IsActive
+	}
+	return false
+}
+
+type GetPaymentMethodsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Methods       []*PaymentMethodInfo   `protobuf:"bytes,1,rep,name=methods,proto3" json:"methods,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetPaymentMethodsResponse) Reset() {
+	*x = GetPaymentMethodsResponse{}
+	mi := &file_kurbhan_proto_msgTypes[28]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetPaymentMethodsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPaymentMethodsResponse) ProtoMessage() {}
+
+func (x *GetPaymentMethodsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[28]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPaymentMethodsResponse.ProtoReflect.Descriptor instead.
+func (*GetPaymentMethodsResponse) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{28}
+}
+
+func (x *GetPaymentMethodsResponse) GetMethods() []*PaymentMethodInfo {
+	if x != nil {
+		return x.Methods
+	}
+	return nil
+}
+
+type GetDriverShipmentsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	DriverId      string                 `protobuf:"bytes,1,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"`
+	StatusFilter  string                 `protobuf:"bytes,2,opt,name=status_filter,json=statusFilter,proto3" json:"status_filter,omitempty"` // optional: filter by status
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetDriverShipmentsRequest) Reset() {
+	*x = GetDriverShipmentsRequest{}
+	mi := &file_kurbhan_proto_msgTypes[29]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDriverShipmentsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDriverShipmentsRequest) ProtoMessage() {}
+
+func (x *GetDriverShipmentsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[29]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDriverShipmentsRequest.ProtoReflect.Descriptor instead.
+func (*GetDriverShipmentsRequest) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{29}
+}
+
+func (x *GetDriverShipmentsRequest) GetDriverId() string {
+	if x != nil {
+		return x.DriverId
+	}
+	return ""
+}
+
+func (x *GetDriverShipmentsRequest) GetStatusFilter() string {
+	if x != nil {
+		return x.StatusFilter
+	}
+	return ""
+}
+
+type DriverShipmentItem struct {
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	ShipmentId         string                 `protobuf:"bytes,1,opt,name=shipment_id,json=shipmentId,proto3" json:"shipment_id,omitempty"`
+	TrackingNumber     string                 `protobuf:"bytes,2,opt,name=tracking_number,json=trackingNumber,proto3" json:"tracking_number,omitempty"`
+	SenderName         string                 `protobuf:"bytes,3,opt,name=sender_name,json=senderName,proto3" json:"sender_name,omitempty"`
+	SenderAddress      string                 `protobuf:"bytes,4,opt,name=sender_address,json=senderAddress,proto3" json:"sender_address,omitempty"`
+	SenderPhone        string                 `protobuf:"bytes,5,opt,name=sender_phone,json=senderPhone,proto3" json:"sender_phone,omitempty"`
+	ReceiverName       string                 `protobuf:"bytes,6,opt,name=receiver_name,json=receiverName,proto3" json:"receiver_name,omitempty"`
+	ReceiverAddress    string                 `protobuf:"bytes,7,opt,name=receiver_address,json=receiverAddress,proto3" json:"receiver_address,omitempty"`
+	ReceiverPhone      string                 `protobuf:"bytes,8,opt,name=receiver_phone,json=receiverPhone,proto3" json:"receiver_phone,omitempty"`
+	WeightKg           float64                `protobuf:"fixed64,9,opt,name=weight_kg,json=weightKg,proto3" json:"weight_kg,omitempty"`
+	ServiceType        string                 `protobuf:"bytes,10,opt,name=service_type,json=serviceType,proto3" json:"service_type,omitempty"`
+	TotalCost          float64                `protobuf:"fixed64,11,opt,name=total_cost,json=totalCost,proto3" json:"total_cost,omitempty"`
+	Status             string                 `protobuf:"bytes,12,opt,name=status,proto3" json:"status,omitempty"`
+	PaymentMethod      string                 `protobuf:"bytes,13,opt,name=payment_method,json=paymentMethod,proto3" json:"payment_method,omitempty"`
+	CodAmountToCollect float64                `protobuf:"fixed64,14,opt,name=cod_amount_to_collect,json=codAmountToCollect,proto3" json:"cod_amount_to_collect,omitempty"`
+	CreatedAt          string                 `protobuf:"bytes,15,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
+}
+
+func (x *DriverShipmentItem) Reset() {
+	*x = DriverShipmentItem{}
+	mi := &file_kurbhan_proto_msgTypes[30]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DriverShipmentItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DriverShipmentItem) ProtoMessage() {}
+
+func (x *DriverShipmentItem) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[30]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DriverShipmentItem.ProtoReflect.Descriptor instead.
+func (*DriverShipmentItem) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{30}
+}
+
+func (x *DriverShipmentItem) GetShipmentId() string {
+	if x != nil {
+		return x.ShipmentId
+	}
+	return ""
+}
+
+func (x *DriverShipmentItem) GetTrackingNumber() string {
+	if x != nil {
+		return x.TrackingNumber
+	}
+	return ""
+}
+
+func (x *DriverShipmentItem) GetSenderName() string {
+	if x != nil {
+		return x.SenderName
+	}
+	return ""
+}
+
+func (x *DriverShipmentItem) GetSenderAddress() string {
+	if x != nil {
+		return x.SenderAddress
+	}
+	return ""
+}
+
+func (x *DriverShipmentItem) GetSenderPhone() string {
+	if x != nil {
+		return x.SenderPhone
+	}
+	return ""
+}
+
+func (x *DriverShipmentItem) GetReceiverName() string {
+	if x != nil {
+		return x.ReceiverName
+	}
+	return ""
+}
+
+func (x *DriverShipmentItem) GetReceiverAddress() string {
+	if x != nil {
+		return x.ReceiverAddress
+	}
+	return ""
+}
+
+func (x *DriverShipmentItem) GetReceiverPhone() string {
+	if x != nil {
+		return x.ReceiverPhone
+	}
+	return ""
+}
+
+func (x *DriverShipmentItem) GetWeightKg() float64 {
+	if x != nil {
+		return x.WeightKg
+	}
+	return 0
+}
+
+func (x *DriverShipmentItem) GetServiceType() string {
+	if x != nil {
+		return x.ServiceType
+	}
+	return ""
+}
+
+func (x *DriverShipmentItem) GetTotalCost() float64 {
+	if x != nil {
+		return x.TotalCost
+	}
+	return 0
+}
+
+func (x *DriverShipmentItem) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *DriverShipmentItem) GetPaymentMethod() string {
+	if x != nil {
+		return x.PaymentMethod
+	}
+	return ""
+}
+
+func (x *DriverShipmentItem) GetCodAmountToCollect() float64 {
+	if x != nil {
+		return x.CodAmountToCollect
+	}
+	return 0
+}
+
+func (x *DriverShipmentItem) GetCreatedAt() string {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return ""
+}
+
+type GetDriverShipmentsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Shipments     []*DriverShipmentItem  `protobuf:"bytes,1,rep,name=shipments,proto3" json:"shipments,omitempty"`
+	TotalCount    int32                  `protobuf:"varint,2,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetDriverShipmentsResponse) Reset() {
+	*x = GetDriverShipmentsResponse{}
+	mi := &file_kurbhan_proto_msgTypes[31]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetDriverShipmentsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetDriverShipmentsResponse) ProtoMessage() {}
+
+func (x *GetDriverShipmentsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[31]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetDriverShipmentsResponse.ProtoReflect.Descriptor instead.
+func (*GetDriverShipmentsResponse) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{31}
+}
+
+func (x *GetDriverShipmentsResponse) GetShipments() []*DriverShipmentItem {
+	if x != nil {
+		return x.Shipments
+	}
+	return nil
+}
+
+func (x *GetDriverShipmentsResponse) GetTotalCount() int32 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
+}
+
+type AcceptJobRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ShipmentId    string                 `protobuf:"bytes,1,opt,name=shipment_id,json=shipmentId,proto3" json:"shipment_id,omitempty"`
+	DriverId      string                 `protobuf:"bytes,2,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AcceptJobRequest) Reset() {
+	*x = AcceptJobRequest{}
+	mi := &file_kurbhan_proto_msgTypes[32]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AcceptJobRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AcceptJobRequest) ProtoMessage() {}
+
+func (x *AcceptJobRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[32]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AcceptJobRequest.ProtoReflect.Descriptor instead.
+func (*AcceptJobRequest) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{32}
+}
+
+func (x *AcceptJobRequest) GetShipmentId() string {
+	if x != nil {
+		return x.ShipmentId
+	}
+	return ""
+}
+
+func (x *AcceptJobRequest) GetDriverId() string {
+	if x != nil {
+		return x.DriverId
+	}
+	return ""
+}
+
+type AcceptJobResponse struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Success        bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message        string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	TrackingNumber string                 `protobuf:"bytes,3,opt,name=tracking_number,json=trackingNumber,proto3" json:"tracking_number,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *AcceptJobResponse) Reset() {
+	*x = AcceptJobResponse{}
+	mi := &file_kurbhan_proto_msgTypes[33]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AcceptJobResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AcceptJobResponse) ProtoMessage() {}
+
+func (x *AcceptJobResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[33]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AcceptJobResponse.ProtoReflect.Descriptor instead.
+func (*AcceptJobResponse) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{33}
+}
+
+func (x *AcceptJobResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *AcceptJobResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *AcceptJobResponse) GetTrackingNumber() string {
+	if x != nil {
+		return x.TrackingNumber
+	}
+	return ""
+}
+
+type UpdateLocationRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	DriverId      string                 `protobuf:"bytes,1,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"`
+	ShipmentId    string                 `protobuf:"bytes,2,opt,name=shipment_id,json=shipmentId,proto3" json:"shipment_id,omitempty"`
+	Latitude      float64                `protobuf:"fixed64,3,opt,name=latitude,proto3" json:"latitude,omitempty"`
+	Longitude     float64                `protobuf:"fixed64,4,opt,name=longitude,proto3" json:"longitude,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateLocationRequest) Reset() {
+	*x = UpdateLocationRequest{}
+	mi := &file_kurbhan_proto_msgTypes[34]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateLocationRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateLocationRequest) ProtoMessage() {}
+
+func (x *UpdateLocationRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[34]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateLocationRequest.ProtoReflect.Descriptor instead.
+func (*UpdateLocationRequest) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{34}
+}
+
+func (x *UpdateLocationRequest) GetDriverId() string {
+	if x != nil {
+		return x.DriverId
+	}
+	return ""
+}
+
+func (x *UpdateLocationRequest) GetShipmentId() string {
+	if x != nil {
+		return x.ShipmentId
+	}
+	return ""
+}
+
+func (x *UpdateLocationRequest) GetLatitude() float64 {
+	if x != nil {
+		return x.Latitude
+	}
+	return 0
+}
+
+func (x *UpdateLocationRequest) GetLongitude() float64 {
+	if x != nil {
+		return x.Longitude
+	}
+	return 0
+}
+
+type UpdateLocationResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateLocationResponse) Reset() {
+	*x = UpdateLocationResponse{}
+	mi := &file_kurbhan_proto_msgTypes[35]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateLocationResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateLocationResponse) ProtoMessage() {}
+
+func (x *UpdateLocationResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[35]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateLocationResponse.ProtoReflect.Descriptor instead.
+func (*UpdateLocationResponse) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{35}
+}
+
+func (x *UpdateLocationResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *UpdateLocationResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+type CompleteDeliveryRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ShipmentId    string                 `protobuf:"bytes,1,opt,name=shipment_id,json=shipmentId,proto3" json:"shipment_id,omitempty"`
+	DriverId      string                 `protobuf:"bytes,2,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"`
+	ProofImageUrl string                 `protobuf:"bytes,3,opt,name=proof_image_url,json=proofImageUrl,proto3" json:"proof_image_url,omitempty"`
+	RecipientName string                 `protobuf:"bytes,4,opt,name=recipient_name,json=recipientName,proto3" json:"recipient_name,omitempty"`
+	Notes         string                 `protobuf:"bytes,5,opt,name=notes,proto3" json:"notes,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CompleteDeliveryRequest) Reset() {
+	*x = CompleteDeliveryRequest{}
+	mi := &file_kurbhan_proto_msgTypes[36]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CompleteDeliveryRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CompleteDeliveryRequest) ProtoMessage() {}
+
+func (x *CompleteDeliveryRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[36]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CompleteDeliveryRequest.ProtoReflect.Descriptor instead.
+func (*CompleteDeliveryRequest) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{36}
+}
+
+func (x *CompleteDeliveryRequest) GetShipmentId() string {
+	if x != nil {
+		return x.ShipmentId
+	}
+	return ""
+}
+
+func (x *CompleteDeliveryRequest) GetDriverId() string {
+	if x != nil {
+		return x.DriverId
+	}
+	return ""
+}
+
+func (x *CompleteDeliveryRequest) GetProofImageUrl() string {
+	if x != nil {
+		return x.ProofImageUrl
+	}
+	return ""
+}
+
+func (x *CompleteDeliveryRequest) GetRecipientName() string {
+	if x != nil {
+		return x.RecipientName
+	}
+	return ""
+}
+
+func (x *CompleteDeliveryRequest) GetNotes() string {
+	if x != nil {
+		return x.Notes
+	}
+	return ""
+}
+
+type CompleteDeliveryResponse struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Success        bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message        string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	TrackingNumber string                 `protobuf:"bytes,3,opt,name=tracking_number,json=trackingNumber,proto3" json:"tracking_number,omitempty"`
+	CompletedAt    string                 `protobuf:"bytes,4,opt,name=completed_at,json=completedAt,proto3" json:"completed_at,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *CompleteDeliveryResponse) Reset() {
+	*x = CompleteDeliveryResponse{}
+	mi := &file_kurbhan_proto_msgTypes[37]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CompleteDeliveryResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CompleteDeliveryResponse) ProtoMessage() {}
+
+func (x *CompleteDeliveryResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[37]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CompleteDeliveryResponse.ProtoReflect.Descriptor instead.
+func (*CompleteDeliveryResponse) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{37}
+}
+
+func (x *CompleteDeliveryResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *CompleteDeliveryResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *CompleteDeliveryResponse) GetTrackingNumber() string {
+	if x != nil {
+		return x.TrackingNumber
+	}
+	return ""
+}
+
+func (x *CompleteDeliveryResponse) GetCompletedAt() string {
+	if x != nil {
+		return x.CompletedAt
+	}
+	return ""
+}
+
+type CollectCODRequest struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	ShipmentId      string                 `protobuf:"bytes,1,opt,name=shipment_id,json=shipmentId,proto3" json:"shipment_id,omitempty"`
+	DriverId        string                 `protobuf:"bytes,2,opt,name=driver_id,json=driverId,proto3" json:"driver_id,omitempty"`
+	AmountCollected float64                `protobuf:"fixed64,3,opt,name=amount_collected,json=amountCollected,proto3" json:"amount_collected,omitempty"`
+	CollectionType  string                 `protobuf:"bytes,4,opt,name=collection_type,json=collectionType,proto3" json:"collection_type,omitempty"` // DP_PICKUP or REMAINING_DELIVERY
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *CollectCODRequest) Reset() {
+	*x = CollectCODRequest{}
+	mi := &file_kurbhan_proto_msgTypes[38]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CollectCODRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CollectCODRequest) ProtoMessage() {}
+
+func (x *CollectCODRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[38]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CollectCODRequest.ProtoReflect.Descriptor instead.
+func (*CollectCODRequest) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{38}
+}
+
+func (x *CollectCODRequest) GetShipmentId() string {
+	if x != nil {
+		return x.ShipmentId
+	}
+	return ""
+}
+
+func (x *CollectCODRequest) GetDriverId() string {
+	if x != nil {
+		return x.DriverId
+	}
+	return ""
+}
+
+func (x *CollectCODRequest) GetAmountCollected() float64 {
+	if x != nil {
+		return x.AmountCollected
+	}
+	return 0
+}
+
+func (x *CollectCODRequest) GetCollectionType() string {
+	if x != nil {
+		return x.CollectionType
+	}
+	return ""
+}
+
+type CollectCODResponse struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Success        bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message        string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	TotalCollected float64                `protobuf:"fixed64,3,opt,name=total_collected,json=totalCollected,proto3" json:"total_collected,omitempty"`
+	Remaining      float64                `protobuf:"fixed64,4,opt,name=remaining,proto3" json:"remaining,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *CollectCODResponse) Reset() {
+	*x = CollectCODResponse{}
+	mi := &file_kurbhan_proto_msgTypes[39]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CollectCODResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CollectCODResponse) ProtoMessage() {}
+
+func (x *CollectCODResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_kurbhan_proto_msgTypes[39]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CollectCODResponse.ProtoReflect.Descriptor instead.
+func (*CollectCODResponse) Descriptor() ([]byte, []int) {
+	return file_kurbhan_proto_rawDescGZIP(), []int{39}
+}
+
+func (x *CollectCODResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *CollectCODResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *CollectCODResponse) GetTotalCollected() float64 {
+	if x != nil {
+		return x.TotalCollected
+	}
+	return 0
+}
+
+func (x *CollectCODResponse) GetRemaining() float64 {
+	if x != nil {
+		return x.Remaining
+	}
+	return 0
+}
+
 var File_kurbhan_proto protoreflect.FileDescriptor
 
 const file_kurbhan_proto_rawDesc = "" +
@@ -1426,17 +3138,192 @@ const file_kurbhan_proto_rawDesc = "" +
 	"\vtotal_price\x18\x03 \x01(\x01R\n" +
 	"totalPrice\x129\n" +
 	"\n" +
-	"created_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt2\x92\x01\n" +
+	"created_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x8a\x02\n" +
+	"\x14CreatePaymentRequest\x12\x1f\n" +
+	"\vshipment_id\x18\x01 \x01(\tR\n" +
+	"shipmentId\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x16\n" +
+	"\x06method\x18\x03 \x01(\tR\x06method\x12\x18\n" +
+	"\achannel\x18\x04 \x01(\tR\achannel\x12\x16\n" +
+	"\x06amount\x18\x05 \x01(\x01R\x06amount\x12\"\n" +
+	"\rcod_dp_amount\x18\x06 \x01(\x01R\vcodDpAmount\x12%\n" +
+	"\x0ecustomer_phone\x18\a \x01(\tR\rcustomerPhone\x12#\n" +
+	"\rcustomer_name\x18\b \x01(\tR\fcustomerName\"\x92\x03\n" +
+	"\x15CreatePaymentResponse\x12\x1d\n" +
+	"\n" +
+	"payment_id\x18\x01 \x01(\tR\tpaymentId\x12\x16\n" +
+	"\x06method\x18\x02 \x01(\tR\x06method\x12\x18\n" +
+	"\achannel\x18\x03 \x01(\tR\achannel\x12\x16\n" +
+	"\x06amount\x18\x04 \x01(\x01R\x06amount\x12\x1b\n" +
+	"\tdp_amount\x18\x05 \x01(\x01R\bdpAmount\x12)\n" +
+	"\x10remaining_amount\x18\x06 \x01(\x01R\x0fremainingAmount\x12\x1b\n" +
+	"\tva_number\x18\a \x01(\tR\bvaNumber\x12.\n" +
+	"\x13bank_account_number\x18\b \x01(\tR\x11bankAccountNumber\x12*\n" +
+	"\x11bank_account_name\x18\t \x01(\tR\x0fbankAccountName\x12\x16\n" +
+	"\x06status\x18\n" +
+	" \x01(\tR\x06status\x12\x1d\n" +
+	"\n" +
+	"expired_at\x18\v \x01(\tR\texpiredAt\x12\x18\n" +
+	"\amessage\x18\f \x01(\tR\amessage\"8\n" +
+	"\x17GetPaymentStatusRequest\x12\x1d\n" +
+	"\n" +
+	"payment_id\x18\x01 \x01(\tR\tpaymentId\"\xec\x04\n" +
+	"\x18GetPaymentStatusResponse\x12\x1d\n" +
+	"\n" +
+	"payment_id\x18\x01 \x01(\tR\tpaymentId\x12\x1f\n" +
+	"\vshipment_id\x18\x02 \x01(\tR\n" +
+	"shipmentId\x12\x16\n" +
+	"\x06method\x18\x03 \x01(\tR\x06method\x12\x18\n" +
+	"\achannel\x18\x04 \x01(\tR\achannel\x12\x16\n" +
+	"\x06amount\x18\x05 \x01(\x01R\x06amount\x12\x1b\n" +
+	"\tdp_amount\x18\x06 \x01(\x01R\bdpAmount\x12)\n" +
+	"\x10remaining_amount\x18\a \x01(\x01R\x0fremainingAmount\x12\x1b\n" +
+	"\tva_number\x18\b \x01(\tR\bvaNumber\x12\x16\n" +
+	"\x06status\x18\t \x01(\tR\x06status\x12\x1d\n" +
+	"\n" +
+	"expired_at\x18\n" +
+	" \x01(\tR\texpiredAt\x12!\n" +
+	"\fconfirmed_at\x18\v \x01(\tR\vconfirmedAt\x12\x1d\n" +
+	"\n" +
+	"created_at\x18\f \x01(\tR\tcreatedAt\x12%\n" +
+	"\x0ecustomer_phone\x18\r \x01(\tR\rcustomerPhone\x12#\n" +
+	"\rcustomer_name\x18\x0e \x01(\tR\fcustomerName\x12\x1f\n" +
+	"\vsender_name\x18\x0f \x01(\tR\n" +
+	"senderName\x12!\n" +
+	"\fsender_phone\x18\x10 \x01(\tR\vsenderPhone\x12-\n" +
+	"\x12amount_transferred\x18\x11 \x01(\x01R\x11amountTransferred\x12)\n" +
+	"\x10rejection_reason\x18\x12 \x01(\tR\x0frejectionReason\"\x95\x02\n" +
+	"\x15ConfirmPaymentRequest\x12\x1d\n" +
+	"\n" +
+	"payment_id\x18\x01 \x01(\tR\tpaymentId\x12!\n" +
+	"\fconfirmed_by\x18\x02 \x01(\tR\vconfirmedBy\x12&\n" +
+	"\x0fproof_image_url\x18\x03 \x01(\tR\rproofImageUrl\x12\x1f\n" +
+	"\vsender_name\x18\x04 \x01(\tR\n" +
+	"senderName\x12!\n" +
+	"\fsender_phone\x18\x05 \x01(\tR\vsenderPhone\x12-\n" +
+	"\x12amount_transferred\x18\x06 \x01(\x01R\x11amountTransferred\x12\x1f\n" +
+	"\vbank_sender\x18\a \x01(\tR\n" +
+	"bankSender\"\xae\x01\n" +
+	"\x16ConfirmPaymentResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12\x1d\n" +
+	"\n" +
+	"payment_id\x18\x03 \x01(\tR\tpaymentId\x12\x16\n" +
+	"\x06status\x18\x04 \x01(\tR\x06status\x12)\n" +
+	"\x10rejection_reason\x18\x05 \x01(\tR\x0frejectionReason\"\x9c\x01\n" +
+	"\x1bProcessVATransactionRequest\x12\x1b\n" +
+	"\tva_number\x18\x01 \x01(\tR\bvaNumber\x12\x16\n" +
+	"\x06amount\x18\x02 \x01(\x01R\x06amount\x12%\n" +
+	"\x0etransaction_id\x18\x03 \x01(\tR\rtransactionId\x12!\n" +
+	"\fpayment_date\x18\x04 \x01(\tR\vpaymentDate\"\xd5\x01\n" +
+	"\x1cProcessVATransactionResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x16\n" +
+	"\x06status\x18\x02 \x01(\tR\x06status\x12\x18\n" +
+	"\amessage\x18\x03 \x01(\tR\amessage\x12\x1f\n" +
+	"\vshipment_id\x18\x04 \x01(\tR\n" +
+	"shipmentId\x12\x1d\n" +
+	"\n" +
+	"payment_id\x18\x05 \x01(\tR\tpaymentId\x12)\n" +
+	"\x10rejection_reason\x18\x06 \x01(\tR\x0frejectionReason\"\x1a\n" +
+	"\x18GetPaymentMethodsRequest\"\xe1\x01\n" +
+	"\x11PaymentMethodInfo\x12\x16\n" +
+	"\x06method\x18\x01 \x01(\tR\x06method\x12\x18\n" +
+	"\achannel\x18\x02 \x01(\tR\achannel\x12!\n" +
+	"\fdisplay_name\x18\x03 \x01(\tR\vdisplayName\x12.\n" +
+	"\x13bank_account_number\x18\x04 \x01(\tR\x11bankAccountNumber\x12*\n" +
+	"\x11bank_account_name\x18\x05 \x01(\tR\x0fbankAccountName\x12\x1b\n" +
+	"\tis_active\x18\x06 \x01(\bR\bisActive\"T\n" +
+	"\x19GetPaymentMethodsResponse\x127\n" +
+	"\amethods\x18\x01 \x03(\v2\x1d.kurbhan.v1.PaymentMethodInfoR\amethods\"]\n" +
+	"\x19GetDriverShipmentsRequest\x12\x1b\n" +
+	"\tdriver_id\x18\x01 \x01(\tR\bdriverId\x12#\n" +
+	"\rstatus_filter\x18\x02 \x01(\tR\fstatusFilter\"\xb0\x04\n" +
+	"\x12DriverShipmentItem\x12\x1f\n" +
+	"\vshipment_id\x18\x01 \x01(\tR\n" +
+	"shipmentId\x12'\n" +
+	"\x0ftracking_number\x18\x02 \x01(\tR\x0etrackingNumber\x12\x1f\n" +
+	"\vsender_name\x18\x03 \x01(\tR\n" +
+	"senderName\x12%\n" +
+	"\x0esender_address\x18\x04 \x01(\tR\rsenderAddress\x12!\n" +
+	"\fsender_phone\x18\x05 \x01(\tR\vsenderPhone\x12#\n" +
+	"\rreceiver_name\x18\x06 \x01(\tR\freceiverName\x12)\n" +
+	"\x10receiver_address\x18\a \x01(\tR\x0freceiverAddress\x12%\n" +
+	"\x0ereceiver_phone\x18\b \x01(\tR\rreceiverPhone\x12\x1b\n" +
+	"\tweight_kg\x18\t \x01(\x01R\bweightKg\x12!\n" +
+	"\fservice_type\x18\n" +
+	" \x01(\tR\vserviceType\x12\x1d\n" +
+	"\n" +
+	"total_cost\x18\v \x01(\x01R\ttotalCost\x12\x16\n" +
+	"\x06status\x18\f \x01(\tR\x06status\x12%\n" +
+	"\x0epayment_method\x18\r \x01(\tR\rpaymentMethod\x121\n" +
+	"\x15cod_amount_to_collect\x18\x0e \x01(\x01R\x12codAmountToCollect\x12\x1d\n" +
+	"\n" +
+	"created_at\x18\x0f \x01(\tR\tcreatedAt\"{\n" +
+	"\x1aGetDriverShipmentsResponse\x12<\n" +
+	"\tshipments\x18\x01 \x03(\v2\x1e.kurbhan.v1.DriverShipmentItemR\tshipments\x12\x1f\n" +
+	"\vtotal_count\x18\x02 \x01(\x05R\n" +
+	"totalCount\"P\n" +
+	"\x10AcceptJobRequest\x12\x1f\n" +
+	"\vshipment_id\x18\x01 \x01(\tR\n" +
+	"shipmentId\x12\x1b\n" +
+	"\tdriver_id\x18\x02 \x01(\tR\bdriverId\"p\n" +
+	"\x11AcceptJobResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12'\n" +
+	"\x0ftracking_number\x18\x03 \x01(\tR\x0etrackingNumber\"\x8f\x01\n" +
+	"\x15UpdateLocationRequest\x12\x1b\n" +
+	"\tdriver_id\x18\x01 \x01(\tR\bdriverId\x12\x1f\n" +
+	"\vshipment_id\x18\x02 \x01(\tR\n" +
+	"shipmentId\x12\x1a\n" +
+	"\blatitude\x18\x03 \x01(\x01R\blatitude\x12\x1c\n" +
+	"\tlongitude\x18\x04 \x01(\x01R\tlongitude\"L\n" +
+	"\x16UpdateLocationResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"\xbc\x01\n" +
+	"\x17CompleteDeliveryRequest\x12\x1f\n" +
+	"\vshipment_id\x18\x01 \x01(\tR\n" +
+	"shipmentId\x12\x1b\n" +
+	"\tdriver_id\x18\x02 \x01(\tR\bdriverId\x12&\n" +
+	"\x0fproof_image_url\x18\x03 \x01(\tR\rproofImageUrl\x12%\n" +
+	"\x0erecipient_name\x18\x04 \x01(\tR\rrecipientName\x12\x14\n" +
+	"\x05notes\x18\x05 \x01(\tR\x05notes\"\x9a\x01\n" +
+	"\x18CompleteDeliveryResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12'\n" +
+	"\x0ftracking_number\x18\x03 \x01(\tR\x0etrackingNumber\x12!\n" +
+	"\fcompleted_at\x18\x04 \x01(\tR\vcompletedAt\"\xa5\x01\n" +
+	"\x11CollectCODRequest\x12\x1f\n" +
+	"\vshipment_id\x18\x01 \x01(\tR\n" +
+	"shipmentId\x12\x1b\n" +
+	"\tdriver_id\x18\x02 \x01(\tR\bdriverId\x12)\n" +
+	"\x10amount_collected\x18\x03 \x01(\x01R\x0famountCollected\x12'\n" +
+	"\x0fcollection_type\x18\x04 \x01(\tR\x0ecollectionType\"\x8f\x01\n" +
+	"\x12CollectCODResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12'\n" +
+	"\x0ftotal_collected\x18\x03 \x01(\x01R\x0etotalCollected\x12\x1c\n" +
+	"\tremaining\x18\x04 \x01(\x01R\tremaining2\x92\x01\n" +
 	"\vAuthService\x12E\n" +
 	"\bRegister\x12\x1b.kurbhan.v1.RegisterRequest\x1a\x1c.kurbhan.v1.RegisterResponse\x12<\n" +
 	"\x05Login\x12\x18.kurbhan.v1.LoginRequest\x1a\x19.kurbhan.v1.LoginResponse2c\n" +
 	"\vRateService\x12T\n" +
-	"\rCalculateRate\x12 .kurbhan.v1.CalculateRateRequest\x1a!.kurbhan.v1.CalculateRateResponse2\xfe\x02\n" +
+	"\rCalculateRate\x12 .kurbhan.v1.CalculateRateRequest\x1a!.kurbhan.v1.CalculateRateResponse2\xcf\x06\n" +
 	"\x0fShipmentService\x12W\n" +
 	"\x0eCreateShipment\x12!.kurbhan.v1.CreateShipmentRequest\x1a\".kurbhan.v1.CreateShipmentResponse\x12i\n" +
 	"\x14UpdateShipmentStatus\x12'.kurbhan.v1.UpdateShipmentStatusRequest\x1a(.kurbhan.v1.UpdateShipmentStatusResponse\x12Q\n" +
 	"\x0eCancelShipment\x12!.kurbhan.v1.CancelShipmentRequest\x1a\x1c.kurbhan.v1.ShipmentResponse\x12T\n" +
-	"\rTrackShipment\x12 .kurbhan.v1.TrackShipmentRequest\x1a!.kurbhan.v1.TrackShipmentResponseB\x1aZ\x18kurbhan/gen/v1;kurbhanv1b\x06proto3"
+	"\rTrackShipment\x12 .kurbhan.v1.TrackShipmentRequest\x1a!.kurbhan.v1.TrackShipmentResponse\x12k\n" +
+	"\x1aGetDriverAssignedShipments\x12%.kurbhan.v1.GetDriverShipmentsRequest\x1a&.kurbhan.v1.GetDriverShipmentsResponse\x12P\n" +
+	"\x11AcceptShipmentJob\x12\x1c.kurbhan.v1.AcceptJobRequest\x1a\x1d.kurbhan.v1.AcceptJobResponse\x12]\n" +
+	"\x14UpdateDriverLocation\x12!.kurbhan.v1.UpdateLocationRequest\x1a\".kurbhan.v1.UpdateLocationResponse\x12]\n" +
+	"\x10CompleteDelivery\x12#.kurbhan.v1.CompleteDeliveryRequest\x1a$.kurbhan.v1.CompleteDeliveryResponse\x12R\n" +
+	"\x11CollectCODPayment\x12\x1d.kurbhan.v1.CollectCODRequest\x1a\x1e.kurbhan.v1.CollectCODResponse2\xeb\x03\n" +
+	"\x0ePaymentService\x12T\n" +
+	"\rCreatePayment\x12 .kurbhan.v1.CreatePaymentRequest\x1a!.kurbhan.v1.CreatePaymentResponse\x12]\n" +
+	"\x10GetPaymentStatus\x12#.kurbhan.v1.GetPaymentStatusRequest\x1a$.kurbhan.v1.GetPaymentStatusResponse\x12W\n" +
+	"\x0eConfirmPayment\x12!.kurbhan.v1.ConfirmPaymentRequest\x1a\".kurbhan.v1.ConfirmPaymentResponse\x12i\n" +
+	"\x14ProcessVATransaction\x12'.kurbhan.v1.ProcessVATransactionRequest\x1a(.kurbhan.v1.ProcessVATransactionResponse\x12`\n" +
+	"\x11GetPaymentMethods\x12$.kurbhan.v1.GetPaymentMethodsRequest\x1a%.kurbhan.v1.GetPaymentMethodsResponseB\x1aZ\x18kurbhan/gen/v1;kurbhanv1b\x06proto3"
 
 var (
 	file_kurbhan_proto_rawDescOnce sync.Once
@@ -1450,7 +3337,7 @@ func file_kurbhan_proto_rawDescGZIP() []byte {
 	return file_kurbhan_proto_rawDescData
 }
 
-var file_kurbhan_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_kurbhan_proto_msgTypes = make([]protoimpl.MessageInfo, 40)
 var file_kurbhan_proto_goTypes = []any{
 	(*RegisterRequest)(nil),              // 0: kurbhan.v1.RegisterRequest
 	(*LoginRequest)(nil),                 // 1: kurbhan.v1.LoginRequest
@@ -1470,32 +3357,76 @@ var file_kurbhan_proto_goTypes = []any{
 	(*TrackShipmentRequest)(nil),         // 15: kurbhan.v1.TrackShipmentRequest
 	(*TrackShipmentResponse)(nil),        // 16: kurbhan.v1.TrackShipmentResponse
 	(*ShipmentResponse)(nil),             // 17: kurbhan.v1.ShipmentResponse
-	(*timestamppb.Timestamp)(nil),        // 18: google.protobuf.Timestamp
+	(*CreatePaymentRequest)(nil),         // 18: kurbhan.v1.CreatePaymentRequest
+	(*CreatePaymentResponse)(nil),        // 19: kurbhan.v1.CreatePaymentResponse
+	(*GetPaymentStatusRequest)(nil),      // 20: kurbhan.v1.GetPaymentStatusRequest
+	(*GetPaymentStatusResponse)(nil),     // 21: kurbhan.v1.GetPaymentStatusResponse
+	(*ConfirmPaymentRequest)(nil),        // 22: kurbhan.v1.ConfirmPaymentRequest
+	(*ConfirmPaymentResponse)(nil),       // 23: kurbhan.v1.ConfirmPaymentResponse
+	(*ProcessVATransactionRequest)(nil),  // 24: kurbhan.v1.ProcessVATransactionRequest
+	(*ProcessVATransactionResponse)(nil), // 25: kurbhan.v1.ProcessVATransactionResponse
+	(*GetPaymentMethodsRequest)(nil),     // 26: kurbhan.v1.GetPaymentMethodsRequest
+	(*PaymentMethodInfo)(nil),            // 27: kurbhan.v1.PaymentMethodInfo
+	(*GetPaymentMethodsResponse)(nil),    // 28: kurbhan.v1.GetPaymentMethodsResponse
+	(*GetDriverShipmentsRequest)(nil),    // 29: kurbhan.v1.GetDriverShipmentsRequest
+	(*DriverShipmentItem)(nil),           // 30: kurbhan.v1.DriverShipmentItem
+	(*GetDriverShipmentsResponse)(nil),   // 31: kurbhan.v1.GetDriverShipmentsResponse
+	(*AcceptJobRequest)(nil),             // 32: kurbhan.v1.AcceptJobRequest
+	(*AcceptJobResponse)(nil),            // 33: kurbhan.v1.AcceptJobResponse
+	(*UpdateLocationRequest)(nil),        // 34: kurbhan.v1.UpdateLocationRequest
+	(*UpdateLocationResponse)(nil),       // 35: kurbhan.v1.UpdateLocationResponse
+	(*CompleteDeliveryRequest)(nil),      // 36: kurbhan.v1.CompleteDeliveryRequest
+	(*CompleteDeliveryResponse)(nil),     // 37: kurbhan.v1.CompleteDeliveryResponse
+	(*CollectCODRequest)(nil),            // 38: kurbhan.v1.CollectCODRequest
+	(*CollectCODResponse)(nil),           // 39: kurbhan.v1.CollectCODResponse
+	(*timestamppb.Timestamp)(nil),        // 40: google.protobuf.Timestamp
 }
 var file_kurbhan_proto_depIdxs = []int32{
 	2,  // 0: kurbhan.v1.LoginResponse.user:type_name -> kurbhan.v1.UserProto
 	13, // 1: kurbhan.v1.TrackShipmentResponse.shipment:type_name -> kurbhan.v1.ShipmentProto
 	14, // 2: kurbhan.v1.TrackShipmentResponse.histories:type_name -> kurbhan.v1.TrackingHistoryProto
-	18, // 3: kurbhan.v1.ShipmentResponse.created_at:type_name -> google.protobuf.Timestamp
-	0,  // 4: kurbhan.v1.AuthService.Register:input_type -> kurbhan.v1.RegisterRequest
-	1,  // 5: kurbhan.v1.AuthService.Login:input_type -> kurbhan.v1.LoginRequest
-	6,  // 6: kurbhan.v1.RateService.CalculateRate:input_type -> kurbhan.v1.CalculateRateRequest
-	8,  // 7: kurbhan.v1.ShipmentService.CreateShipment:input_type -> kurbhan.v1.CreateShipmentRequest
-	10, // 8: kurbhan.v1.ShipmentService.UpdateShipmentStatus:input_type -> kurbhan.v1.UpdateShipmentStatusRequest
-	12, // 9: kurbhan.v1.ShipmentService.CancelShipment:input_type -> kurbhan.v1.CancelShipmentRequest
-	15, // 10: kurbhan.v1.ShipmentService.TrackShipment:input_type -> kurbhan.v1.TrackShipmentRequest
-	4,  // 11: kurbhan.v1.AuthService.Register:output_type -> kurbhan.v1.RegisterResponse
-	3,  // 12: kurbhan.v1.AuthService.Login:output_type -> kurbhan.v1.LoginResponse
-	7,  // 13: kurbhan.v1.RateService.CalculateRate:output_type -> kurbhan.v1.CalculateRateResponse
-	9,  // 14: kurbhan.v1.ShipmentService.CreateShipment:output_type -> kurbhan.v1.CreateShipmentResponse
-	11, // 15: kurbhan.v1.ShipmentService.UpdateShipmentStatus:output_type -> kurbhan.v1.UpdateShipmentStatusResponse
-	17, // 16: kurbhan.v1.ShipmentService.CancelShipment:output_type -> kurbhan.v1.ShipmentResponse
-	16, // 17: kurbhan.v1.ShipmentService.TrackShipment:output_type -> kurbhan.v1.TrackShipmentResponse
-	11, // [11:18] is the sub-list for method output_type
-	4,  // [4:11] is the sub-list for method input_type
-	4,  // [4:4] is the sub-list for extension type_name
-	4,  // [4:4] is the sub-list for extension extendee
-	0,  // [0:4] is the sub-list for field type_name
+	40, // 3: kurbhan.v1.ShipmentResponse.created_at:type_name -> google.protobuf.Timestamp
+	27, // 4: kurbhan.v1.GetPaymentMethodsResponse.methods:type_name -> kurbhan.v1.PaymentMethodInfo
+	30, // 5: kurbhan.v1.GetDriverShipmentsResponse.shipments:type_name -> kurbhan.v1.DriverShipmentItem
+	0,  // 6: kurbhan.v1.AuthService.Register:input_type -> kurbhan.v1.RegisterRequest
+	1,  // 7: kurbhan.v1.AuthService.Login:input_type -> kurbhan.v1.LoginRequest
+	6,  // 8: kurbhan.v1.RateService.CalculateRate:input_type -> kurbhan.v1.CalculateRateRequest
+	8,  // 9: kurbhan.v1.ShipmentService.CreateShipment:input_type -> kurbhan.v1.CreateShipmentRequest
+	10, // 10: kurbhan.v1.ShipmentService.UpdateShipmentStatus:input_type -> kurbhan.v1.UpdateShipmentStatusRequest
+	12, // 11: kurbhan.v1.ShipmentService.CancelShipment:input_type -> kurbhan.v1.CancelShipmentRequest
+	15, // 12: kurbhan.v1.ShipmentService.TrackShipment:input_type -> kurbhan.v1.TrackShipmentRequest
+	29, // 13: kurbhan.v1.ShipmentService.GetDriverAssignedShipments:input_type -> kurbhan.v1.GetDriverShipmentsRequest
+	32, // 14: kurbhan.v1.ShipmentService.AcceptShipmentJob:input_type -> kurbhan.v1.AcceptJobRequest
+	34, // 15: kurbhan.v1.ShipmentService.UpdateDriverLocation:input_type -> kurbhan.v1.UpdateLocationRequest
+	36, // 16: kurbhan.v1.ShipmentService.CompleteDelivery:input_type -> kurbhan.v1.CompleteDeliveryRequest
+	38, // 17: kurbhan.v1.ShipmentService.CollectCODPayment:input_type -> kurbhan.v1.CollectCODRequest
+	18, // 18: kurbhan.v1.PaymentService.CreatePayment:input_type -> kurbhan.v1.CreatePaymentRequest
+	20, // 19: kurbhan.v1.PaymentService.GetPaymentStatus:input_type -> kurbhan.v1.GetPaymentStatusRequest
+	22, // 20: kurbhan.v1.PaymentService.ConfirmPayment:input_type -> kurbhan.v1.ConfirmPaymentRequest
+	24, // 21: kurbhan.v1.PaymentService.ProcessVATransaction:input_type -> kurbhan.v1.ProcessVATransactionRequest
+	26, // 22: kurbhan.v1.PaymentService.GetPaymentMethods:input_type -> kurbhan.v1.GetPaymentMethodsRequest
+	4,  // 23: kurbhan.v1.AuthService.Register:output_type -> kurbhan.v1.RegisterResponse
+	3,  // 24: kurbhan.v1.AuthService.Login:output_type -> kurbhan.v1.LoginResponse
+	7,  // 25: kurbhan.v1.RateService.CalculateRate:output_type -> kurbhan.v1.CalculateRateResponse
+	9,  // 26: kurbhan.v1.ShipmentService.CreateShipment:output_type -> kurbhan.v1.CreateShipmentResponse
+	11, // 27: kurbhan.v1.ShipmentService.UpdateShipmentStatus:output_type -> kurbhan.v1.UpdateShipmentStatusResponse
+	17, // 28: kurbhan.v1.ShipmentService.CancelShipment:output_type -> kurbhan.v1.ShipmentResponse
+	16, // 29: kurbhan.v1.ShipmentService.TrackShipment:output_type -> kurbhan.v1.TrackShipmentResponse
+	31, // 30: kurbhan.v1.ShipmentService.GetDriverAssignedShipments:output_type -> kurbhan.v1.GetDriverShipmentsResponse
+	33, // 31: kurbhan.v1.ShipmentService.AcceptShipmentJob:output_type -> kurbhan.v1.AcceptJobResponse
+	35, // 32: kurbhan.v1.ShipmentService.UpdateDriverLocation:output_type -> kurbhan.v1.UpdateLocationResponse
+	37, // 33: kurbhan.v1.ShipmentService.CompleteDelivery:output_type -> kurbhan.v1.CompleteDeliveryResponse
+	39, // 34: kurbhan.v1.ShipmentService.CollectCODPayment:output_type -> kurbhan.v1.CollectCODResponse
+	19, // 35: kurbhan.v1.PaymentService.CreatePayment:output_type -> kurbhan.v1.CreatePaymentResponse
+	21, // 36: kurbhan.v1.PaymentService.GetPaymentStatus:output_type -> kurbhan.v1.GetPaymentStatusResponse
+	23, // 37: kurbhan.v1.PaymentService.ConfirmPayment:output_type -> kurbhan.v1.ConfirmPaymentResponse
+	25, // 38: kurbhan.v1.PaymentService.ProcessVATransaction:output_type -> kurbhan.v1.ProcessVATransactionResponse
+	28, // 39: kurbhan.v1.PaymentService.GetPaymentMethods:output_type -> kurbhan.v1.GetPaymentMethodsResponse
+	23, // [23:40] is the sub-list for method output_type
+	6,  // [6:23] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_kurbhan_proto_init() }
@@ -1509,9 +3440,9 @@ func file_kurbhan_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_kurbhan_proto_rawDesc), len(file_kurbhan_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   18,
+			NumMessages:   40,
 			NumExtensions: 0,
-			NumServices:   3,
+			NumServices:   4,
 		},
 		GoTypes:           file_kurbhan_proto_goTypes,
 		DependencyIndexes: file_kurbhan_proto_depIdxs,

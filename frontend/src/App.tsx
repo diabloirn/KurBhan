@@ -8,6 +8,8 @@ import Tracking from './pages/Tracking'
 import Dashboard from './pages/Dashboard'
 import Admin from './pages/Admin'
 
+import FAQ from './pages/FAQ'
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -20,6 +22,7 @@ export default function App() {
           <Route path="/tracking" element={<Tracking />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/faq" element={<FAQ />} />
         </Route>
       </Routes>
     </BrowserRouter>

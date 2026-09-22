@@ -4,16 +4,27 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log"
+	"os"
 	"time"
 
 	pb "auth-service/pb"
+
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-var jwtSecret = []byte("KURBHAN_SUPER_SECRET_KEY_2026")
+var jwtSecret []byte
+
+func init() {
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		log.Fatal("JWT_SECRET environment variable is required")
+	}
+	jwtSecret = []byte(secret)
+}
 
 func (h *AuthHandler) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
 	var userID, fullName, role, hashedPassword string

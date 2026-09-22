@@ -1,0 +1,9 @@
+go 1.26.3
+
+use (
+	./backend/internal/services/auth_service
+	./backend/internal/services/payment_service
+	./backend/internal/services/rate_service
+	./backend/internal/services/scraping_daemon
+	./backend/internal/services/shipment_service
+)

@@ -5,10 +5,11 @@ services:
       dockerfile: Dockerfile
     container_name: kurbhan-auth-service
     ports:
-      - "50051:50051"
+      - "${AUTH_SERVICE_PORT:-50051}:${AUTH_SERVICE_PORT:-50051}"
+    env_file:
+      - .env
     environment:
-      - DB_URI=postgresql://postgres.wgyzpzdnublmqfirikab:Diabloirn16......@aws-0-ap-northeast-1.pooler.supabase.com:6543/postgres
-      - PORT=50051
+      - PORT=${AUTH_SERVICE_PORT:-50051}
     networks:
       - kurbhan-network
 
@@ -18,11 +19,11 @@ services:
       dockerfile: Dockerfile
     container_name: kurbhan-rate-service
     ports:
-      - "50052:50052"
+      - "${RATE_SERVICE_PORT:-50052}:${RATE_SERVICE_PORT:-50052}"
+    env_file:
+      - .env
     environment:
-      - DB_URI=postgresql://postgres.wgyzpzdnublmqfirikab:Diabloirn16......@aws-0-ap-northeast-1.pooler.supabase.com:6543/postgres
-      - MEMCACHED_HOST=memcached:11211
-      - PORT=50052
+      - PORT=${RATE_SERVICE_PORT:-50052}
     depends_on:
       - memcached
     networks:
@@ -34,12 +35,42 @@ services:
       dockerfile: Dockerfile
     container_name: kurbhan-shipment-service
     ports:
-      - "50053:50053"
+      - "${SHIPMENT_SERVICE_PORT:-50053}:${SHIPMENT_SERVICE_PORT:-50053}"
+    env_file:
+      - .env
     environment:
-      - DB_URI=postgresql://postgres.wgyzpzdnublmqfirikab:Diabloirn16......@aws-0-ap-northeast-1.pooler.supabase.com:6543/postgres
-      - PORT=50053
+      - PORT=${SHIPMENT_SERVICE_PORT:-50053}
     networks:
       - kurbhan-network
+
+  payment-service:
+    build:
+      context: ./backend/internal/services/payment_service
+      dockerfile: Dockerfile
+    container_name: kurbhan-payment-service
+    ports:
+      - "${PAYMENT_SERVICE_PORT:-50054}:${PAYMENT_SERVICE_PORT:-50054}"
+    env_file:
+      - .env
+    environment:
+      - PORT=${PAYMENT_SERVICE_PORT:-50054}
+    depends_on:
+      - shipment-service
+    networks:
+      - kurbhan-network
+
+  scraping-daemon:
+    build:
+      context: ./backend/internal/services/scraping_daemon
+      dockerfile: Dockerfile
+    container_name: kurbhan-scraping-daemon
+    env_file:
+      - .env
+    depends_on:
+      - rate-service
+    networks:
+      - kurbhan-network
+    restart: unless-stopped
 
   memcached:
     image: memcached:alpine
@@ -55,12 +86,13 @@ services:
     volumes:
       - ./envoy/envoy.yaml:/etc/envoy/envoy.yaml
     ports:
-      - "8080:8080"
+      - "${ENVOY_PORT:-8080}:8080"
       - "9901:9901"
     depends_on:
       - auth-service
       - rate-service
       - shipment-service
+      - payment-service
     networks:
       - kurbhan-network
 

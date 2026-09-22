@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Send, Search, TrendingUp, Package, Clock, CheckCircle2, ArrowRight, ShieldCheck, Ban, ArrowUpRight } from 'lucide-react';
+import { Send, Search, TrendingUp, Package, Clock, CheckCircle2, ArrowRight, ShieldCheck, Ban, ArrowUpRight, Printer } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { getStoredShipments, updateStoredShipmentStatus, type StoredShipment } from '../lib/shipmentStorage';
 import { shipmentServiceClient } from '../services/grpcClient';
 import { CancelShipmentRequest } from '../proto/kurbhan_pb';
 import { cn } from '../lib/cn';
+import WaybillModal, { type WaybillData } from '../components/WaybillModal';
 import './Dashboard.css';
 
 const getStatusBadge = (status: StoredShipment['status']) => {
@@ -36,6 +37,8 @@ export default function Dashboard() {
   const [mfaAuthApp, setMfaAuthApp] = useState(true);
   const [mfaSms, setMfaSms] = useState(false);
   const [cancelingId, setCancelingId] = useState<string | null>(null);
+  const [selectedWaybill, setSelectedWaybill] = useState<WaybillData | null>(null);
+  const [isWaybillOpen, setIsWaybillOpen] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -202,6 +205,36 @@ export default function Dashboard() {
                     </div>
 
                     <div className="dashboard-item-actions">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedWaybill({
+                            trackingNumber: item.trackingNumber,
+                            senderName: item.senderName,
+                            senderPhone: item.senderPhone,
+                            senderAddress: item.senderAddress,
+                            receiverName: item.receiverName,
+                            receiverPhone: item.receiverPhone,
+                            receiverAddress: item.receiverAddress,
+                            originLocation: item.originLocation,
+                            destinationLocation: item.destinationLocation,
+                            weightKg: item.weightKg,
+                            serviceType: item.serviceType,
+                            vehicleType: item.vehicleType,
+                            totalCost: item.totalCost,
+                            paymentMethod: item.paymentMethod,
+                            paymentStatus: item.paymentStatus,
+                            vaNumber: item.vaNumber,
+                            createdAt: item.createdAt,
+                          });
+                          setIsWaybillOpen(true);
+                        }}
+                        className="hazard-btn text-xs py-1.5 px-3 flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <Printer className="w-3.5 h-3.5" />
+                        <span>Cetak Resi</span>
+                      </button>
+
                       {item.status === 'PENDING' && (
                         <button
                           onClick={() => handleCancelShipment(item)}
@@ -284,6 +317,13 @@ export default function Dashboard() {
           </div>
         </motion.div>
       </div>
+
+      {/* Modal Cetak Resi Fisik */}
+      <WaybillModal 
+        isOpen={isWaybillOpen} 
+        onClose={() => setIsWaybillOpen(false)} 
+        data={selectedWaybill} 
+      />
     </div>
   );
 }

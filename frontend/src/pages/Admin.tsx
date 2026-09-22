@@ -9,8 +9,11 @@ import {
   CheckCircle2, 
   MapPin, 
   Search, 
-  Sliders, 
-  Send 
+  Send,
+  Zap,
+  FileCheck,
+  X,
+  Printer
 } from 'lucide-react';
 import { 
   getStoredShipments, 
@@ -18,9 +21,14 @@ import {
   updateStoredPaymentStatus, 
   type StoredShipment 
 } from '../lib/shipmentStorage';
-import { shipmentServiceClient } from '../services/grpcClient';
-import { UpdateShipmentStatusRequest } from '../proto/kurbhan_pb';
+import { shipmentServiceClient, paymentServiceClient } from '../services/grpcClient';
+import { 
+  UpdateShipmentStatusRequest, 
+  ConfirmPaymentRequest, 
+  ProcessVATransactionRequest 
+} from '../proto/kurbhan_pb';
 import { cn } from '../lib/cn';
+import WaybillModal, { type WaybillData } from '../components/WaybillModal';
 import './Admin.css';
 
 interface DriverItem {
@@ -60,6 +68,24 @@ export default function Admin() {
   const [scrapingTime, setScrapingTime] = useState('Hari ini, 08:00 WIB');
   const [isScraping, setIsScraping] = useState(false);
 
+  // VA Simulation state
+  const [vaSimulationNumber, setVaSimulationNumber] = useState('');
+  const [vaSimulationAmount, setVaSimulationAmount] = useState<number | ''>('');
+  const [isProcessingVA, setIsProcessingVA] = useState(false);
+  const [vaSimulationFeedback, setVaSimulationFeedback] = useState<{ success: boolean; status: string; message: string } | null>(null);
+
+  // Transfer verification modal state
+  const [activeTransferShipment, setActiveTransferShipment] = useState<StoredShipment | null>(null);
+  const [transferSenderName, setTransferSenderName] = useState('');
+  const [transferSenderPhone, setTransferSenderPhone] = useState('');
+  const [transferAmount, setTransferAmount] = useState<number>(0);
+  const [transferProof, setTransferProof] = useState('');
+  const [isConfirmingTransfer, setIsConfirmingTransfer] = useState(false);
+  const [transferFeedback, setTransferFeedback] = useState<{ success: boolean; message: string } | null>(null);
+  const [waybillModalData, setWaybillModalData] = useState<WaybillData | null>(null);
+  const [isWaybillOpen, setIsWaybillOpen] = useState(false);
+  const [waybillSuccessBanner, setWaybillSuccessBanner] = useState(false);
+
   const handleUpdateStatus = async () => {
     if (!selectedResi) return;
 
@@ -84,9 +110,214 @@ export default function Admin() {
     }
   };
 
-  const handleVerifyPayment = (trackingNumber: string) => {
-    updateStoredPaymentStatus(trackingNumber, 'VERIFIED');
-    setShipments(getStoredShipments());
+  // Automated VA transaction processing (Simulated Webhook / Inward Transaction)
+  const handleProcessVATransaction = async () => {
+    if (!vaSimulationNumber || !vaSimulationAmount) return;
+
+    setIsProcessingVA(true);
+    setVaSimulationFeedback(null);
+
+    try {
+      const req = new ProcessVATransactionRequest();
+      req.setVaNumber(vaSimulationNumber);
+      req.setAmount(Number(vaSimulationAmount));
+      req.setTransactionId(`tx-va-${Date.now()}`);
+      req.setPaymentDate(new Date().toISOString());
+
+      const res = await paymentServiceClient.processVATransaction(req, {});
+      const obj = res.toObject();
+
+      if (obj.success) {
+        setVaSimulationFeedback({
+          success: true,
+          status: obj.status,
+          message: `✅ DITERIMA: Uang transfer Rp ${Number(vaSimulationAmount).toLocaleString('id-ID')} sesuai tujuan VA ${vaSimulationNumber}. Status diperbarui menjadi LUNAS!`
+        });
+
+        // Update local storage status
+        const current = getStoredShipments();
+        const target = current.find(s => s.vaNumber === vaSimulationNumber);
+        if (target) {
+          updateStoredPaymentStatus(target.trackingNumber, 'VERIFIED');
+          setShipments(getStoredShipments());
+          setWaybillModalData({
+            trackingNumber: target.trackingNumber,
+            senderName: target.senderName,
+            senderPhone: target.senderPhone,
+            senderAddress: target.senderAddress,
+            receiverName: target.receiverName,
+            receiverPhone: target.receiverPhone,
+            receiverAddress: target.receiverAddress,
+            originLocation: target.originLocation,
+            destinationLocation: target.destinationLocation,
+            weightKg: target.weightKg,
+            serviceType: target.serviceType,
+            vehicleType: target.vehicleType,
+            totalCost: target.totalCost,
+            paymentMethod: target.paymentMethod,
+            paymentStatus: 'VERIFIED',
+            vaNumber: target.vaNumber,
+            createdAt: target.createdAt,
+          });
+          setWaybillSuccessBanner(true);
+          setIsWaybillOpen(true);
+        }
+      } else {
+        setVaSimulationFeedback({
+          success: false,
+          status: obj.status,
+          message: `❌ DITOLAK: ${obj.rejectionReason || obj.message}`
+        });
+      }
+    } catch {
+      // Fallback local logic
+      const current = getStoredShipments();
+      const target = current.find(s => s.vaNumber === vaSimulationNumber);
+      if (target) {
+        if (Math.abs(target.totalCost - Number(vaSimulationAmount)) <= 0.01) {
+          updateStoredPaymentStatus(target.trackingNumber, 'VERIFIED');
+          setShipments(getStoredShipments());
+          setVaSimulationFeedback({
+            success: true,
+            status: 'ACCEPTED',
+            message: `✅ DITERIMA (Simulasi): Uang transfer Rp ${Number(vaSimulationAmount).toLocaleString('id-ID')} cocok dengan tagihan VA. Status LUNAS!`
+          });
+          setWaybillModalData({
+            trackingNumber: target.trackingNumber,
+            senderName: target.senderName,
+            senderPhone: target.senderPhone,
+            senderAddress: target.senderAddress,
+            receiverName: target.receiverName,
+            receiverPhone: target.receiverPhone,
+            receiverAddress: target.receiverAddress,
+            originLocation: target.originLocation,
+            destinationLocation: target.destinationLocation,
+            weightKg: target.weightKg,
+            serviceType: target.serviceType,
+            vehicleType: target.vehicleType,
+            totalCost: target.totalCost,
+            paymentMethod: target.paymentMethod,
+            paymentStatus: 'VERIFIED',
+            vaNumber: target.vaNumber,
+            createdAt: target.createdAt,
+          });
+          setWaybillSuccessBanner(true);
+          setIsWaybillOpen(true);
+        } else {
+          setVaSimulationFeedback({
+            success: false,
+            status: 'REJECTED',
+            message: `❌ DITOLAK: Nominal transfer Rp ${Number(vaSimulationAmount).toLocaleString('id-ID')} tidak cocok dengan tagihan Rp ${target.totalCost.toLocaleString('id-ID')}!`
+          });
+        }
+      } else {
+        setVaSimulationFeedback({
+          success: false,
+          status: 'REJECTED',
+          message: `❌ DITOLAK: Nomor VA ${vaSimulationNumber} tidak terdaftar dalam manifes!`
+        });
+      }
+    } finally {
+      setIsProcessingVA(false);
+    }
+  };
+
+  // Manual bank transfer cross-checking
+  const handleOpenTransferModal = (shipment: StoredShipment) => {
+    setActiveTransferShipment(shipment);
+    setTransferSenderName(shipment.senderName);
+    setTransferSenderPhone(shipment.senderPhone);
+    setTransferAmount(shipment.totalCost);
+    setTransferProof(shipment.transferProofUrl || 'https://storage.kurbhan.co.id/proofs/sample_transfer.jpg');
+    setTransferFeedback(null);
+  };
+
+  const handleConfirmBankTransfer = async () => {
+    if (!activeTransferShipment) return;
+
+    setIsConfirmingTransfer(true);
+    setTransferFeedback(null);
+
+    try {
+      const req = new ConfirmPaymentRequest();
+      req.setPaymentId(activeTransferShipment.paymentId || `pay-${activeTransferShipment.trackingNumber}`);
+      req.setConfirmedBy('ADMIN_OFFICER');
+      req.setSenderName(transferSenderName);
+      req.setSenderPhone(transferSenderPhone);
+      req.setAmountTransferred(Number(transferAmount));
+      req.setProofImageUrl(transferProof);
+      req.setBankSender(activeTransferShipment.paymentChannel || 'BCA');
+
+      const res = await paymentServiceClient.confirmPayment(req, {});
+      const obj = res.toObject();
+
+      if (obj.success) {
+        updateStoredPaymentStatus(activeTransferShipment.trackingNumber, 'VERIFIED');
+        setShipments(getStoredShipments());
+        setTransferFeedback({ success: true, message: '✅ Pembayaran transfer berhasil diverifikasi dan dikonfirmasi!' });
+        setWaybillModalData({
+          trackingNumber: activeTransferShipment.trackingNumber,
+          senderName: activeTransferShipment.senderName,
+          senderPhone: activeTransferShipment.senderPhone,
+          senderAddress: activeTransferShipment.senderAddress,
+          receiverName: activeTransferShipment.receiverName,
+          receiverPhone: activeTransferShipment.receiverPhone,
+          receiverAddress: activeTransferShipment.receiverAddress,
+          originLocation: activeTransferShipment.originLocation,
+          destinationLocation: activeTransferShipment.destinationLocation,
+          weightKg: activeTransferShipment.weightKg,
+          serviceType: activeTransferShipment.serviceType,
+          vehicleType: activeTransferShipment.vehicleType,
+          totalCost: activeTransferShipment.totalCost,
+          paymentMethod: activeTransferShipment.paymentMethod,
+          paymentStatus: 'VERIFIED',
+          vaNumber: activeTransferShipment.vaNumber,
+          createdAt: activeTransferShipment.createdAt,
+        });
+        setWaybillSuccessBanner(true);
+        setTimeout(() => {
+          setActiveTransferShipment(null);
+          setIsWaybillOpen(true);
+        }, 1200);
+      } else {
+        setTransferFeedback({ success: false, message: `❌ Verifikasi ditolak: ${obj.rejectionReason || obj.message}` });
+      }
+    } catch {
+      // Local fallback verification
+      if (Math.abs(activeTransferShipment.totalCost - Number(transferAmount)) <= 0.01 && transferSenderName && transferSenderPhone) {
+        updateStoredPaymentStatus(activeTransferShipment.trackingNumber, 'VERIFIED');
+        setShipments(getStoredShipments());
+        setTransferFeedback({ success: true, message: '✅ Pembayaran transfer berhasil diverifikasi (Local Sync)!' });
+        setWaybillModalData({
+          trackingNumber: activeTransferShipment.trackingNumber,
+          senderName: activeTransferShipment.senderName,
+          senderPhone: activeTransferShipment.senderPhone,
+          senderAddress: activeTransferShipment.senderAddress,
+          receiverName: activeTransferShipment.receiverName,
+          receiverPhone: activeTransferShipment.receiverPhone,
+          receiverAddress: activeTransferShipment.receiverAddress,
+          originLocation: activeTransferShipment.originLocation,
+          destinationLocation: activeTransferShipment.destinationLocation,
+          weightKg: activeTransferShipment.weightKg,
+          serviceType: activeTransferShipment.serviceType,
+          vehicleType: activeTransferShipment.vehicleType,
+          totalCost: activeTransferShipment.totalCost,
+          paymentMethod: activeTransferShipment.paymentMethod,
+          paymentStatus: 'VERIFIED',
+          vaNumber: activeTransferShipment.vaNumber,
+          createdAt: activeTransferShipment.createdAt,
+        });
+        setWaybillSuccessBanner(true);
+        setTimeout(() => {
+          setActiveTransferShipment(null);
+          setIsWaybillOpen(true);
+        }, 1200);
+      } else {
+        setTransferFeedback({ success: false, message: '❌ Verifikasi ditolak: Nominal atau data tidak sesuai.' });
+      }
+    } finally {
+      setIsConfirmingTransfer(false);
+    }
   };
 
   const handleTriggerScraper = () => {
@@ -112,7 +343,7 @@ export default function Admin() {
             <span className="section-eyebrow">CONTROL CENTER</span>
             <h1 className="admin-headline">Dashboard Operasional Admin</h1>
             <p className="admin-sub">
-              Manajemen manifest pengiriman, alokasi armada/driver, verifikasi pembayaran, dan benchmark tarif.
+              Manajemen manifest pengiriman, alokasi armada/driver, verifikasi pembayaran multi-channel, dan benchmark tarif.
             </p>
           </div>
           <div className="admin-badge">
@@ -137,7 +368,7 @@ export default function Admin() {
             className={cn("admin-tab-btn", activeTab === 'payments' && "active")}
           >
             <CreditCard className="w-4 h-4" />
-            <span>Verifikasi Pembayaran (FR-6.3)</span>
+            <span>Verifikasi Pembayaran & VA (FR-6.3)</span>
           </button>
           <button 
             type="button" 
@@ -303,18 +534,79 @@ export default function Admin() {
           </motion.div>
         )}
 
-        {/* Tab 2: Verifikasi Pembayaran (FR-6.3) */}
+        {/* Tab 2: Verifikasi Pembayaran & Simulasi VA (FR-6.3) */}
         {activeTab === 'payments' && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+            {/* Simulasi Otomasi Virtual Account Masuk */}
+            <div className="admin-update-panel bg-[var(--kb-paper)] border-2 border-[var(--kb-hazard)]">
+              <div className="admin-panel-title text-[var(--kb-wood)] flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <Zap className="w-4 h-4 text-[var(--kb-wood)]" />
+                  <span className="font-bold">⚡ Simulasi Otomasi Pembayaran Virtual Account Masuk (Webhook Test)</span>
+                </div>
+                <span className="text-xs px-2 py-0.5 bg-[var(--kb-hazard)] text-[var(--kb-wood)] font-bold">
+                  Batas Waktu: 1x24 Jam
+                </span>
+              </div>
+              <p className="text-xs text-[var(--kb-wood-light)] mt-1 mb-3">
+                Uji coba otomatisasi: Sistem backend dan database akan memeriksa kecocokan nomor VA tujuan, nominal uang, serta batas waktu 1x24 jam. Jika cocok, pembayaran langsung diterima dan status pengiriman berubah otomatis.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="text-xs font-bold text-[var(--kb-wood)]">Nomor Virtual Account</label>
+                  <input 
+                    type="text"
+                    placeholder="cth: 3910781234567890"
+                    value={vaSimulationNumber}
+                    onChange={(e) => setVaSimulationNumber(e.target.value)}
+                    className="cargo-input w-full text-xs font-mono font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-[var(--kb-wood)]">Nominal Uang Transfer (Rp)</label>
+                  <input 
+                    type="number"
+                    placeholder="cth: 45000"
+                    value={vaSimulationAmount}
+                    onChange={(e) => setVaSimulationAmount(e.target.value === '' ? '' : Number(e.target.value))}
+                    className="cargo-input w-full text-xs font-mono font-bold"
+                  />
+                </div>
+                <div className="flex items-end">
+                  <button 
+                    type="button" 
+                    onClick={handleProcessVATransaction}
+                    disabled={isProcessingVA || !vaSimulationNumber || !vaSimulationAmount}
+                    className="hazard-btn w-full h-[38px] text-xs flex items-center justify-center gap-1.5 disabled:opacity-50"
+                  >
+                    {isProcessingVA ? 'Memeriksa Mutasi...' : 'Kirim Transaksi Masuk'}
+                  </button>
+                </div>
+              </div>
+
+              {vaSimulationFeedback && (
+                <div className={cn(
+                  "mt-3 text-xs font-bold p-2.5 border flex items-center gap-1.5",
+                  vaSimulationFeedback.success 
+                    ? "bg-[var(--kb-hazard)] text-[var(--kb-wood)] border-[var(--kb-wood)]" 
+                    : "bg-red-100 text-red-800 border-red-400"
+                )}>
+                  <span>{vaSimulationFeedback.message}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Tabel Daftar Pembayaran & Aksi Crosscheck */}
             <div className="admin-card">
               <div className="admin-card-header">
                 <div>
                   <h3 className="admin-card-title">
                     <CreditCard className="w-5 h-5 text-[var(--kb-wood)]" />
-                    Pencocokan & Verifikasi Pembayaran Masuk (FR-6.3)
+                    Daftar Pembayaran Masuk & Status Verifikasi (FR-6.3)
                   </h3>
                   <p className="text-xs text-[var(--kb-wood-light)] mt-1">
-                    Verifikasi pembayaran dari transfer bank dan QRIS sebelum kurir melakukan penjemputan paket.
+                    Verifikasi pembayaran dari Virtual Account (otomatis), Transfer Bank (crosscheck manual), dan COD (minimal DP 50%).
                   </p>
                 </div>
               </div>
@@ -324,10 +616,11 @@ export default function Admin() {
                   <thead>
                     <tr>
                       <th>Nomor Resi</th>
-                      <th>Pengirim</th>
-                      <th>Metode Pembayaran</th>
+                      <th>Pengirim & Kontak</th>
+                      <th>Metode & Channel</th>
+                      <th>Info Akun / VA</th>
                       <th>Nominal Tagihan</th>
-                      <th>Status Pembayaran</th>
+                      <th>Status</th>
                       <th>Aksi Verifikasi</th>
                     </tr>
                   </thead>
@@ -335,9 +628,40 @@ export default function Admin() {
                     {shipments.map(item => (
                       <tr key={item.id}>
                         <td className="font-mono font-bold">{item.trackingNumber}</td>
-                        <td>{item.senderName} ({item.senderPhone})</td>
-                        <td>{item.paymentMethod || 'QRIS Instan'}</td>
-                        <td className="font-bold">Rp {item.totalCost.toLocaleString('id-ID')}</td>
+                        <td>
+                          <div className="font-bold text-xs">{item.senderName}</div>
+                          <div className="text-xs text-[var(--kb-gray-2)] font-mono">{item.senderPhone}</div>
+                        </td>
+                        <td>
+                          <span className="text-xs font-semibold px-2 py-0.5 bg-[var(--kb-paper-dark)] border border-[var(--kb-wood)] inline-block">
+                            {item.paymentMethod}
+                          </span>
+                        </td>
+                        <td>
+                          {item.vaNumber ? (
+                            <div>
+                              <span className="font-mono text-xs font-bold text-[var(--kb-wood)] block">{item.vaNumber}</span>
+                              <button 
+                                type="button"
+                                onClick={() => {
+                                  setVaSimulationNumber(item.vaNumber || '');
+                                  setVaSimulationAmount(item.totalCost);
+                                }}
+                                className="text-[10px] text-[var(--kb-wood)] underline mt-0.5"
+                              >
+                                Isi ke Simulasi VA ↗
+                              </button>
+                            </div>
+                          ) : (
+                            <span className="text-xs text-[var(--kb-gray-2)]">Rekening KurBhan</span>
+                          )}
+                        </td>
+                        <td className="font-bold">
+                          Rp {item.totalCost.toLocaleString('id-ID')}
+                          {item.dpAmount ? (
+                            <span className="block text-[10px] text-[var(--kb-wood-light)]">DP: Rp {item.dpAmount.toLocaleString('id-ID')}</span>
+                          ) : null}
+                        </td>
                         <td>
                           <span className={cn(
                             "px-2.5 py-1 text-xs font-bold border",
@@ -350,18 +674,53 @@ export default function Admin() {
                         </td>
                         <td>
                           {item.paymentStatus === 'VERIFIED' ? (
-                            <span className="text-xs text-[var(--kb-wood)] font-bold flex items-center gap-1">
-                              <CheckCircle2 className="w-4 h-4 text-[var(--kb-wood)]" />
-                              LUNAS
-                            </span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-[var(--kb-green)] font-bold flex items-center gap-1">
+                                <CheckCircle2 className="w-4 h-4 text-[var(--kb-green)]" />
+                                LUNAS
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setWaybillModalData({
+                                    trackingNumber: item.trackingNumber,
+                                    senderName: item.senderName,
+                                    senderPhone: item.senderPhone,
+                                    senderAddress: item.senderAddress,
+                                    receiverName: item.receiverName,
+                                    receiverPhone: item.receiverPhone,
+                                    receiverAddress: item.receiverAddress,
+                                    originLocation: item.originLocation,
+                                    destinationLocation: item.destinationLocation,
+                                    weightKg: item.weightKg,
+                                    serviceType: item.serviceType,
+                                    vehicleType: item.vehicleType,
+                                    totalCost: item.totalCost,
+                                    paymentMethod: item.paymentMethod,
+                                    paymentStatus: item.paymentStatus,
+                                    vaNumber: item.vaNumber,
+                                    createdAt: item.createdAt,
+                                  });
+                                  setWaybillSuccessBanner(false);
+                                  setIsWaybillOpen(true);
+                                }}
+                                className="paper-btn text-xs px-2 py-0.5 flex items-center gap-1 cursor-pointer"
+                              >
+                                <Printer className="w-3 h-3" />
+                                <span>Cetak Resi</span>
+                              </button>
+                            </div>
                           ) : (
-                            <button 
-                              type="button" 
-                              onClick={() => handleVerifyPayment(item.trackingNumber)}
-                              className="hazard-btn text-xs px-3 py-1.5"
-                            >
-                              Verifikasi Sekarang
-                            </button>
+                            <div className="flex items-center gap-1.5">
+                              <button 
+                                type="button" 
+                                onClick={() => handleOpenTransferModal(item)}
+                                className="hazard-btn text-xs px-2.5 py-1 flex items-center gap-1"
+                              >
+                                <FileCheck className="w-3.5 h-3.5" />
+                                <span>Crosscheck</span>
+                              </button>
+                            </div>
                           )}
                         </td>
                       </tr>
@@ -370,6 +729,107 @@ export default function Admin() {
                 </table>
               </div>
             </div>
+
+            {/* Modal Crosscheck Transfer Manual */}
+            {activeTransferShipment && (
+              <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="bg-[var(--kb-paper)] border-2 border-[var(--kb-wood)] p-6 max-w-lg w-full rounded shadow-xl space-y-4"
+                >
+                  <div className="flex items-center justify-between pb-3 border-b border-[var(--kb-kraft-dark)]">
+                    <div className="flex items-center gap-2">
+                      <FileCheck className="w-5 h-5 text-[var(--kb-wood)]" />
+                      <h3 className="font-bold text-sm text-[var(--kb-wood)]">
+                        Crosscheck & Verifikasi Transfer Bank ({activeTransferShipment.trackingNumber})
+                      </h3>
+                    </div>
+                    <button type="button" onClick={() => setActiveTransferShipment(null)} className="text-[var(--kb-wood)]">
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  <p className="text-xs text-[var(--kb-wood-light)]">
+                    Backend akan memverifikasi nama lengkap, nomor telepon, kesesuaian nominal transfer dengan tagihan, dan bukti transfer sebelum menerima pembayaran.
+                  </p>
+
+                  <div className="space-y-3 text-xs">
+                    <div>
+                      <label className="font-bold text-[var(--kb-wood)]">Nama Lengkap Pengirim (Pada Bukti Transfer)</label>
+                      <input 
+                        type="text"
+                        value={transferSenderName}
+                        onChange={(e) => setTransferSenderName(e.target.value)}
+                        className="cargo-input w-full text-xs"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="font-bold text-[var(--kb-wood)]">Nomor Telepon Pengirim</label>
+                      <input 
+                        type="text"
+                        value={transferSenderPhone}
+                        onChange={(e) => setTransferSenderPhone(e.target.value)}
+                        className="cargo-input w-full text-xs font-mono"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="font-bold text-[var(--kb-wood)]">Nominal yang Ditransfer (Rp)</label>
+                      <input 
+                        type="number"
+                        value={transferAmount}
+                        onChange={(e) => setTransferAmount(Number(e.target.value))}
+                        className="cargo-input w-full text-xs font-mono font-bold"
+                      />
+                      <span className="text-[10px] text-[var(--kb-wood-light)]">
+                        Tagihan sistem: Rp {activeTransferShipment.totalCost.toLocaleString('id-ID')}
+                      </span>
+                    </div>
+
+                    <div>
+                      <label className="font-bold text-[var(--kb-wood)]">URL / Path Bukti Transfer (Struk)</label>
+                      <input 
+                        type="text"
+                        value={transferProof}
+                        onChange={(e) => setTransferProof(e.target.value)}
+                        className="cargo-input w-full text-xs font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  {transferFeedback && (
+                    <div className={cn(
+                      "text-xs font-bold p-2 border flex items-center gap-1.5",
+                      transferFeedback.success 
+                        ? "bg-[var(--kb-hazard)] text-[var(--kb-wood)] border-[var(--kb-wood)]" 
+                        : "bg-red-100 text-red-800 border-red-400"
+                    )}>
+                      <span>{transferFeedback.message}</span>
+                    </div>
+                  )}
+
+                  <div className="flex items-center justify-end gap-2 pt-3 border-t border-[var(--kb-kraft-dark)]">
+                    <button 
+                      type="button" 
+                      onClick={() => setActiveTransferShipment(null)}
+                      className="paper-btn text-xs px-3 py-1.5"
+                    >
+                      Batal
+                    </button>
+                    <button 
+                      type="button" 
+                      onClick={handleConfirmBankTransfer}
+                      disabled={isConfirmingTransfer}
+                      className="hazard-btn text-xs px-4 py-1.5 flex items-center gap-1.5"
+                    >
+                      {isConfirmingTransfer ? 'Memverifikasi...' : 'Verifikasi & Konfirmasi'}
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
           </motion.div>
         )}
 
@@ -454,60 +914,69 @@ export default function Admin() {
                   <thead>
                     <tr>
                       <th>Rute Logistik</th>
+                      <th>Berat</th>
                       <th>KurBhan (Transparan)</th>
                       <th>JNE Reguler</th>
                       <th>J&T Express EZ</th>
                       <th>SiCepat BEST</th>
-                      <th>Margin Keunggulan</th>
+                      <th>Status Selisih</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td className="font-bold text-xs">Jakarta ➔ Bekasi (Darat)</td>
-                      <td className="font-bold text-[var(--kb-wood)] bg-[var(--kb-hazard)]/30">Rp 12.000 / kg</td>
-                      <td className="text-[var(--kb-wood-light)]">Rp 14.500 / kg</td>
-                      <td className="text-[var(--kb-wood-light)]">Rp 14.000 / kg</td>
-                      <td className="text-[var(--kb-wood-light)]">Rp 15.000 / kg</td>
-                      <td><span className="px-2 py-0.5 border border-[var(--kb-wood)] bg-[var(--kb-hazard)] text-[var(--kb-wood)] font-bold text-xs">Hemat 17-20%</span></td>
+                      <td className="font-semibold text-xs">Jakarta Timur ➔ Bekasi Barat</td>
+                      <td className="text-xs">5 kg</td>
+                      <td className="font-bold text-[var(--kb-wood)]">Rp 45.000</td>
+                      <td className="text-xs text-[var(--kb-wood-light)]">Rp 55.000</td>
+                      <td className="text-xs text-[var(--kb-wood-light)]">Rp 53.000</td>
+                      <td className="text-xs text-[var(--kb-wood-light)]">Rp 56.000</td>
+                      <td>
+                        <span className="px-2 py-0.5 text-xs font-bold bg-[var(--kb-hazard)] text-[var(--kb-wood)] border border-[var(--kb-wood)]">
+                          Hemat 18% - 24%
+                        </span>
+                      </td>
                     </tr>
                     <tr>
-                      <td className="font-bold text-xs">Jakarta ➔ Bandung (Darat)</td>
-                      <td className="font-bold text-[var(--kb-wood)] bg-[var(--kb-hazard)]/30">Rp 15.000 / kg</td>
-                      <td className="text-[var(--kb-wood-light)]">Rp 18.500 / kg</td>
-                      <td className="text-[var(--kb-wood-light)]">Rp 17.500 / kg</td>
-                      <td className="text-[var(--kb-wood-light)]">Rp 19.000 / kg</td>
-                      <td><span className="px-2 py-0.5 border border-[var(--kb-wood)] bg-[var(--kb-hazard)] text-[var(--kb-wood)] font-bold text-xs">Hemat 19-21%</span></td>
+                      <td className="font-semibold text-xs">Jakarta ➔ Bandung</td>
+                      <td className="text-xs">12 kg</td>
+                      <td className="font-bold text-[var(--kb-wood)]">Rp 85.000</td>
+                      <td className="text-xs text-[var(--kb-wood-light)]">Rp 104.000</td>
+                      <td className="text-xs text-[var(--kb-wood-light)]">Rp 100.000</td>
+                      <td className="text-xs text-[var(--kb-wood-light)]">Rp 106.000</td>
+                      <td>
+                        <span className="px-2 py-0.5 text-xs font-bold bg-[var(--kb-hazard)] text-[var(--kb-wood)] border border-[var(--kb-wood)]">
+                          Hemat 15% - 25%
+                        </span>
+                      </td>
                     </tr>
                     <tr>
-                      <td className="font-bold text-xs">Jakarta ➔ Surabaya (Darat)</td>
-                      <td className="font-bold text-[var(--kb-wood)] bg-[var(--kb-hazard)]/30">Rp 22.000 / kg</td>
-                      <td className="text-[var(--kb-wood-light)]">Rp 27.000 / kg</td>
-                      <td className="text-[var(--kb-wood-light)]">Rp 26.000 / kg</td>
-                      <td className="text-[var(--kb-wood-light)]">Rp 28.500 / kg</td>
-                      <td><span className="px-2 py-0.5 border border-[var(--kb-wood)] bg-[var(--kb-hazard)] text-[var(--kb-wood)] font-bold text-xs">Hemat 18-23%</span></td>
-                    </tr>
-                    <tr>
-                      <td className="font-bold text-xs">Jakarta ➔ Medan (Laut/Udara)</td>
-                      <td className="font-bold text-[var(--kb-wood)] bg-[var(--kb-hazard)]/30">Rp 38.000 / kg</td>
-                      <td className="text-[var(--kb-wood-light)]">Rp 48.000 / kg</td>
-                      <td className="text-[var(--kb-wood-light)]">Rp 46.500 / kg</td>
-                      <td className="text-[var(--kb-wood-light)]">Rp 50.000 / kg</td>
-                      <td><span className="px-2 py-0.5 border border-[var(--kb-wood)] bg-[var(--kb-hazard)] text-[var(--kb-wood)] font-bold text-xs">Hemat 21-24%</span></td>
+                      <td className="font-semibold text-xs">Surabaya ➔ Medan (Lintas Pulau)</td>
+                      <td className="text-xs">25 kg</td>
+                      <td className="font-bold text-[var(--kb-wood)]">Rp 320.000</td>
+                      <td className="text-xs text-[var(--kb-wood-light)]">Rp 390.000</td>
+                      <td className="text-xs text-[var(--kb-wood-light)]">Rp 380.000</td>
+                      <td className="text-xs text-[var(--kb-wood-light)]">Rp 400.000</td>
+                      <td>
+                        <span className="px-2 py-0.5 text-xs font-bold bg-[var(--kb-hazard)] text-[var(--kb-wood)] border border-[var(--kb-wood)]">
+                          Hemat 19% - 25%
+                        </span>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
-              </div>
-
-              <div className="mt-4 p-4 bg-[var(--kb-kraft-light)] border-2 border-[var(--kb-wood)] flex items-start gap-3 shadow-[2px_2px_0px_var(--kb-wood)]">
-                <Sliders className="w-5 h-5 text-[var(--kb-wood)] shrink-0 mt-0.5" />
-                <div className="text-xs text-[var(--kb-wood)]">
-                  <strong>Pemberitahuan Audit Tarif (FR-5.3):</strong> Seluruh perubahan acuan tarif ekspedisi dan pergeseran margin benchmark kompetitor dicatat secara otomatis ke dalam audit trail sistem untuk akuntabilitas operasional.
-                </div>
               </div>
             </div>
           </motion.div>
         )}
       </div>
+
+      {/* Modal Cetak Resi Fisik / Pop-up Pembayaran Berhasil */}
+      <WaybillModal 
+        isOpen={isWaybillOpen} 
+        onClose={() => setIsWaybillOpen(false)} 
+        data={waybillModalData} 
+        isSuccessNotification={waybillSuccessBanner}
+      />
     </div>
   );
 }

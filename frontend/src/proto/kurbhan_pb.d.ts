@@ -619,3 +619,819 @@ export namespace ShipmentResponse {
   };
 }
 
+export class CreatePaymentRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: CreatePaymentRequest.AsObject);
+  getShipmentId(): string;
+  setShipmentId(value: string): CreatePaymentRequest;
+
+  getUserId(): string;
+  setUserId(value: string): CreatePaymentRequest;
+
+  getMethod(): string;
+  setMethod(value: string): CreatePaymentRequest;
+
+  getChannel(): string;
+  setChannel(value: string): CreatePaymentRequest;
+
+  getAmount(): number;
+  setAmount(value: number): CreatePaymentRequest;
+
+  getCodDpAmount(): number;
+  setCodDpAmount(value: number): CreatePaymentRequest;
+
+  getCustomerPhone(): string;
+  setCustomerPhone(value: string): CreatePaymentRequest;
+
+  getCustomerName(): string;
+  setCustomerName(value: string): CreatePaymentRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CreatePaymentRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: CreatePaymentRequest): CreatePaymentRequest.AsObject;
+  static serializeBinaryToWriter(message: CreatePaymentRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CreatePaymentRequest;
+  static deserializeBinaryFromReader(message: CreatePaymentRequest, reader: jspb.BinaryReader): CreatePaymentRequest;
+}
+
+export namespace CreatePaymentRequest {
+  export type AsObject = {
+    shipmentId: string;
+    userId: string;
+    method: string;
+    channel: string;
+    amount: number;
+    codDpAmount: number;
+    customerPhone: string;
+    customerName: string;
+  };
+}
+
+export class CreatePaymentResponse extends jspb.Message {
+  constructor();
+  constructor(opt_data?: CreatePaymentResponse.AsObject);
+  getPaymentId(): string;
+  setPaymentId(value: string): CreatePaymentResponse;
+
+  getMethod(): string;
+  setMethod(value: string): CreatePaymentResponse;
+
+  getChannel(): string;
+  setChannel(value: string): CreatePaymentResponse;
+
+  getAmount(): number;
+  setAmount(value: number): CreatePaymentResponse;
+
+  getDpAmount(): number;
+  setDpAmount(value: number): CreatePaymentResponse;
+
+  getRemainingAmount(): number;
+  setRemainingAmount(value: number): CreatePaymentResponse;
+
+  getVaNumber(): string;
+  setVaNumber(value: string): CreatePaymentResponse;
+
+  getBankAccountNumber(): string;
+  setBankAccountNumber(value: string): CreatePaymentResponse;
+
+  getBankAccountName(): string;
+  setBankAccountName(value: string): CreatePaymentResponse;
+
+  getStatus(): string;
+  setStatus(value: string): CreatePaymentResponse;
+
+  getExpiredAt(): string;
+  setExpiredAt(value: string): CreatePaymentResponse;
+
+  getMessage(): string;
+  setMessage(value: string): CreatePaymentResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CreatePaymentResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: CreatePaymentResponse): CreatePaymentResponse.AsObject;
+  static serializeBinaryToWriter(message: CreatePaymentResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CreatePaymentResponse;
+  static deserializeBinaryFromReader(message: CreatePaymentResponse, reader: jspb.BinaryReader): CreatePaymentResponse;
+}
+
+export namespace CreatePaymentResponse {
+  export type AsObject = {
+    paymentId: string;
+    method: string;
+    channel: string;
+    amount: number;
+    dpAmount: number;
+    remainingAmount: number;
+    vaNumber: string;
+    bankAccountNumber: string;
+    bankAccountName: string;
+    status: string;
+    expiredAt: string;
+    message: string;
+  };
+}
+
+export class GetPaymentStatusRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: GetPaymentStatusRequest.AsObject);
+  getPaymentId(): string;
+  setPaymentId(value: string): GetPaymentStatusRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetPaymentStatusRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetPaymentStatusRequest): GetPaymentStatusRequest.AsObject;
+  static serializeBinaryToWriter(message: GetPaymentStatusRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetPaymentStatusRequest;
+  static deserializeBinaryFromReader(message: GetPaymentStatusRequest, reader: jspb.BinaryReader): GetPaymentStatusRequest;
+}
+
+export namespace GetPaymentStatusRequest {
+  export type AsObject = {
+    paymentId: string;
+  };
+}
+
+export class GetPaymentStatusResponse extends jspb.Message {
+  constructor();
+  constructor(opt_data?: GetPaymentStatusResponse.AsObject);
+  getPaymentId(): string;
+  setPaymentId(value: string): GetPaymentStatusResponse;
+
+  getShipmentId(): string;
+  setShipmentId(value: string): GetPaymentStatusResponse;
+
+  getMethod(): string;
+  setMethod(value: string): GetPaymentStatusResponse;
+
+  getChannel(): string;
+  setChannel(value: string): GetPaymentStatusResponse;
+
+  getAmount(): number;
+  setAmount(value: number): GetPaymentStatusResponse;
+
+  getDpAmount(): number;
+  setDpAmount(value: number): GetPaymentStatusResponse;
+
+  getRemainingAmount(): number;
+  setRemainingAmount(value: number): GetPaymentStatusResponse;
+
+  getVaNumber(): string;
+  setVaNumber(value: string): GetPaymentStatusResponse;
+
+  getStatus(): string;
+  setStatus(value: string): GetPaymentStatusResponse;
+
+  getExpiredAt(): string;
+  setExpiredAt(value: string): GetPaymentStatusResponse;
+
+  getConfirmedAt(): string;
+  setConfirmedAt(value: string): GetPaymentStatusResponse;
+
+  getCreatedAt(): string;
+  setCreatedAt(value: string): GetPaymentStatusResponse;
+
+  getCustomerPhone(): string;
+  setCustomerPhone(value: string): GetPaymentStatusResponse;
+
+  getCustomerName(): string;
+  setCustomerName(value: string): GetPaymentStatusResponse;
+
+  getSenderName(): string;
+  setSenderName(value: string): GetPaymentStatusResponse;
+
+  getSenderPhone(): string;
+  setSenderPhone(value: string): GetPaymentStatusResponse;
+
+  getAmountTransferred(): number;
+  setAmountTransferred(value: number): GetPaymentStatusResponse;
+
+  getRejectionReason(): string;
+  setRejectionReason(value: string): GetPaymentStatusResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetPaymentStatusResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetPaymentStatusResponse): GetPaymentStatusResponse.AsObject;
+  static serializeBinaryToWriter(message: GetPaymentStatusResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetPaymentStatusResponse;
+  static deserializeBinaryFromReader(message: GetPaymentStatusResponse, reader: jspb.BinaryReader): GetPaymentStatusResponse;
+}
+
+export namespace GetPaymentStatusResponse {
+  export type AsObject = {
+    paymentId: string;
+    shipmentId: string;
+    method: string;
+    channel: string;
+    amount: number;
+    dpAmount: number;
+    remainingAmount: number;
+    vaNumber: string;
+    status: string;
+    expiredAt: string;
+    confirmedAt: string;
+    createdAt: string;
+    customerPhone: string;
+    customerName: string;
+    senderName: string;
+    senderPhone: string;
+    amountTransferred: number;
+    rejectionReason: string;
+  };
+}
+
+export class ConfirmPaymentRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: ConfirmPaymentRequest.AsObject);
+  getPaymentId(): string;
+  setPaymentId(value: string): ConfirmPaymentRequest;
+
+  getConfirmedBy(): string;
+  setConfirmedBy(value: string): ConfirmPaymentRequest;
+
+  getProofImageUrl(): string;
+  setProofImageUrl(value: string): ConfirmPaymentRequest;
+
+  getSenderName(): string;
+  setSenderName(value: string): ConfirmPaymentRequest;
+
+  getSenderPhone(): string;
+  setSenderPhone(value: string): ConfirmPaymentRequest;
+
+  getAmountTransferred(): number;
+  setAmountTransferred(value: number): ConfirmPaymentRequest;
+
+  getBankSender(): string;
+  setBankSender(value: string): ConfirmPaymentRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ConfirmPaymentRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ConfirmPaymentRequest): ConfirmPaymentRequest.AsObject;
+  static serializeBinaryToWriter(message: ConfirmPaymentRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ConfirmPaymentRequest;
+  static deserializeBinaryFromReader(message: ConfirmPaymentRequest, reader: jspb.BinaryReader): ConfirmPaymentRequest;
+}
+
+export namespace ConfirmPaymentRequest {
+  export type AsObject = {
+    paymentId: string;
+    confirmedBy: string;
+    proofImageUrl: string;
+    senderName: string;
+    senderPhone: string;
+    amountTransferred: number;
+    bankSender: string;
+  };
+}
+
+export class ConfirmPaymentResponse extends jspb.Message {
+  constructor();
+  constructor(opt_data?: ConfirmPaymentResponse.AsObject);
+  getSuccess(): boolean;
+  setSuccess(value: boolean): ConfirmPaymentResponse;
+
+  getMessage(): string;
+  setMessage(value: string): ConfirmPaymentResponse;
+
+  getPaymentId(): string;
+  setPaymentId(value: string): ConfirmPaymentResponse;
+
+  getStatus(): string;
+  setStatus(value: string): ConfirmPaymentResponse;
+
+  getRejectionReason(): string;
+  setRejectionReason(value: string): ConfirmPaymentResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ConfirmPaymentResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: ConfirmPaymentResponse): ConfirmPaymentResponse.AsObject;
+  static serializeBinaryToWriter(message: ConfirmPaymentResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ConfirmPaymentResponse;
+  static deserializeBinaryFromReader(message: ConfirmPaymentResponse, reader: jspb.BinaryReader): ConfirmPaymentResponse;
+}
+
+export namespace ConfirmPaymentResponse {
+  export type AsObject = {
+    success: boolean;
+    message: string;
+    paymentId: string;
+    status: string;
+    rejectionReason: string;
+  };
+}
+
+export class ProcessVATransactionRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: ProcessVATransactionRequest.AsObject);
+  getVaNumber(): string;
+  setVaNumber(value: string): ProcessVATransactionRequest;
+
+  getAmount(): number;
+  setAmount(value: number): ProcessVATransactionRequest;
+
+  getTransactionId(): string;
+  setTransactionId(value: string): ProcessVATransactionRequest;
+
+  getPaymentDate(): string;
+  setPaymentDate(value: string): ProcessVATransactionRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ProcessVATransactionRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ProcessVATransactionRequest): ProcessVATransactionRequest.AsObject;
+  static serializeBinaryToWriter(message: ProcessVATransactionRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ProcessVATransactionRequest;
+  static deserializeBinaryFromReader(message: ProcessVATransactionRequest, reader: jspb.BinaryReader): ProcessVATransactionRequest;
+}
+
+export namespace ProcessVATransactionRequest {
+  export type AsObject = {
+    vaNumber: string;
+    amount: number;
+    transactionId: string;
+    paymentDate: string;
+  };
+}
+
+export class ProcessVATransactionResponse extends jspb.Message {
+  constructor();
+  constructor(opt_data?: ProcessVATransactionResponse.AsObject);
+  getSuccess(): boolean;
+  setSuccess(value: boolean): ProcessVATransactionResponse;
+
+  getStatus(): string;
+  setStatus(value: string): ProcessVATransactionResponse;
+
+  getMessage(): string;
+  setMessage(value: string): ProcessVATransactionResponse;
+
+  getShipmentId(): string;
+  setShipmentId(value: string): ProcessVATransactionResponse;
+
+  getPaymentId(): string;
+  setPaymentId(value: string): ProcessVATransactionResponse;
+
+  getRejectionReason(): string;
+  setRejectionReason(value: string): ProcessVATransactionResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ProcessVATransactionResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: ProcessVATransactionResponse): ProcessVATransactionResponse.AsObject;
+  static serializeBinaryToWriter(message: ProcessVATransactionResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ProcessVATransactionResponse;
+  static deserializeBinaryFromReader(message: ProcessVATransactionResponse, reader: jspb.BinaryReader): ProcessVATransactionResponse;
+}
+
+export namespace ProcessVATransactionResponse {
+  export type AsObject = {
+    success: boolean;
+    status: string;
+    message: string;
+    shipmentId: string;
+    paymentId: string;
+    rejectionReason: string;
+  };
+}
+
+export class GetPaymentMethodsRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: GetPaymentMethodsRequest.AsObject);
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetPaymentMethodsRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetPaymentMethodsRequest): GetPaymentMethodsRequest.AsObject;
+  static serializeBinaryToWriter(message: GetPaymentMethodsRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetPaymentMethodsRequest;
+  static deserializeBinaryFromReader(message: GetPaymentMethodsRequest, reader: jspb.BinaryReader): GetPaymentMethodsRequest;
+}
+
+export namespace GetPaymentMethodsRequest {
+  export type AsObject = {
+  };
+}
+
+export class PaymentMethodInfo extends jspb.Message {
+  constructor();
+  constructor(opt_data?: PaymentMethodInfo.AsObject);
+  getMethod(): string;
+  setMethod(value: string): PaymentMethodInfo;
+
+  getChannel(): string;
+  setChannel(value: string): PaymentMethodInfo;
+
+  getDisplayName(): string;
+  setDisplayName(value: string): PaymentMethodInfo;
+
+  getBankAccountNumber(): string;
+  setBankAccountNumber(value: string): PaymentMethodInfo;
+
+  getBankAccountName(): string;
+  setBankAccountName(value: string): PaymentMethodInfo;
+
+  getIsActive(): boolean;
+  setIsActive(value: boolean): PaymentMethodInfo;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): PaymentMethodInfo.AsObject;
+  static toObject(includeInstance: boolean, msg: PaymentMethodInfo): PaymentMethodInfo.AsObject;
+  static serializeBinaryToWriter(message: PaymentMethodInfo, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): PaymentMethodInfo;
+  static deserializeBinaryFromReader(message: PaymentMethodInfo, reader: jspb.BinaryReader): PaymentMethodInfo;
+}
+
+export namespace PaymentMethodInfo {
+  export type AsObject = {
+    method: string;
+    channel: string;
+    displayName: string;
+    bankAccountNumber: string;
+    bankAccountName: string;
+    isActive: boolean;
+  };
+}
+
+export class GetPaymentMethodsResponse extends jspb.Message {
+  constructor();
+  constructor(opt_data?: GetPaymentMethodsResponse.AsObject);
+  getMethodsList(): Array<PaymentMethodInfo>;
+  setMethodsList(value: Array<PaymentMethodInfo>): GetPaymentMethodsResponse;
+  clearMethodsList(): GetPaymentMethodsResponse;
+  addMethods(value?: PaymentMethodInfo, index?: number): PaymentMethodInfo;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetPaymentMethodsResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetPaymentMethodsResponse): GetPaymentMethodsResponse.AsObject;
+  static serializeBinaryToWriter(message: GetPaymentMethodsResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetPaymentMethodsResponse;
+  static deserializeBinaryFromReader(message: GetPaymentMethodsResponse, reader: jspb.BinaryReader): GetPaymentMethodsResponse;
+}
+
+export namespace GetPaymentMethodsResponse {
+  export type AsObject = {
+    methodsList: Array<PaymentMethodInfo.AsObject>;
+  };
+}
+
+export class GetDriverShipmentsRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: GetDriverShipmentsRequest.AsObject);
+  getDriverId(): string;
+  setDriverId(value: string): GetDriverShipmentsRequest;
+
+  getStatusFilter(): string;
+  setStatusFilter(value: string): GetDriverShipmentsRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetDriverShipmentsRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetDriverShipmentsRequest): GetDriverShipmentsRequest.AsObject;
+  static serializeBinaryToWriter(message: GetDriverShipmentsRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetDriverShipmentsRequest;
+  static deserializeBinaryFromReader(message: GetDriverShipmentsRequest, reader: jspb.BinaryReader): GetDriverShipmentsRequest;
+}
+
+export namespace GetDriverShipmentsRequest {
+  export type AsObject = {
+    driverId: string;
+    statusFilter: string;
+  };
+}
+
+export class DriverShipmentItem extends jspb.Message {
+  constructor();
+  constructor(opt_data?: DriverShipmentItem.AsObject);
+  getShipmentId(): string;
+  setShipmentId(value: string): DriverShipmentItem;
+
+  getTrackingNumber(): string;
+  setTrackingNumber(value: string): DriverShipmentItem;
+
+  getSenderName(): string;
+  setSenderName(value: string): DriverShipmentItem;
+
+  getSenderAddress(): string;
+  setSenderAddress(value: string): DriverShipmentItem;
+
+  getSenderPhone(): string;
+  setSenderPhone(value: string): DriverShipmentItem;
+
+  getReceiverName(): string;
+  setReceiverName(value: string): DriverShipmentItem;
+
+  getReceiverAddress(): string;
+  setReceiverAddress(value: string): DriverShipmentItem;
+
+  getReceiverPhone(): string;
+  setReceiverPhone(value: string): DriverShipmentItem;
+
+  getWeightKg(): number;
+  setWeightKg(value: number): DriverShipmentItem;
+
+  getServiceType(): string;
+  setServiceType(value: string): DriverShipmentItem;
+
+  getTotalCost(): number;
+  setTotalCost(value: number): DriverShipmentItem;
+
+  getStatus(): string;
+  setStatus(value: string): DriverShipmentItem;
+
+  getPaymentMethod(): string;
+  setPaymentMethod(value: string): DriverShipmentItem;
+
+  getCodAmountToCollect(): number;
+  setCodAmountToCollect(value: number): DriverShipmentItem;
+
+  getCreatedAt(): string;
+  setCreatedAt(value: string): DriverShipmentItem;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): DriverShipmentItem.AsObject;
+  static toObject(includeInstance: boolean, msg: DriverShipmentItem): DriverShipmentItem.AsObject;
+  static serializeBinaryToWriter(message: DriverShipmentItem, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DriverShipmentItem;
+  static deserializeBinaryFromReader(message: DriverShipmentItem, reader: jspb.BinaryReader): DriverShipmentItem;
+}
+
+export namespace DriverShipmentItem {
+  export type AsObject = {
+    shipmentId: string;
+    trackingNumber: string;
+    senderName: string;
+    senderAddress: string;
+    senderPhone: string;
+    receiverName: string;
+    receiverAddress: string;
+    receiverPhone: string;
+    weightKg: number;
+    serviceType: string;
+    totalCost: number;
+    status: string;
+    paymentMethod: string;
+    codAmountToCollect: number;
+    createdAt: string;
+  };
+}
+
+export class GetDriverShipmentsResponse extends jspb.Message {
+  constructor();
+  constructor(opt_data?: GetDriverShipmentsResponse.AsObject);
+  getShipmentsList(): Array<DriverShipmentItem>;
+  setShipmentsList(value: Array<DriverShipmentItem>): GetDriverShipmentsResponse;
+  clearShipmentsList(): GetDriverShipmentsResponse;
+  addShipments(value?: DriverShipmentItem, index?: number): DriverShipmentItem;
+
+  getTotalCount(): number;
+  setTotalCount(value: number): GetDriverShipmentsResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetDriverShipmentsResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetDriverShipmentsResponse): GetDriverShipmentsResponse.AsObject;
+  static serializeBinaryToWriter(message: GetDriverShipmentsResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetDriverShipmentsResponse;
+  static deserializeBinaryFromReader(message: GetDriverShipmentsResponse, reader: jspb.BinaryReader): GetDriverShipmentsResponse;
+}
+
+export namespace GetDriverShipmentsResponse {
+  export type AsObject = {
+    shipmentsList: Array<DriverShipmentItem.AsObject>;
+    totalCount: number;
+  };
+}
+
+export class AcceptJobRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: AcceptJobRequest.AsObject);
+  getShipmentId(): string;
+  setShipmentId(value: string): AcceptJobRequest;
+
+  getDriverId(): string;
+  setDriverId(value: string): AcceptJobRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): AcceptJobRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: AcceptJobRequest): AcceptJobRequest.AsObject;
+  static serializeBinaryToWriter(message: AcceptJobRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AcceptJobRequest;
+  static deserializeBinaryFromReader(message: AcceptJobRequest, reader: jspb.BinaryReader): AcceptJobRequest;
+}
+
+export namespace AcceptJobRequest {
+  export type AsObject = {
+    shipmentId: string;
+    driverId: string;
+  };
+}
+
+export class AcceptJobResponse extends jspb.Message {
+  constructor();
+  constructor(opt_data?: AcceptJobResponse.AsObject);
+  getSuccess(): boolean;
+  setSuccess(value: boolean): AcceptJobResponse;
+
+  getMessage(): string;
+  setMessage(value: string): AcceptJobResponse;
+
+  getTrackingNumber(): string;
+  setTrackingNumber(value: string): AcceptJobResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): AcceptJobResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: AcceptJobResponse): AcceptJobResponse.AsObject;
+  static serializeBinaryToWriter(message: AcceptJobResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AcceptJobResponse;
+  static deserializeBinaryFromReader(message: AcceptJobResponse, reader: jspb.BinaryReader): AcceptJobResponse;
+}
+
+export namespace AcceptJobResponse {
+  export type AsObject = {
+    success: boolean;
+    message: string;
+    trackingNumber: string;
+  };
+}
+
+export class UpdateLocationRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: UpdateLocationRequest.AsObject);
+  getDriverId(): string;
+  setDriverId(value: string): UpdateLocationRequest;
+
+  getShipmentId(): string;
+  setShipmentId(value: string): UpdateLocationRequest;
+
+  getLatitude(): number;
+  setLatitude(value: number): UpdateLocationRequest;
+
+  getLongitude(): number;
+  setLongitude(value: number): UpdateLocationRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpdateLocationRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: UpdateLocationRequest): UpdateLocationRequest.AsObject;
+  static serializeBinaryToWriter(message: UpdateLocationRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpdateLocationRequest;
+  static deserializeBinaryFromReader(message: UpdateLocationRequest, reader: jspb.BinaryReader): UpdateLocationRequest;
+}
+
+export namespace UpdateLocationRequest {
+  export type AsObject = {
+    driverId: string;
+    shipmentId: string;
+    latitude: number;
+    longitude: number;
+  };
+}
+
+export class UpdateLocationResponse extends jspb.Message {
+  constructor();
+  constructor(opt_data?: UpdateLocationResponse.AsObject);
+  getSuccess(): boolean;
+  setSuccess(value: boolean): UpdateLocationResponse;
+
+  getMessage(): string;
+  setMessage(value: string): UpdateLocationResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpdateLocationResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: UpdateLocationResponse): UpdateLocationResponse.AsObject;
+  static serializeBinaryToWriter(message: UpdateLocationResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpdateLocationResponse;
+  static deserializeBinaryFromReader(message: UpdateLocationResponse, reader: jspb.BinaryReader): UpdateLocationResponse;
+}
+
+export namespace UpdateLocationResponse {
+  export type AsObject = {
+    success: boolean;
+    message: string;
+  };
+}
+
+export class CompleteDeliveryRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: CompleteDeliveryRequest.AsObject);
+  getShipmentId(): string;
+  setShipmentId(value: string): CompleteDeliveryRequest;
+
+  getDriverId(): string;
+  setDriverId(value: string): CompleteDeliveryRequest;
+
+  getProofImageUrl(): string;
+  setProofImageUrl(value: string): CompleteDeliveryRequest;
+
+  getRecipientName(): string;
+  setRecipientName(value: string): CompleteDeliveryRequest;
+
+  getNotes(): string;
+  setNotes(value: string): CompleteDeliveryRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CompleteDeliveryRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: CompleteDeliveryRequest): CompleteDeliveryRequest.AsObject;
+  static serializeBinaryToWriter(message: CompleteDeliveryRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CompleteDeliveryRequest;
+  static deserializeBinaryFromReader(message: CompleteDeliveryRequest, reader: jspb.BinaryReader): CompleteDeliveryRequest;
+}
+
+export namespace CompleteDeliveryRequest {
+  export type AsObject = {
+    shipmentId: string;
+    driverId: string;
+    proofImageUrl: string;
+    recipientName: string;
+    notes: string;
+  };
+}
+
+export class CompleteDeliveryResponse extends jspb.Message {
+  constructor();
+  constructor(opt_data?: CompleteDeliveryResponse.AsObject);
+  getSuccess(): boolean;
+  setSuccess(value: boolean): CompleteDeliveryResponse;
+
+  getMessage(): string;
+  setMessage(value: string): CompleteDeliveryResponse;
+
+  getTrackingNumber(): string;
+  setTrackingNumber(value: string): CompleteDeliveryResponse;
+
+  getCompletedAt(): string;
+  setCompletedAt(value: string): CompleteDeliveryResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CompleteDeliveryResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: CompleteDeliveryResponse): CompleteDeliveryResponse.AsObject;
+  static serializeBinaryToWriter(message: CompleteDeliveryResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CompleteDeliveryResponse;
+  static deserializeBinaryFromReader(message: CompleteDeliveryResponse, reader: jspb.BinaryReader): CompleteDeliveryResponse;
+}
+
+export namespace CompleteDeliveryResponse {
+  export type AsObject = {
+    success: boolean;
+    message: string;
+    trackingNumber: string;
+    completedAt: string;
+  };
+}
+
+export class CollectCODRequest extends jspb.Message {
+  constructor();
+  constructor(opt_data?: CollectCODRequest.AsObject);
+  getShipmentId(): string;
+  setShipmentId(value: string): CollectCODRequest;
+
+  getDriverId(): string;
+  setDriverId(value: string): CollectCODRequest;
+
+  getAmountCollected(): number;
+  setAmountCollected(value: number): CollectCODRequest;
+
+  getCollectionType(): string;
+  setCollectionType(value: string): CollectCODRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CollectCODRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: CollectCODRequest): CollectCODRequest.AsObject;
+  static serializeBinaryToWriter(message: CollectCODRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CollectCODRequest;
+  static deserializeBinaryFromReader(message: CollectCODRequest, reader: jspb.BinaryReader): CollectCODRequest;
+}
+
+export namespace CollectCODRequest {
+  export type AsObject = {
+    shipmentId: string;
+    driverId: string;
+    amountCollected: number;
+    collectionType: string;
+  };
+}
+
+export class CollectCODResponse extends jspb.Message {
+  constructor();
+  constructor(opt_data?: CollectCODResponse.AsObject);
+  getSuccess(): boolean;
+  setSuccess(value: boolean): CollectCODResponse;
+
+  getMessage(): string;
+  setMessage(value: string): CollectCODResponse;
+
+  getTotalCollected(): number;
+  setTotalCollected(value: number): CollectCODResponse;
+
+  getRemaining(): number;
+  setRemaining(value: number): CollectCODResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CollectCODResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: CollectCODResponse): CollectCODResponse.AsObject;
+  static serializeBinaryToWriter(message: CollectCODResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CollectCODResponse;
+  static deserializeBinaryFromReader(message: CollectCODResponse, reader: jspb.BinaryReader): CollectCODResponse;
+}
+
+export namespace CollectCODResponse {
+  export type AsObject = {
+    success: boolean;
+    message: string;
+    totalCollected: number;
+    remaining: number;
+  };
+}
+

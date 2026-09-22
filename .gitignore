@@ -5,12 +5,19 @@ vendor/
 # Environment & Secret variables
 .env
 *.env
+!.env.example
 
 # Build outputs & Executables
 *.exe
 *.out
 dist/
 build/
+
+# Go test & coverage
+*.test
+*.prof
+coverage.out
+coverage.html
 
 # IDE / Editor files
 .vscode/

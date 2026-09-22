@@ -85,6 +85,11 @@ service ShipmentService {
   rpc UpdateShipmentStatus (UpdateShipmentStatusRequest) returns (UpdateShipmentStatusResponse);
   rpc CancelShipment (CancelShipmentRequest) returns (ShipmentResponse);
   rpc TrackShipment (TrackShipmentRequest) returns (TrackShipmentResponse);
+  rpc GetDriverAssignedShipments (GetDriverShipmentsRequest) returns (GetDriverShipmentsResponse);
+  rpc AcceptShipmentJob (AcceptJobRequest) returns (AcceptJobResponse);
+  rpc UpdateDriverLocation (UpdateLocationRequest) returns (UpdateLocationResponse);
+  rpc CompleteDelivery (CompleteDeliveryRequest) returns (CompleteDeliveryResponse);
+  rpc CollectCODPayment (CollectCODRequest) returns (CollectCODResponse);
 }
 
 message CreateShipmentRequest {
@@ -163,4 +168,199 @@ message ShipmentResponse {
   string status = 2;
   double total_price = 3;
   google.protobuf.Timestamp created_at = 4;
+}
+
+// ==========================================
+// 4. PAYMENT SERVICE
+// ==========================================
+service PaymentService {
+  rpc CreatePayment (CreatePaymentRequest) returns (CreatePaymentResponse);
+  rpc GetPaymentStatus (GetPaymentStatusRequest) returns (GetPaymentStatusResponse);
+  rpc ConfirmPayment (ConfirmPaymentRequest) returns (ConfirmPaymentResponse);
+  rpc ProcessVATransaction (ProcessVATransactionRequest) returns (ProcessVATransactionResponse);
+  rpc GetPaymentMethods (GetPaymentMethodsRequest) returns (GetPaymentMethodsResponse);
+}
+
+message CreatePaymentRequest {
+  string shipment_id = 1;
+  string user_id = 2;
+  string method = 3;           // BANK_TRANSFER, VIRTUAL_ACCOUNT, COD
+  string channel = 4;          // BCA, BLU_BCA, MANDIRI, BNI, BRI
+  double amount = 5;
+  double cod_dp_amount = 6;    // DP amount for COD (minimum 50% of amount)
+  string customer_phone = 7;   // Nomor telepon untuk generate nomor VA
+  string customer_name = 8;    // Nama pelanggan/pengirim
+}
+
+message CreatePaymentResponse {
+  string payment_id = 1;
+  string method = 2;
+  string channel = 3;
+  double amount = 4;
+  double dp_amount = 5;
+  double remaining_amount = 6;
+  string va_number = 7;                // Virtual Account number (prefix + nomor telepon)
+  string bank_account_number = 8;      // Bank account for transfer
+  string bank_account_name = 9;        // Account holder name
+  string status = 10;
+  string expired_at = 11;              // Batas waktu pembayaran (maksimal 1x24 jam)
+  string message = 12;
+}
+
+message GetPaymentStatusRequest {
+  string payment_id = 1;
+}
+
+message GetPaymentStatusResponse {
+  string payment_id = 1;
+  string shipment_id = 2;
+  string method = 3;
+  string channel = 4;
+  double amount = 5;
+  double dp_amount = 6;
+  double remaining_amount = 7;
+  string va_number = 8;
+  string status = 9;
+  string expired_at = 10;
+  string confirmed_at = 11;
+  string created_at = 12;
+  string customer_phone = 13;
+  string customer_name = 14;
+  string sender_name = 15;
+  string sender_phone = 16;
+  double amount_transferred = 17;
+  string rejection_reason = 18;
+}
+
+message ConfirmPaymentRequest {
+  string payment_id = 1;
+  string confirmed_by = 2;        // admin user_id, 'SYSTEM', or 'WEBHOOK'
+  string proof_image_url = 3;     // URL/path bukti transfer yang di-upload
+  string sender_name = 4;         // Nama lengkap pengirim pada struk/rekening
+  string sender_phone = 5;        // Nomor telepon pengirim
+  double amount_transferred = 6;  // Nominal yang ditransfer
+  string bank_sender = 7;         // Asal bank pengirim
+}
+
+message ConfirmPaymentResponse {
+  bool success = 1;
+  string message = 2;
+  string payment_id = 3;
+  string status = 4;              // VERIFIED, REJECTED, PENDING
+  string rejection_reason = 5;    // Alasan penolakan jika tidak cocok
+}
+
+message ProcessVATransactionRequest {
+  string va_number = 1;           // Nomor VA tujuan pembayaran (prefix + no telepon)
+  double amount = 2;              // Jumlah uang yang ditransfer masuk
+  string transaction_id = 3;      // ID transaksi dari bank gateway
+  string payment_date = 4;        // Timestamp transaksi pembayaran
+}
+
+message ProcessVATransactionResponse {
+  bool success = 1;
+  string status = 2;              // ACCEPTED, REJECTED
+  string message = 3;
+  string shipment_id = 4;
+  string payment_id = 5;
+  string rejection_reason = 6;
+}
+
+message GetPaymentMethodsRequest {}
+
+message PaymentMethodInfo {
+  string method = 1;
+  string channel = 2;
+  string display_name = 3;
+  string bank_account_number = 4;
+  string bank_account_name = 5;
+  bool is_active = 6;
+}
+
+message GetPaymentMethodsResponse {
+  repeated PaymentMethodInfo methods = 1;
+}
+
+// ==========================================
+// 5. DRIVER SERVICE RPCs
+// ==========================================
+
+message GetDriverShipmentsRequest {
+  string driver_id = 1;
+  string status_filter = 2;  // optional: filter by status
+}
+
+message DriverShipmentItem {
+  string shipment_id = 1;
+  string tracking_number = 2;
+  string sender_name = 3;
+  string sender_address = 4;
+  string sender_phone = 5;
+  string receiver_name = 6;
+  string receiver_address = 7;
+  string receiver_phone = 8;
+  double weight_kg = 9;
+  string service_type = 10;
+  double total_cost = 11;
+  string status = 12;
+  string payment_method = 13;
+  double cod_amount_to_collect = 14;
+  string created_at = 15;
+}
+
+message GetDriverShipmentsResponse {
+  repeated DriverShipmentItem shipments = 1;
+  int32 total_count = 2;
+}
+
+message AcceptJobRequest {
+  string shipment_id = 1;
+  string driver_id = 2;
+}
+
+message AcceptJobResponse {
+  bool success = 1;
+  string message = 2;
+  string tracking_number = 3;
+}
+
+message UpdateLocationRequest {
+  string driver_id = 1;
+  string shipment_id = 2;
+  double latitude = 3;
+  double longitude = 4;
+}
+
+message UpdateLocationResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message CompleteDeliveryRequest {
+  string shipment_id = 1;
+  string driver_id = 2;
+  string proof_image_url = 3;
+  string recipient_name = 4;
+  string notes = 5;
+}
+
+message CompleteDeliveryResponse {
+  bool success = 1;
+  string message = 2;
+  string tracking_number = 3;
+  string completed_at = 4;
+}
+
+message CollectCODRequest {
+  string shipment_id = 1;
+  string driver_id = 2;
+  double amount_collected = 3;
+  string collection_type = 4;  // DP_PICKUP or REMAINING_DELIVERY
+}
+
+message CollectCODResponse {
+  bool success = 1;
+  string message = 2;
+  double total_collected = 3;
+  double remaining = 4;
 }

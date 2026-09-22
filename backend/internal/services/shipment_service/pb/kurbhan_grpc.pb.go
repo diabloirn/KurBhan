@@ -277,10 +277,15 @@ var RateService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	ShipmentService_CreateShipment_FullMethodName       = "/kurbhan.v1.ShipmentService/CreateShipment"
-	ShipmentService_UpdateShipmentStatus_FullMethodName = "/kurbhan.v1.ShipmentService/UpdateShipmentStatus"
-	ShipmentService_CancelShipment_FullMethodName       = "/kurbhan.v1.ShipmentService/CancelShipment"
-	ShipmentService_TrackShipment_FullMethodName        = "/kurbhan.v1.ShipmentService/TrackShipment"
+	ShipmentService_CreateShipment_FullMethodName             = "/kurbhan.v1.ShipmentService/CreateShipment"
+	ShipmentService_UpdateShipmentStatus_FullMethodName       = "/kurbhan.v1.ShipmentService/UpdateShipmentStatus"
+	ShipmentService_CancelShipment_FullMethodName             = "/kurbhan.v1.ShipmentService/CancelShipment"
+	ShipmentService_TrackShipment_FullMethodName              = "/kurbhan.v1.ShipmentService/TrackShipment"
+	ShipmentService_GetDriverAssignedShipments_FullMethodName = "/kurbhan.v1.ShipmentService/GetDriverAssignedShipments"
+	ShipmentService_AcceptShipmentJob_FullMethodName          = "/kurbhan.v1.ShipmentService/AcceptShipmentJob"
+	ShipmentService_UpdateDriverLocation_FullMethodName       = "/kurbhan.v1.ShipmentService/UpdateDriverLocation"
+	ShipmentService_CompleteDelivery_FullMethodName           = "/kurbhan.v1.ShipmentService/CompleteDelivery"
+	ShipmentService_CollectCODPayment_FullMethodName          = "/kurbhan.v1.ShipmentService/CollectCODPayment"
 )
 
 // ShipmentServiceClient is the client API for ShipmentService service.
@@ -295,6 +300,11 @@ type ShipmentServiceClient interface {
 	UpdateShipmentStatus(ctx context.Context, in *UpdateShipmentStatusRequest, opts ...grpc.CallOption) (*UpdateShipmentStatusResponse, error)
 	CancelShipment(ctx context.Context, in *CancelShipmentRequest, opts ...grpc.CallOption) (*ShipmentResponse, error)
 	TrackShipment(ctx context.Context, in *TrackShipmentRequest, opts ...grpc.CallOption) (*TrackShipmentResponse, error)
+	GetDriverAssignedShipments(ctx context.Context, in *GetDriverShipmentsRequest, opts ...grpc.CallOption) (*GetDriverShipmentsResponse, error)
+	AcceptShipmentJob(ctx context.Context, in *AcceptJobRequest, opts ...grpc.CallOption) (*AcceptJobResponse, error)
+	UpdateDriverLocation(ctx context.Context, in *UpdateLocationRequest, opts ...grpc.CallOption) (*UpdateLocationResponse, error)
+	CompleteDelivery(ctx context.Context, in *CompleteDeliveryRequest, opts ...grpc.CallOption) (*CompleteDeliveryResponse, error)
+	CollectCODPayment(ctx context.Context, in *CollectCODRequest, opts ...grpc.CallOption) (*CollectCODResponse, error)
 }
 
 type shipmentServiceClient struct {
@@ -345,6 +355,56 @@ func (c *shipmentServiceClient) TrackShipment(ctx context.Context, in *TrackShip
 	return out, nil
 }
 
+func (c *shipmentServiceClient) GetDriverAssignedShipments(ctx context.Context, in *GetDriverShipmentsRequest, opts ...grpc.CallOption) (*GetDriverShipmentsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetDriverShipmentsResponse)
+	err := c.cc.Invoke(ctx, ShipmentService_GetDriverAssignedShipments_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shipmentServiceClient) AcceptShipmentJob(ctx context.Context, in *AcceptJobRequest, opts ...grpc.CallOption) (*AcceptJobResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AcceptJobResponse)
+	err := c.cc.Invoke(ctx, ShipmentService_AcceptShipmentJob_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shipmentServiceClient) UpdateDriverLocation(ctx context.Context, in *UpdateLocationRequest, opts ...grpc.CallOption) (*UpdateLocationResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateLocationResponse)
+	err := c.cc.Invoke(ctx, ShipmentService_UpdateDriverLocation_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shipmentServiceClient) CompleteDelivery(ctx context.Context, in *CompleteDeliveryRequest, opts ...grpc.CallOption) (*CompleteDeliveryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CompleteDeliveryResponse)
+	err := c.cc.Invoke(ctx, ShipmentService_CompleteDelivery_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shipmentServiceClient) CollectCODPayment(ctx context.Context, in *CollectCODRequest, opts ...grpc.CallOption) (*CollectCODResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CollectCODResponse)
+	err := c.cc.Invoke(ctx, ShipmentService_CollectCODPayment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ShipmentServiceServer is the server API for ShipmentService service.
 // All implementations must embed UnimplementedShipmentServiceServer
 // for forward compatibility.
@@ -357,6 +417,11 @@ type ShipmentServiceServer interface {
 	UpdateShipmentStatus(context.Context, *UpdateShipmentStatusRequest) (*UpdateShipmentStatusResponse, error)
 	CancelShipment(context.Context, *CancelShipmentRequest) (*ShipmentResponse, error)
 	TrackShipment(context.Context, *TrackShipmentRequest) (*TrackShipmentResponse, error)
+	GetDriverAssignedShipments(context.Context, *GetDriverShipmentsRequest) (*GetDriverShipmentsResponse, error)
+	AcceptShipmentJob(context.Context, *AcceptJobRequest) (*AcceptJobResponse, error)
+	UpdateDriverLocation(context.Context, *UpdateLocationRequest) (*UpdateLocationResponse, error)
+	CompleteDelivery(context.Context, *CompleteDeliveryRequest) (*CompleteDeliveryResponse, error)
+	CollectCODPayment(context.Context, *CollectCODRequest) (*CollectCODResponse, error)
 	mustEmbedUnimplementedShipmentServiceServer()
 }
 
@@ -378,6 +443,21 @@ func (UnimplementedShipmentServiceServer) CancelShipment(context.Context, *Cance
 }
 func (UnimplementedShipmentServiceServer) TrackShipment(context.Context, *TrackShipmentRequest) (*TrackShipmentResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method TrackShipment not implemented")
+}
+func (UnimplementedShipmentServiceServer) GetDriverAssignedShipments(context.Context, *GetDriverShipmentsRequest) (*GetDriverShipmentsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDriverAssignedShipments not implemented")
+}
+func (UnimplementedShipmentServiceServer) AcceptShipmentJob(context.Context, *AcceptJobRequest) (*AcceptJobResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AcceptShipmentJob not implemented")
+}
+func (UnimplementedShipmentServiceServer) UpdateDriverLocation(context.Context, *UpdateLocationRequest) (*UpdateLocationResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateDriverLocation not implemented")
+}
+func (UnimplementedShipmentServiceServer) CompleteDelivery(context.Context, *CompleteDeliveryRequest) (*CompleteDeliveryResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CompleteDelivery not implemented")
+}
+func (UnimplementedShipmentServiceServer) CollectCODPayment(context.Context, *CollectCODRequest) (*CollectCODResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CollectCODPayment not implemented")
 }
 func (UnimplementedShipmentServiceServer) mustEmbedUnimplementedShipmentServiceServer() {}
 func (UnimplementedShipmentServiceServer) testEmbeddedByValue()                         {}
@@ -472,6 +552,96 @@ func _ShipmentService_TrackShipment_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ShipmentService_GetDriverAssignedShipments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDriverShipmentsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShipmentServiceServer).GetDriverAssignedShipments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShipmentService_GetDriverAssignedShipments_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShipmentServiceServer).GetDriverAssignedShipments(ctx, req.(*GetDriverShipmentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ShipmentService_AcceptShipmentJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AcceptJobRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShipmentServiceServer).AcceptShipmentJob(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShipmentService_AcceptShipmentJob_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShipmentServiceServer).AcceptShipmentJob(ctx, req.(*AcceptJobRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ShipmentService_UpdateDriverLocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateLocationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShipmentServiceServer).UpdateDriverLocation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShipmentService_UpdateDriverLocation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShipmentServiceServer).UpdateDriverLocation(ctx, req.(*UpdateLocationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ShipmentService_CompleteDelivery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompleteDeliveryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShipmentServiceServer).CompleteDelivery(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShipmentService_CompleteDelivery_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShipmentServiceServer).CompleteDelivery(ctx, req.(*CompleteDeliveryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ShipmentService_CollectCODPayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CollectCODRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShipmentServiceServer).CollectCODPayment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShipmentService_CollectCODPayment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShipmentServiceServer).CollectCODPayment(ctx, req.(*CollectCODRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ShipmentService_ServiceDesc is the grpc.ServiceDesc for ShipmentService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -494,6 +664,288 @@ var ShipmentService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TrackShipment",
 			Handler:    _ShipmentService_TrackShipment_Handler,
+		},
+		{
+			MethodName: "GetDriverAssignedShipments",
+			Handler:    _ShipmentService_GetDriverAssignedShipments_Handler,
+		},
+		{
+			MethodName: "AcceptShipmentJob",
+			Handler:    _ShipmentService_AcceptShipmentJob_Handler,
+		},
+		{
+			MethodName: "UpdateDriverLocation",
+			Handler:    _ShipmentService_UpdateDriverLocation_Handler,
+		},
+		{
+			MethodName: "CompleteDelivery",
+			Handler:    _ShipmentService_CompleteDelivery_Handler,
+		},
+		{
+			MethodName: "CollectCODPayment",
+			Handler:    _ShipmentService_CollectCODPayment_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "kurbhan.proto",
+}
+
+const (
+	PaymentService_CreatePayment_FullMethodName        = "/kurbhan.v1.PaymentService/CreatePayment"
+	PaymentService_GetPaymentStatus_FullMethodName     = "/kurbhan.v1.PaymentService/GetPaymentStatus"
+	PaymentService_ConfirmPayment_FullMethodName       = "/kurbhan.v1.PaymentService/ConfirmPayment"
+	PaymentService_ProcessVATransaction_FullMethodName = "/kurbhan.v1.PaymentService/ProcessVATransaction"
+	PaymentService_GetPaymentMethods_FullMethodName    = "/kurbhan.v1.PaymentService/GetPaymentMethods"
+)
+
+// PaymentServiceClient is the client API for PaymentService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// ==========================================
+// 4. PAYMENT SERVICE
+// ==========================================
+type PaymentServiceClient interface {
+	CreatePayment(ctx context.Context, in *CreatePaymentRequest, opts ...grpc.CallOption) (*CreatePaymentResponse, error)
+	GetPaymentStatus(ctx context.Context, in *GetPaymentStatusRequest, opts ...grpc.CallOption) (*GetPaymentStatusResponse, error)
+	ConfirmPayment(ctx context.Context, in *ConfirmPaymentRequest, opts ...grpc.CallOption) (*ConfirmPaymentResponse, error)
+	ProcessVATransaction(ctx context.Context, in *ProcessVATransactionRequest, opts ...grpc.CallOption) (*ProcessVATransactionResponse, error)
+	GetPaymentMethods(ctx context.Context, in *GetPaymentMethodsRequest, opts ...grpc.CallOption) (*GetPaymentMethodsResponse, error)
+}
+
+type paymentServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewPaymentServiceClient(cc grpc.ClientConnInterface) PaymentServiceClient {
+	return &paymentServiceClient{cc}
+}
+
+func (c *paymentServiceClient) CreatePayment(ctx context.Context, in *CreatePaymentRequest, opts ...grpc.CallOption) (*CreatePaymentResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreatePaymentResponse)
+	err := c.cc.Invoke(ctx, PaymentService_CreatePayment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *paymentServiceClient) GetPaymentStatus(ctx context.Context, in *GetPaymentStatusRequest, opts ...grpc.CallOption) (*GetPaymentStatusResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetPaymentStatusResponse)
+	err := c.cc.Invoke(ctx, PaymentService_GetPaymentStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *paymentServiceClient) ConfirmPayment(ctx context.Context, in *ConfirmPaymentRequest, opts ...grpc.CallOption) (*ConfirmPaymentResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ConfirmPaymentResponse)
+	err := c.cc.Invoke(ctx, PaymentService_ConfirmPayment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *paymentServiceClient) ProcessVATransaction(ctx context.Context, in *ProcessVATransactionRequest, opts ...grpc.CallOption) (*ProcessVATransactionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ProcessVATransactionResponse)
+	err := c.cc.Invoke(ctx, PaymentService_ProcessVATransaction_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *paymentServiceClient) GetPaymentMethods(ctx context.Context, in *GetPaymentMethodsRequest, opts ...grpc.CallOption) (*GetPaymentMethodsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetPaymentMethodsResponse)
+	err := c.cc.Invoke(ctx, PaymentService_GetPaymentMethods_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// PaymentServiceServer is the server API for PaymentService service.
+// All implementations must embed UnimplementedPaymentServiceServer
+// for forward compatibility.
+//
+// ==========================================
+// 4. PAYMENT SERVICE
+// ==========================================
+type PaymentServiceServer interface {
+	CreatePayment(context.Context, *CreatePaymentRequest) (*CreatePaymentResponse, error)
+	GetPaymentStatus(context.Context, *GetPaymentStatusRequest) (*GetPaymentStatusResponse, error)
+	ConfirmPayment(context.Context, *ConfirmPaymentRequest) (*ConfirmPaymentResponse, error)
+	ProcessVATransaction(context.Context, *ProcessVATransactionRequest) (*ProcessVATransactionResponse, error)
+	GetPaymentMethods(context.Context, *GetPaymentMethodsRequest) (*GetPaymentMethodsResponse, error)
+	mustEmbedUnimplementedPaymentServiceServer()
+}
+
+// UnimplementedPaymentServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedPaymentServiceServer struct{}
+
+func (UnimplementedPaymentServiceServer) CreatePayment(context.Context, *CreatePaymentRequest) (*CreatePaymentResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreatePayment not implemented")
+}
+func (UnimplementedPaymentServiceServer) GetPaymentStatus(context.Context, *GetPaymentStatusRequest) (*GetPaymentStatusResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetPaymentStatus not implemented")
+}
+func (UnimplementedPaymentServiceServer) ConfirmPayment(context.Context, *ConfirmPaymentRequest) (*ConfirmPaymentResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ConfirmPayment not implemented")
+}
+func (UnimplementedPaymentServiceServer) ProcessVATransaction(context.Context, *ProcessVATransactionRequest) (*ProcessVATransactionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ProcessVATransaction not implemented")
+}
+func (UnimplementedPaymentServiceServer) GetPaymentMethods(context.Context, *GetPaymentMethodsRequest) (*GetPaymentMethodsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetPaymentMethods not implemented")
+}
+func (UnimplementedPaymentServiceServer) mustEmbedUnimplementedPaymentServiceServer() {}
+func (UnimplementedPaymentServiceServer) testEmbeddedByValue()                        {}
+
+// UnsafePaymentServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to PaymentServiceServer will
+// result in compilation errors.
+type UnsafePaymentServiceServer interface {
+	mustEmbedUnimplementedPaymentServiceServer()
+}
+
+func RegisterPaymentServiceServer(s grpc.ServiceRegistrar, srv PaymentServiceServer) {
+	// If the following call panics, it indicates UnimplementedPaymentServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&PaymentService_ServiceDesc, srv)
+}
+
+func _PaymentService_CreatePayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreatePaymentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PaymentServiceServer).CreatePayment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PaymentService_CreatePayment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PaymentServiceServer).CreatePayment(ctx, req.(*CreatePaymentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PaymentService_GetPaymentStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPaymentStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PaymentServiceServer).GetPaymentStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PaymentService_GetPaymentStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PaymentServiceServer).GetPaymentStatus(ctx, req.(*GetPaymentStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PaymentService_ConfirmPayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConfirmPaymentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PaymentServiceServer).ConfirmPayment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PaymentService_ConfirmPayment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PaymentServiceServer).ConfirmPayment(ctx, req.(*ConfirmPaymentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PaymentService_ProcessVATransaction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProcessVATransactionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PaymentServiceServer).ProcessVATransaction(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PaymentService_ProcessVATransaction_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PaymentServiceServer).ProcessVATransaction(ctx, req.(*ProcessVATransactionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PaymentService_GetPaymentMethods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPaymentMethodsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PaymentServiceServer).GetPaymentMethods(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PaymentService_GetPaymentMethods_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PaymentServiceServer).GetPaymentMethods(ctx, req.(*GetPaymentMethodsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// PaymentService_ServiceDesc is the grpc.ServiceDesc for PaymentService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var PaymentService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "kurbhan.v1.PaymentService",
+	HandlerType: (*PaymentServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreatePayment",
+			Handler:    _PaymentService_CreatePayment_Handler,
+		},
+		{
+			MethodName: "GetPaymentStatus",
+			Handler:    _PaymentService_GetPaymentStatus_Handler,
+		},
+		{
+			MethodName: "ConfirmPayment",
+			Handler:    _PaymentService_ConfirmPayment_Handler,
+		},
+		{
+			MethodName: "ProcessVATransaction",
+			Handler:    _PaymentService_ProcessVATransaction_Handler,
+		},
+		{
+			MethodName: "GetPaymentMethods",
+			Handler:    _PaymentService_GetPaymentMethods_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
