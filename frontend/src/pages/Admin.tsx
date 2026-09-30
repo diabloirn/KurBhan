@@ -13,7 +13,11 @@ import {
   Zap,
   FileCheck,
   X,
-  Printer
+  Printer,
+  ZoomIn,
+  Trash2,
+  Camera,
+  Image as ImageIcon
 } from 'lucide-react';
 import { 
   getStoredShipments, 
@@ -80,6 +84,9 @@ export default function Admin() {
   const [transferSenderPhone, setTransferSenderPhone] = useState('');
   const [transferAmount, setTransferAmount] = useState<number>(0);
   const [transferProof, setTransferProof] = useState('');
+  const [transferProofError, setTransferProofError] = useState<string | null>(null);
+  const [isProofEnlarged, setIsProofEnlarged] = useState(false);
+  const [useUrlInput, setUseUrlInput] = useState(false);
   const [isConfirmingTransfer, setIsConfirmingTransfer] = useState(false);
   const [transferFeedback, setTransferFeedback] = useState<{ success: boolean; message: string } | null>(null);
   const [waybillModalData, setWaybillModalData] = useState<WaybillData | null>(null);
@@ -225,11 +232,39 @@ export default function Admin() {
   // Manual bank transfer cross-checking
   const handleOpenTransferModal = (shipment: StoredShipment) => {
     setActiveTransferShipment(shipment);
-    setTransferSenderName(shipment.senderName);
-    setTransferSenderPhone(shipment.senderPhone);
+    setTransferSenderName(shipment.senderTransferName || shipment.senderName);
+    setTransferSenderPhone(shipment.senderTransferPhone || shipment.senderPhone);
     setTransferAmount(shipment.totalCost);
     setTransferProof(shipment.transferProofUrl || 'https://storage.kurbhan.co.id/proofs/sample_transfer.jpg');
+    setTransferProofError(null);
+    setUseUrlInput(false);
     setTransferFeedback(null);
+  };
+
+  const handleAdminProofFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setTransferProofError(null);
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setTransferProofError('Format berkas tidak valid. Harap pilih gambar (JPG, PNG, WEBP).');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setTransferProofError(`Ukuran berkas melebihi batas 5 MB (${(file.size / (1024 * 1024)).toFixed(1)} MB).`);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        setTransferProof(reader.result);
+      }
+    };
+    reader.onerror = () => {
+      setTransferProofError('Gagal membaca berkas gambar.');
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleConfirmBankTransfer = async () => {
@@ -664,13 +699,19 @@ export default function Admin() {
                         </td>
                         <td>
                           <span className={cn(
-                            "px-2.5 py-1 text-xs font-bold border",
+                            "px-2.5 py-1 text-xs font-bold border block text-center",
                             item.paymentStatus === 'VERIFIED'
                               ? "bg-[var(--kb-hazard)] text-[var(--kb-wood)] border-[var(--kb-wood)]"
                               : "bg-[var(--kb-paper-dark)] text-[var(--kb-wood)] border-[var(--kb-wood)]"
                           )}>
                             {item.paymentStatus === 'VERIFIED' ? 'TERVERIFIKASI' : 'MENUNGGU VERIFIKASI'}
                           </span>
+                          {item.paymentStatus !== 'VERIFIED' && item.transferProofUrl && (
+                            <span className="text-[10px] text-[var(--kb-wood)] font-bold mt-1 flex items-center justify-center gap-1">
+                              <FileCheck className="w-3 h-3 text-[var(--kb-green)]" />
+                              <span>Struk Terunggah</span>
+                            </span>
+                          )}
                         </td>
                         <td>
                           {item.paymentStatus === 'VERIFIED' ? (
@@ -715,10 +756,15 @@ export default function Admin() {
                               <button 
                                 type="button" 
                                 onClick={() => handleOpenTransferModal(item)}
-                                className="hazard-btn text-xs px-2.5 py-1 flex items-center gap-1"
+                                className={cn(
+                                  "text-xs px-2.5 py-1 flex items-center gap-1 cursor-pointer",
+                                  item.transferProofUrl
+                                    ? "hazard-btn"
+                                    : "paper-btn border-[var(--kb-wood)]"
+                                )}
                               >
                                 <FileCheck className="w-3.5 h-3.5" />
-                                <span>Crosscheck</span>
+                                <span>{item.transferProofUrl ? 'Periksa Struk' : 'Crosscheck'}</span>
                               </button>
                             </div>
                           )}
@@ -789,13 +835,93 @@ export default function Admin() {
                     </div>
 
                     <div>
-                      <label className="font-bold text-[var(--kb-wood)]">URL / Path Bukti Transfer (Struk)</label>
-                      <input 
-                        type="text"
-                        value={transferProof}
-                        onChange={(e) => setTransferProof(e.target.value)}
-                        className="cargo-input w-full text-xs font-mono"
-                      />
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="font-bold text-[var(--kb-wood)]">
+                          Bukti Transfer / Struk Pembayaran *
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setUseUrlInput(!useUrlInput)}
+                          className="text-[10px] text-[var(--kb-wood)] underline cursor-pointer"
+                        >
+                          {useUrlInput ? 'Gunakan Upload Berkas' : 'Gunakan URL Gambar'}
+                        </button>
+                      </div>
+
+                      {useUrlInput ? (
+                        <input 
+                          type="text"
+                          value={transferProof}
+                          onChange={(e) => setTransferProof(e.target.value)}
+                          placeholder="https://... atau data:image/..."
+                          className="cargo-input w-full text-xs font-mono"
+                        />
+                      ) : (
+                        <div className="space-y-2">
+                          <label className="flex items-center justify-center gap-2 p-3 border-2 border-dashed border-[var(--kb-wood)] bg-[var(--kb-paper)] hover:bg-[var(--kb-kraft-light)] cursor-pointer transition-colors">
+                            <Camera className="w-4 h-4 text-[var(--kb-wood)]" />
+                            <span className="font-bold text-xs text-[var(--kb-wood)]">
+                              Pilih Berkas Struk (JPG, PNG, WEBP)
+                            </span>
+                            <input 
+                              type="file"
+                              accept="image/jpeg,image/png,image/webp"
+                              onChange={handleAdminProofFileChange}
+                              className="hidden"
+                            />
+                          </label>
+
+                          {transferProofError && (
+                            <div className="text-[11px] text-red-600 bg-red-50 p-1.5 border border-red-300">
+                              {transferProofError}
+                            </div>
+                          )}
+
+                          {transferProof && (
+                            <div className="relative border-2 border-[var(--kb-wood)] bg-[var(--kb-paper-dark)] p-2">
+                              <div className="flex items-center justify-between pb-1 mb-1 border-b border-[var(--kb-wood)]/20 text-[10px]">
+                                <span className="font-bold text-[var(--kb-wood)] flex items-center gap-1">
+                                  <ImageIcon className="w-3 h-3" />
+                                  {activeTransferShipment.transferProofUrl === transferProof
+                                    ? 'Bukti Dari Pelanggan'
+                                    : 'Berkas Struk Terpilih'}
+                                </span>
+                                <div className="flex items-center gap-1.5">
+                                  <button
+                                    type="button"
+                                    onClick={() => setIsProofEnlarged(true)}
+                                    className="px-1.5 py-0.5 bg-[var(--kb-paper)] border border-[var(--kb-wood)] text-[10px] font-bold text-[var(--kb-wood)] flex items-center gap-1 cursor-pointer hover:bg-[var(--kb-hazard)]"
+                                    title="Perbesar Tampilan Struk"
+                                  >
+                                    <ZoomIn className="w-3 h-3" />
+                                    <span>Perbesar</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => setTransferProof('')}
+                                    className="px-1.5 py-0.5 bg-[#e0d6c8] border border-[var(--kb-wood)] text-[10px] font-bold text-[#7a2e22] flex items-center gap-1 cursor-pointer hover:bg-red-200"
+                                    title="Hapus Bukti"
+                                  >
+                                    <Trash2 className="w-3 h-3" />
+                                  </button>
+                                </div>
+                              </div>
+
+                              <div 
+                                className="h-32 flex items-center justify-center overflow-hidden bg-black/5 cursor-pointer"
+                                onClick={() => setIsProofEnlarged(true)}
+                                title="Klik untuk memperbesar struk"
+                              >
+                                <img 
+                                  src={transferProof} 
+                                  alt="Bukti Transfer Struk" 
+                                  className="max-h-full max-w-full object-contain"
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -828,6 +954,39 @@ export default function Admin() {
                     </button>
                   </div>
                 </motion.div>
+              </div>
+            )}
+
+            {/* Modal Perbesar Struk Bukti Transfer */}
+            {isProofEnlarged && transferProof && (
+              <div 
+                className="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 cursor-pointer"
+                onClick={() => setIsProofEnlarged(false)}
+              >
+                <div 
+                  className="relative max-w-2xl max-h-[90vh] w-full bg-[var(--kb-paper)] p-3 border-2 border-[var(--kb-wood)] shadow-2xl space-y-2"
+                  onClick={e => e.stopPropagation()}
+                >
+                  <div className="flex justify-between items-center pb-2 border-b border-[var(--kb-wood)]">
+                    <span className="font-bold text-xs text-[var(--kb-wood)]">
+                      Struk Bukti Transfer: {activeTransferShipment?.trackingNumber}
+                    </span>
+                    <button 
+                      type="button" 
+                      onClick={() => setIsProofEnlarged(false)} 
+                      className="p-1 font-bold text-sm text-[var(--kb-wood)] hover:opacity-70 cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <div className="overflow-auto max-h-[75vh] flex items-center justify-center p-2 bg-black/10">
+                    <img 
+                      src={transferProof} 
+                      alt="Struk Bukti Transfer Lengkap" 
+                      className="max-w-full max-h-[70vh] object-contain shadow-md"
+                    />
+                  </div>
+                </div>
               </div>
             )}
           </motion.div>

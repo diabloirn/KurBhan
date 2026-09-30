@@ -7,7 +7,7 @@ import Booking from './pages/Booking'
 import Tracking from './pages/Tracking'
 import Dashboard from './pages/Dashboard'
 import Admin from './pages/Admin'
-
+import Driver from './pages/Driver'
 import FAQ from './pages/FAQ'
 
 export default function App() {
@@ -22,6 +22,7 @@ export default function App() {
           <Route path="/tracking" element={<Tracking />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/driver" element={<Driver />} />
           <Route path="/faq" element={<FAQ />} />
         </Route>
       </Routes>

@@ -134,3 +134,24 @@ export function updateStoredPaymentStatus(
   localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
 }
 
+export function updateStoredTransferProof(
+  trackingNumber: string,
+  proofUrl: string,
+  senderTransferName?: string,
+  senderTransferPhone?: string
+): void {
+  const current = getStoredShipments();
+  const updated = current.map(s => {
+    if (s.trackingNumber === trackingNumber) {
+      return {
+        ...s,
+        transferProofUrl: proofUrl,
+        senderTransferName: senderTransferName || s.senderTransferName || s.senderName,
+        senderTransferPhone: senderTransferPhone || s.senderTransferPhone || s.senderPhone,
+      };
+    }
+    return s;
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+}
+

@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Send, Search, TrendingUp, Package, Clock, CheckCircle2, ArrowRight, ShieldCheck, Ban, ArrowUpRight, Printer } from 'lucide-react';
+import { Send, Search, TrendingUp, Package, Clock, CheckCircle2, ArrowRight, ShieldCheck, Ban, ArrowUpRight, Printer, Upload, FileCheck } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
-import { getStoredShipments, updateStoredShipmentStatus, type StoredShipment } from '../lib/shipmentStorage';
+import { getStoredShipments, updateStoredShipmentStatus, updateStoredTransferProof, type StoredShipment } from '../lib/shipmentStorage';
 import { shipmentServiceClient } from '../services/grpcClient';
 import { CancelShipmentRequest } from '../proto/kurbhan_pb';
 import { cn } from '../lib/cn';
 import WaybillModal, { type WaybillData } from '../components/WaybillModal';
+import UploadProofModal from '../components/UploadProofModal';
 import './Dashboard.css';
 
 const getStatusBadge = (status: StoredShipment['status']) => {
@@ -39,6 +40,21 @@ export default function Dashboard() {
   const [cancelingId, setCancelingId] = useState<string | null>(null);
   const [selectedWaybill, setSelectedWaybill] = useState<WaybillData | null>(null);
   const [isWaybillOpen, setIsWaybillOpen] = useState(false);
+  const [selectedShipmentForProof, setSelectedShipmentForProof] = useState<StoredShipment | null>(null);
+  const [isProofModalOpen, setIsProofModalOpen] = useState(false);
+  const [proofSuccessToast, setProofSuccessToast] = useState<string | null>(null);
+
+  const handleOpenUploadProof = (item: StoredShipment) => {
+    setSelectedShipmentForProof(item);
+    setIsProofModalOpen(true);
+  };
+
+  const handleProofSuccess = (trackingNumber: string, proofUrl: string, senderName: string, senderPhone: string) => {
+    updateStoredTransferProof(trackingNumber, proofUrl, senderName, senderPhone);
+    setShipments(getStoredShipments());
+    setProofSuccessToast(`✅ Bukti transfer untuk resi ${trackingNumber} berhasil diunggah! Status pembayaran sedang diverifikasi.`);
+    setTimeout(() => setProofSuccessToast(null), 6000);
+  };
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -201,10 +217,31 @@ export default function Dashboard() {
                       <div>
                         <div className="dashboard-detail-label">Status Pembayaran</div>
                         <div className="dashboard-detail-val text-[var(--kb-wood)] font-bold">{item.paymentStatus} ({item.paymentMethod})</div>
+                        {item.paymentStatus === 'UNPAID' && item.transferProofUrl && (
+                          <div className="text-[11px] text-[var(--kb-wood-light)] font-mono mt-0.5 flex items-center gap-1">
+                            <FileCheck className="w-3 h-3 text-[var(--kb-wood)]" />
+                            <span>Bukti terunggah (menunggu verifikasi)</span>
+                          </div>
+                        )}
                       </div>
                     </div>
 
                     <div className="dashboard-item-actions">
+                      {item.paymentStatus === 'UNPAID' && (
+                        <button
+                          type="button"
+                          onClick={() => handleOpenUploadProof(item)}
+                          className={cn(
+                            "text-xs py-1.5 px-3 flex items-center gap-1.5 cursor-pointer font-bold border-2 border-[var(--kb-wood)] transition-colors",
+                            item.transferProofUrl
+                              ? "bg-[var(--kb-paper)] text-[var(--kb-wood)] hover:bg-[var(--kb-kraft-light)]"
+                              : "hazard-btn"
+                          )}
+                        >
+                          <Upload className="w-3.5 h-3.5" />
+                          <span>{item.transferProofUrl ? 'Ubah Bukti Transfer' : 'Unggah Bukti Transfer'}</span>
+                        </button>
+                      )}
                       <button
                         type="button"
                         onClick={() => {
@@ -324,6 +361,21 @@ export default function Dashboard() {
         onClose={() => setIsWaybillOpen(false)} 
         data={selectedWaybill} 
       />
+
+      {/* Modal Unggah Bukti Transfer */}
+      <UploadProofModal
+        isOpen={isProofModalOpen}
+        onClose={() => setIsProofModalOpen(false)}
+        shipment={selectedShipmentForProof}
+        onSuccess={handleProofSuccess}
+      />
+
+      {/* Toast Notifikasi Berhasil Unggah Bukti */}
+      {proofSuccessToast && (
+        <div className="fixed bottom-5 right-5 z-50 bg-[var(--kb-hazard)] text-[var(--kb-wood)] border-2 border-[var(--kb-wood)] p-3 shadow-[var(--crate-shadow)] font-mono text-xs font-bold max-w-md animate-bounce">
+          {proofSuccessToast}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,0 +1,443 @@
+/* ==========================================================================
+   KurBhan - Driver Portal Styles
+   Industrial Warehouse / Freight Manifest Aesthetic — Mobile-First
+   ========================================================================== */
+
+.driver-root {
+  min-height: 100vh;
+  background: var(--kb-paper);
+  background-image: radial-gradient(var(--kb-kraft-dark) 1px, transparent 0);
+  background-size: 24px 24px;
+  padding: 2rem 1rem 5rem;
+}
+
+.driver-container {
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ---- Header ---- */
+.driver-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid var(--kb-wood);
+}
+
+.driver-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.25rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--kb-wood);
+  margin: 0;
+  line-height: 1.1;
+}
+
+.driver-sub {
+  font-family: var(--font-body);
+  margin-top: 0.15rem;
+  font-size: 0.9rem;
+  color: var(--kb-wood-light);
+  line-height: 1.4;
+}
+
+/* ---- Stats Row ---- */
+.driver-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .driver-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.driver-stat-card {
+  background: var(--kb-kraft-light);
+  border: 2px solid var(--kb-wood);
+  box-shadow: var(--crate-shadow);
+  padding: 1rem;
+  text-align: center;
+}
+
+.driver-stat-val {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--kb-wood);
+}
+
+.driver-stat-label {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--kb-wood-light);
+  font-weight: 700;
+  margin-top: 0.25rem;
+}
+
+/* ---- Filter Bar ---- */
+.driver-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.driver-filter-btn {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 2px solid var(--kb-wood);
+  background: var(--kb-paper);
+  color: var(--kb-wood);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  font-family: var(--font-display);
+}
+
+.driver-filter-btn:hover {
+  background: var(--kb-kraft-light);
+}
+
+.driver-filter-btn.active {
+  background: var(--kb-wood);
+  color: var(--kb-hazard);
+}
+
+/* ---- Job Cards ---- */
+.driver-jobs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.driver-job-card {
+  background: var(--kb-kraft-light);
+  border: 2px solid var(--kb-wood);
+  padding: 1.25rem;
+  box-shadow: 2px 2px 0px var(--kb-wood);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.driver-job-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0px var(--kb-wood);
+}
+
+.driver-job-top {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--kb-kraft-dark);
+  padding-bottom: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .driver-job-top {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.driver-job-resi {
+  font-family: monospace;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--kb-wood);
+}
+
+.driver-job-details {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 500px) {
+  .driver-job-details {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.driver-detail-label {
+  font-family: var(--font-display);
+  color: var(--kb-wood-light);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.driver-detail-val {
+  font-family: var(--font-body);
+  font-weight: 700;
+  color: var(--kb-wood);
+  margin-top: 0.15rem;
+  word-break: break-word;
+}
+
+.driver-job-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+/* ---- GPS Panel ---- */
+.driver-gps-panel {
+  background: var(--kb-paper);
+  border: 2px solid var(--kb-wood);
+  box-shadow: var(--crate-shadow);
+  padding: 1.25rem;
+}
+
+.driver-gps-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--kb-wood);
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.driver-gps-info {
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: var(--kb-wood-light);
+  margin-bottom: 0.5rem;
+}
+
+/* ---- COD Modal ---- */
+.driver-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.driver-modal {
+  background: var(--kb-paper);
+  border: 3px solid var(--kb-wood);
+  box-shadow: 6px 6px 0px var(--kb-wood);
+  width: 100%;
+  max-width: 28rem;
+  padding: 1.5rem;
+}
+
+.driver-modal-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--kb-wood);
+  margin: 0 0 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.driver-input-group {
+  margin-bottom: 1rem;
+}
+
+.driver-input-label {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--kb-wood);
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.driver-input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 2px solid var(--kb-wood);
+  background: var(--kb-kraft-light);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--kb-wood);
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.driver-input:focus {
+  border-color: var(--kb-hazard);
+  box-shadow: 0 0 0 2px var(--kb-hazard);
+}
+
+.driver-input::placeholder {
+  color: var(--kb-wood-light);
+  opacity: 0.6;
+}
+
+textarea.driver-input {
+  min-height: 4rem;
+  resize: vertical;
+}
+
+.driver-modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1.25rem;
+}
+
+/* ---- Proof Upload ---- */
+.driver-proof-preview {
+  width: 100%;
+  max-height: 12rem;
+  object-fit: cover;
+  border: 2px solid var(--kb-wood);
+  margin-top: 0.5rem;
+}
+
+.driver-file-input-wrap {
+  position: relative;
+}
+
+.driver-file-input-wrap input[type="file"] {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+/* ---- Empty State ---- */
+.driver-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.driver-empty-icon {
+  width: 3rem;
+  height: 3rem;
+  color: var(--kb-wood-light);
+  margin-bottom: 0.75rem;
+}
+
+.driver-empty-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--kb-wood);
+  margin-bottom: 0.35rem;
+}
+
+.driver-empty-desc {
+  font-family: var(--font-body);
+  color: var(--kb-wood-light);
+  font-size: 0.85rem;
+  max-width: 22rem;
+}
+
+/* ---- Toast Notification ---- */
+.driver-toast {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: 2px solid var(--kb-wood);
+  box-shadow: 3px 3px 0px var(--kb-wood);
+  animation: driver-toast-in 0.2s ease-out;
+  max-width: 20rem;
+}
+
+.driver-toast.success {
+  background: var(--kb-hazard);
+  color: var(--kb-wood);
+}
+
+.driver-toast.error {
+  background: #f8d7da;
+  color: #7a2e22;
+}
+
+@keyframes driver-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---- Login Required ---- */
+.driver-login-card {
+  background: var(--kb-kraft-light);
+  border: 2px solid var(--kb-wood);
+  box-shadow: var(--crate-shadow);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  max-width: 28rem;
+  margin: 4rem auto;
+}
+
+.driver-login-card h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--kb-wood);
+  margin: 0 0 0.5rem 0;
+}
+
+.driver-login-card p {
+  font-family: var(--font-body);
+  color: var(--kb-wood-light);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ---- Responsive Polish ---- */
+@media (max-width: 480px) {
+  .driver-root {
+    padding: 1.5rem 0.75rem 4rem;
+  }
+
+  .driver-job-card {
+    padding: 1rem;
+  }
+
+  .driver-modal {
+    padding: 1.25rem;
+  }
+}
+
